@@ -10,7 +10,7 @@ create table users(
 DROP TABLE IF EXISTS gold_histories;
 create table gold_histories(
   student_ID	  int          not null ,
-  time:			  varchar(100) not null ,
+  time			  varchar(100) not null ,
   change_number   int          not null ,
   residual_number int		   not null ,
   reason          varchar(200) not null ,
