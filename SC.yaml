@@ -19,6 +19,7 @@ schemes:
   - https
 
 paths: 
+
   /login:
     post:
       tags:
@@ -35,7 +36,7 @@ paths:
               - password
             properties:
               student_id:
-                type: integer
+                type: string
                 description: 学号
               password:
                 type: string
@@ -50,8 +51,19 @@ paths:
                 description: 将student_id作为token保留
         400:
           description: 参数或客户端语法有误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: 用户名或密码错误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          
   /punchs/{type}:
     get:
       tags:
@@ -75,19 +87,21 @@ paths:
                       type: string
                     title:
                       type: string
-
+        400:
+          description: 参数或客户端语法有误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
               
-  /user/{student_id}/punchs:
+  /user/punchs:
     get:
       tags: 
         - user
       summary: 用户主页-已选标签
       parameters: 
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -104,20 +118,29 @@ paths:
                     have:
                       type: boolean
                       description: 是否选择
+                      
+        400:
+          description: 参数或客户端语法有误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
           
-  /user/{student_id}:
+  /user:
     get:
       tags:
         - user
       summary: 用户主页
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -129,18 +152,24 @@ paths:
                 type: string
         404:
           description: 没有该资源
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误，没有权限
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
     put:
       tags:
         - user
       summary: 修改用户信息
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
         - name: data
           in: body
           schema:
@@ -155,20 +184,26 @@ paths:
       responses:
         200:
           description: OK
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
           
-  /user/{student_id}/gold:
+  /user/gold:
     get:
       tags:
         - user
       summary: 获取金币数及使用历史
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -189,21 +224,27 @@ paths:
                       
         404:
           description: 没有该资源
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误，没有权限
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
           
           
-  /user/{student_id}/achievement:
+  /user/achievement:
     get:
       tags:
         - user
       summary: 获取过往成就
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -219,20 +260,26 @@ paths:
                       type: string
         404:
           description: 没有该资源
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误，没有权限
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
           
-  /punch/{student_id}: 
+  /punch: 
     get:
       tags:
         - punch
       summary: 我的打卡
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -246,21 +293,61 @@ paths:
                   type: string
                 number:
                   type: integer
-                have:
+                choice:
                   type: boolean
                   description: 今日是否已经打卡
         401:
-          description: token错误，没有权限 
+          description: token错误，没有权限
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    post:
+      tags:
+        - punch
+      summary: 完成打卡
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: punch
+          in: body
+          schema:
+            properties:
+              title:
+                type: string
+      responses:
+        200:
+          description: 打卡成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          
+        400:
+          description: 打卡失败，今日已打卡
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        401:
+          description: token错误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+        
+        
+      
+      
     delete:
       tags:
         - punch
       summary: 移除标签
       parameters:
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
         - name: punch
           in: body
           schema:
@@ -270,11 +357,26 @@ paths:
       responses:
         200:
           description: 移除成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          
         400:
           description: 移除失败
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
           description: token错误
- 
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   /list:
     get:
       summary: 排行榜
@@ -297,18 +399,44 @@ paths:
                   type: integer
         404:
           description: 无资源
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    post:
+      summary: 兑换排名
+      parameters:
+        - name: rank_id
+          in: body
+          schema:
+            properties:
+              id:
+                type: integer
+      responses:
+        200:
+          description: 兑换成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            
+        400: 
+          description: 金币不足或已为该排名
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   
-  /user/{student_id}/punch:
+  /user/punch:
     get:
       tags:
         - user
       summary: 用户打卡数和天数
       parameters: 
         - $ref: "#/parameters/token"
-        - name: student_id
-          in: path
-          required: true
-          type: integer
       responses:
         200:
           description: 获取成功
@@ -324,10 +452,15 @@ paths:
                   type: number
         401:
           description: token错误
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
   
   /backdrop:
     get:
-      summary: 背景兑换
+      summary: 背景兑换价格
       responses:
         200: 
           description: 获取成功
@@ -344,21 +477,62 @@ paths:
         400:
           description: 无资源
           
-  /conceal:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+    post:
+      summary: 兑换背景
+      parameters:
+        - name: backdrop_id
+          in: body
+          schema:
+            properties:
+              id:
+                type: integer
+      responses:
+        200:
+          description: 兑换成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            
+        400: 
+          description: 金币不足或已拥有该背景
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          
+  /privacy:
     post:
       summary: 打卡内容公开与否
       parameters:
-        - name: if
+        - name: choice
           in: body
           schema: 
             properties:
-              if: 
+              choice: 
                 type: boolean
       responses:
         200:
           description: 选择成功
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
         401:
-          description: token错误，没有权限 
+          description: token错误，没有权限
+          schema:
+            type: object
+            properties:
+              message:
+                type: string 
  
 
 parameters:
@@ -366,4 +540,5 @@ parameters:
       name: token
       in: header
       required: true
-      type: string
+      type: string  
+
