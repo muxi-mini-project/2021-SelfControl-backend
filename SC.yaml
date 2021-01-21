@@ -1,0 +1,369 @@
+swagger: '2.0'
+
+info:
+  description: 自控力API
+  version: 1.0.0
+  title : Self_Control API
+  contact: 
+    name: TAODEI
+    email: 864978550@qq.com
+host: localhost
+basePath: /api/v1
+tags: 
+  - name: user
+    description: 用户
+  - name: punch
+    description: 打卡
+schemes:
+  - http
+  - https
+
+paths: 
+  /login:
+    post:
+      tags:
+        - user
+      summary: 登录
+      description: 学号密码登录
+      parameters:
+        - name: data
+          in: body
+          description: post data
+          schema:
+            required:
+              - student_id
+              - password
+            properties:
+              student_id:
+                type: integer
+                description: 学号
+              password:
+                type: string
+                description: 密码
+      responses:
+        200:
+          description: 登录成功
+          schema:
+            properties:
+              token:
+                type: string
+                description: 将student_id作为token保留
+        400:
+          description: 参数或客户端语法有误
+        401:
+          description: 用户名或密码错误
+  /punchs/{type}:
+    get:
+      tags:
+        - punch
+      summary: 显示当前类型所有打卡
+      parameters: 
+        - name: type
+          in: path
+          required: true
+          type: string
+      responses:
+        200: 
+          description: 成功 
+          schema:
+            properties:
+              punch:
+                type: array
+                items:
+                  properties:
+                    icon:
+                      type: string
+                    title:
+                      type: string
+
+              
+  /user/{student_id}/punchs:
+    get:
+      tags: 
+        - user
+      summary: 用户主页-已选标签
+      parameters: 
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:   
+            properties:
+              punch:
+                type: array
+                items:
+                  properties:
+                    title:
+                      type: string
+                    icon:
+                      type: string
+                    have:
+                      type: boolean
+                      description: 是否选择
+        401:
+          description: token错误
+          
+  /user/{student_id}:
+    get:
+      tags:
+        - user
+      summary: 用户主页
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:
+            properties:
+              name: 
+                type: string
+              user_picture:
+                type: string
+        404:
+          description: 没有该资源
+        401:
+          description: token错误，没有权限
+    put:
+      tags:
+        - user
+      summary: 修改用户信息
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+        - name: data
+          in: body
+          schema:
+            properties:
+              user_picture:
+                type: string
+                description: 头像图片的url
+              name:
+                type: string
+              password:
+                type: string
+      responses:
+        200:
+          description: OK
+        401:
+          description: token错误
+          
+  /user/{student_id}/gold:
+    get:
+      tags:
+        - user
+      summary: 获取金币数及使用历史
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:
+            properties:
+              gold:
+                type: integer
+              history:
+                type: array
+                items:
+                  properties:
+                    time:
+                      type: string
+                    reason: 
+                      type: string
+                    change_number:
+                      type: integer
+                      
+        404:
+          description: 没有该资源
+        401:
+          description: token错误，没有权限
+          
+          
+  /user/{student_id}/achievement:
+    get:
+      tags:
+        - user
+      summary: 获取过往成就
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:
+            properties:
+              name: 
+                type: string
+              achievement:
+                type: array
+                items:
+                  properties:
+                    content:
+                      type: string
+        404:
+          description: 没有该资源
+        401:
+          description: token错误，没有权限
+          
+  /punch/{student_id}: 
+    get:
+      tags:
+        - punch
+      summary: 我的打卡
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:
+            type: array
+            items:
+              properties:
+                icon:
+                  type: string
+                title:
+                  type: string
+                number:
+                  type: integer
+                have:
+                  type: boolean
+                  description: 今日是否已经打卡
+        401:
+          description: token错误，没有权限 
+    delete:
+      tags:
+        - punch
+      summary: 移除标签
+      parameters:
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+        - name: punch
+          in: body
+          schema:
+            properties:
+              title:
+                type: string
+      responses:
+        200:
+          description: 移除成功
+        400:
+          description: 移除失败
+        401:
+          description: token错误
+ 
+  /list:
+    get:
+      summary: 排行榜
+      parameters: 
+        - name: time
+          in: header
+          required: true
+          type: number
+      responses:
+        200:
+          description: 获取成功
+          schema:
+            type: array
+            items:
+              properties:
+                user_picture:
+                  type: string
+                  description: 头像图片的url
+                punch_number:
+                  type: integer
+        404:
+          description: 无资源
+  
+  /user/{student_id}/punch:
+    get:
+      tags:
+        - user
+      summary: 用户打卡数和天数
+      parameters: 
+        - $ref: "#/parameters/token"
+        - name: student_id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 获取成功
+          schema:   
+            type: array
+            items:
+              properties:
+                title:
+                  type: string
+                number:
+                  type: integer
+                time:
+                  type: number
+        401:
+          description: token错误
+  
+  /backdrop:
+    get:
+      summary: 背景兑换
+      responses:
+        200: 
+          description: 获取成功
+          schema:
+            type: array
+            items:
+              properties:
+                backdrop_id:
+                  type: integer
+                picture_url:
+                  type: string
+                gold:
+                  type: integer
+        400:
+          description: 无资源
+          
+  /conceal:
+    post:
+      summary: 打卡内容公开与否
+      parameters:
+        - name: if
+          in: body
+          schema: 
+            properties:
+              if: 
+                type: boolean
+      responses:
+        200:
+          description: 选择成功
+        401:
+          description: token错误，没有权限 
+ 
+
+parameters:
+  token:
+      name: token
+      in: header
+      required: true
+      type: string

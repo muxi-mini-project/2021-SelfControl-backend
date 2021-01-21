@@ -1,58 +1,64 @@
 
 DROP TABLE IF EXISTS users;
 create table users(
-  student_ID int		  not null ,
-  gold       int          not null ,
-  name       varchar(100) not null ,
-  primary key (student_ID)
+  student_id   int		    not null UNIQUE,
+  password     varchar(100) not null ,
+  user_picture varchar(100) ,
+  gold         int          not null ,
+  name         varchar(100) ,
+  primary key (student_id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS gold_histories;
 create table gold_histories(
-  student_ID	  int          not null ,
-  time			  varchar(100) not null ,
+  student_id	  int          not null ,
+  time			  date         not null ,
   change_number   int          not null ,
   residual_number int		   not null ,
   reason          varchar(200) not null ,
-  primary key (student_ID)
+  primary key (student_id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS backdrops;
 create table backdrops(
-  backdrop_ID int          not null auto_increment ,
-  picture_URL varchar(100) not null ,
+  backdrop_id int          not null auto_increment ,
+  picture_url varchar(100) not null UNIQUE ,
   price       int          not null ,
-  primary key (backdrop_ID)
+  primary key (backdrop_id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS punch_histories;
 create table punch_histories(
-  student_ID int          not null ,
-  punch_ID   int          not null ,
-  time       varchar(100) not null ,
-  primary key (student_ID,punch_ID,time)
+  id         int          not null auto_increment ,
+  student_id int          not null ,
+  title      varchar(100) not null ,
+  time       date         not null ,
+  primary key (id)
 )ENGINE=InnoDB; 
 
 DROP TABLE IF EXISTS achievements;
 create table achievements(
-  student_ID  int not null ,
+  student_id  int not null ,
   achievement text ,
-  primary key (student_ID)
+  primary key (student_id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS punch_contents;
 create table punch_contents(
-  punch_ID    int          not null auto_increment ,
+  --punch_id    int          not null auto_increment ,
+  type        varchar(100) not null ,
+  title       varchar(100) not null UNIQUE ,
   content     text ,
-  picture_URL varchar(100) not null ,
-  primary key (punch_ID)
+  picture_url varchar(100) not null UNIQUE ,
+  primary key (title)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS users_punchs;
 create table users_punchs(
-  student_ID int not null ,
-  punch_ID   int not null ,
-  primary key (student_ID,punch_ID)
+  id         int          not null auto_increment ,
+  student_id int          not null ,
+  title      varchar(100) not null ,
+  primary key (id)
 )ENGINE=InnoDB;
 
 
