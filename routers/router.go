@@ -7,10 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//Router 1
 func Router(r *gin.Engine) {
 
 	//user:
-	g1 := r.Group("/SC/user")
+	g1 := r.Group("/api/v1/user")
 	{
 		//登陆
 		g1.POST("/", user.Login)
@@ -29,12 +30,15 @@ func Router(r *gin.Engine) {
 
 		//用户打卡数
 		g1.GET("/punch", user.PunchNumber)
+
+		//打卡内容公开与否
+		g1.POST("/privacy", user.Privary)
 	}
 
 	//显示当前类型所有打卡
-	r.GET("/punchs/{type}", handler.Punchs)
+	r.GET("/api/v1/punchs/{type}", handler.Punchs)
 
-	g2 := r.Group("SC/punch")
+	g2 := r.Group("/api/v1/punch")
 	{
 
 		//我的打卡
@@ -48,17 +52,14 @@ func Router(r *gin.Engine) {
 	}
 	//default:
 	//排行榜
-	r.GET("/list", handler.List)
+	r.GET("/api/v1/list", handler.List)
 
 	//兑换排名
-	r.POST("/list", handler.ChangeRanking)
+	r.POST("/api/v1/list", handler.ChangeRanking)
 
 	//背景价格
-	r.GET("/backdrop", handler.BackdropPrice)
+	r.GET("/api/v1/backdrop", handler.BackdropPrice)
 
 	//兑换背景
-	r.POST("/backdrop", handler.ChangeBackdrop)
-
-	//打卡内容公开与否
-	r.POST("/privacy", handler.Privary)
+	r.POST("/api/v1/backdrop", handler.ChangeBackdrop)
 }
