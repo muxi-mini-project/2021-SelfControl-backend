@@ -6,6 +6,7 @@ create table users(
   user_picture varchar(100) ,
   gold         int          default 0 ,
   name         varchar(100) default "小樨",
+  privacy      boolean      default true,
   primary key (student_id)
 )ENGINE=InnoDB;
 
@@ -57,6 +58,7 @@ create table users_punchs(
   id         int          not null auto_increment ,
   student_id varchar(100) not null ,
   title      varchar(100) not null ,
+  number     int          default 0,
   primary key (id)
 )ENGINE=InnoDB;
 

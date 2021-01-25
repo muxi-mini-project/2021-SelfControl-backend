@@ -20,7 +20,7 @@ func Router(r *gin.Engine) {
 		g1.GET("/", user.Homepage)
 
 		//修改用户信息
-		g1.PUT("/", user.ChangeInfo)
+		g1.PUT("/", user.ChangeUserInfo)
 
 		//金币数及历史
 		g1.GET("/gold", user.Gold)
@@ -29,10 +29,11 @@ func Router(r *gin.Engine) {
 		g1.GET("/achievement", user.Achievement)
 
 		//用户打卡数
-		g1.GET("/punch", user.PunchNumber)
+		g1.GET("/punch", user.PunchAndNumber)
 
-		//打卡内容公开与否
-		g1.POST("/privacy", user.Privary)
+		//获取当前隐私
+		g1.GET("/privacy", user.GetPrivacy)
+
 	}
 
 	//显示当前类型所有打卡

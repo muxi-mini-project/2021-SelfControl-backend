@@ -2,7 +2,6 @@ package user
 
 import (
 	"SC/model"
-	"SC/token"
 	"log"
 	"time"
 
@@ -17,27 +16,27 @@ func Login(c *gin.Context) {
 		return
 	}
 	//modle.GetUserInfoFormOne("2020213675","lst...")
-	stu, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
+	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
 	if err != nil {
 		//c.Abort()
 		c.JSON(400, "登录失败")
 		return
 	}
-	if ok := main.db.NewRecord(&p); ok {
-		c.JSON(400, "该用户已注册")
-		return
+	if ok := model.DB.NewRecord(&p); !ok {
+		result := model.DB.Create(&p)
+		if result.Error != nil {
+			c.JSON(400, "登录失败")
+			panic(result.Error)
+		}
 	}
-	data := token.Jwt{
-		ID:   p.StudentID,
-		Name: stu.User.Name,
-	}
+	claims := &model.Jwt{StudentID: p.StudentID}
 
-	data.ExpiresAt = time.Now().Add(2 * time.Hour).Unix()
-	data.IssuedAt = time.Now().Unix()
+	claims.ExpiresAt = time.Now().Add(2 * time.Hour).Unix()
+	claims.IssuedAt = time.Now().Unix()
 
 	var Secret = "vinegar" //加醋
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, data)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(Secret))
 	if err != nil {
 		log.Println(err)
