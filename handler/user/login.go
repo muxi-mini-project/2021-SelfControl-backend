@@ -15,14 +15,17 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "输入有误，格式错误"})
 		return
 	}
-	//modle.GetUserInfoFormOne("2020213675","lst...")
 	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
 	if err != nil {
 		//c.Abort()
 		c.JSON(400, "登录失败")
 		return
 	}
-	if ok := model.DB.NewRecord(&p); !ok {
+	if ok := model.DB.NewRecord(&p); ok {
+		p.Gold = 0
+		p.Name = "小樨"
+		p.Privacy = true
+		p.UserPicture = "www.baidu.com"
 		result := model.DB.Create(&p)
 		if result.Error != nil {
 			c.JSON(400, "登录失败")

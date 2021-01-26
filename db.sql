@@ -1,3 +1,4 @@
+Use Self_Control
 
 DROP TABLE IF EXISTS users;
 create table users(
@@ -5,7 +6,7 @@ create table users(
   password     varchar(100) not null ,
   user_picture varchar(100) ,
   gold         int          default 0 ,
-  name         varchar(100) default "小樨",
+  name         varchar(100) default '小樨',
   privacy      boolean      default true,
   primary key (student_id)
 )ENGINE=InnoDB;
@@ -34,6 +35,8 @@ create table punch_histories(
   student_id varchar(100) not null ,
   title      varchar(100) not null ,
   time       datetime     not null ,
+  day        int          not null ,
+  month      int          not null ,
   primary key (id)
 )ENGINE=InnoDB; 
 
@@ -49,7 +52,6 @@ create table punch_contents(
   type        varchar(100) not null ,
   title       varchar(100) not null UNIQUE ,
   content     text ,
-  picture_url varchar(100) not null UNIQUE ,
   primary key (title)
 )ENGINE=InnoDB;
 
@@ -62,5 +64,18 @@ create table users_punchs(
   primary key (id)
 )ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS list_prices;
+create table list_prices(
+  title varchar(100) not null ,
+  price int          not null ,
+  primary key (title)
+)ENGINE=InnoDB;
 
-
+DROP TABLE IF EXISTS users_backdrops;
+create table users_backdrops(
+  id          int          not null auto_increment ,
+  student_id  varchar(100) not null ,
+  backdrop_id varchar(100) not null ,
+  number      int          default 0,
+  primary key (id)
+)ENGINE=InnoDB;

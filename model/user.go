@@ -1,14 +1,6 @@
 package model
 
-//User 结构体
-type User struct {
-	StudentID   string `json:"student_id"`
-	Name        string `json:"name"`
-	Password    string `json:"password"`
-	UserPicture string `json:"user_picture"`
-	Gold        int    `json:"gold"`
-	Privacy     bool   `json:"privacy"`
-}
+//User结构体在MysqlStruct.go
 
 type UserHomePage struct {
 	Name        string `json:"student_id"`
@@ -19,6 +11,9 @@ type Gold struct {
 	Gold int `json:"gold"`
 }
 
+type Choice struct {
+	Choice bool `json:"choice"`
+}
 type Achievements struct {
 	Achievements []string `json:"achievement"`
 }
@@ -30,11 +25,13 @@ type Punch struct {
 
 type Punch2 struct {
 	Title string `json:"title"`
-	Url   string `json:"url"`
 }
-type Punchs struct {
-	Punchs []Punch `json:"punchs"`
-}
+
 type Privacy struct {
 	Privacy bool `json:"privacy"`
+}
+
+type UserAndNumber struct {
+	StudentId string `json:"student_id"`
+	Number    int    `json:"number"`
 }

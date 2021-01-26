@@ -2,6 +2,15 @@ package model
 
 import "time"
 
+type User struct {
+	StudentID   string `json:"student_id"`
+	Name        string `json:"name"`
+	Password    string `json:"password"`
+	UserPicture string `json:"user_picture"`
+	Gold        int    `json:"gold"`
+	Privacy     bool   `json:"privacy"`
+}
+
 type GoldHistory struct {
 	StudentID      string    `json:"student_id"`
 	Time           time.Time `json:"time"`
@@ -21,6 +30,8 @@ type PunchHistory struct {
 	StudentID string    `json:"student_id"`
 	Title     string    `json:"title"`
 	Time      time.Time `json:"time"`
+	Day       int       `json:"day"`
+	Month     int       `json:"month"`
 }
 
 type Achievement struct {
@@ -29,10 +40,9 @@ type Achievement struct {
 }
 
 type PunchContent struct {
-	Type       string `json:"type"`
-	Title      string `json:"title"`
-	Content    string `json:"content"`
-	PictureUrl string `json:"picture_url"`
+	Type    string `json:"type"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
 }
 
 type UsersPunch struct {
@@ -40,4 +50,15 @@ type UsersPunch struct {
 	StudentID string `json:"student_id"`
 	Title     string `json:"title"`
 	Number    int    `json:"number"`
+}
+
+type ListPrice struct {
+	Title string `json:"title"`
+	Price int    `json:"price"`
+}
+
+type UsersBackdrop struct {
+	ID         int    `json:"id"`
+	StudentID  string `json:"student_id"`
+	BackdropID int    `json:"backdrop_id"`
 }

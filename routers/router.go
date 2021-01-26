@@ -45,6 +45,9 @@ func Router(r *gin.Engine) {
 		//我的打卡
 		g2.GET("/", handler.MyPunch)
 
+		//判断今天是否已打卡
+		g2.GET("/today", handler.TodayPunch)
+
 		//完成打卡
 		g2.POST("/", handler.CompletePunch)
 
@@ -53,14 +56,20 @@ func Router(r *gin.Engine) {
 	}
 	//default:
 	//排行榜
-	r.GET("/api/v1/list", handler.List)
+	r.GET("/api/v1/list/{type}", handler.List)
 
 	//兑换排名
-	r.POST("/api/v1/list", handler.ChangeRanking)
+	r.PUT("/api/v1/list", handler.ChangeRanking)
+
+	//排名兑换价格
+	r.GET("/api/v1/listprice", handler.ListPrice)
 
 	//背景价格
 	r.GET("/api/v1/backdrop", handler.BackdropPrice)
 
 	//兑换背景
-	r.POST("/api/v1/backdrop", handler.ChangeBackdrop)
+	r.PUT("/api/v1/backdrop", handler.ChangeBackdrop)
+
+	//我的背景
+	r.GET("/api/v1/backdrops", handler.MyBackdrops)
 }
