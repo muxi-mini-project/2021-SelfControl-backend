@@ -15,6 +15,7 @@ func Homepage(c *gin.Context) {
 		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
+
 	u := model.GetUserInfo(id)
 	UserHomePage := model.UserHomePage{Name: u.Name, UserPicture: u.UserPicture}
 	c.JSON(200, UserHomePage)
@@ -48,11 +49,26 @@ func Gold(c *gin.Context) {
 		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
+
 	u := model.GetUserInfo(id)
 	Gold := model.Gold{Gold: u.Gold}
 	c.JSON(200, Gold)
 }
 
+func GoldHistory(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := model.VerifyToken(token)
+	if err != nil {
+		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		return
+	}
+
+	histories := model.GetGoldHistory(id)
+	Histories := model.Histories{Histories: histories}
+	c.JSON(200, Histories)
+}
+
+/*
 func Achievement(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
@@ -60,10 +76,11 @@ func Achievement(c *gin.Context) {
 		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
+
 	achievements := model.GetAchievement(id)
 	Achievement := model.Achievements{Achievements: achievements}
 	c.JSON(200, Achievement)
-}
+}*/
 
 func PunchAndNumber(c *gin.Context) {
 	token := c.Request.Header.Get("token")
@@ -72,6 +89,7 @@ func PunchAndNumber(c *gin.Context) {
 		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
+
 	punchs := model.GetPunchAndNumber(id)
 	c.JSON(200, punchs)
 }
@@ -83,6 +101,7 @@ func GetPrivacy(c *gin.Context) {
 		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
+
 	u := model.GetUserInfo(id)
 	privacy := model.Privacy{Privacy: u.Privacy}
 	c.JSON(200, privacy)

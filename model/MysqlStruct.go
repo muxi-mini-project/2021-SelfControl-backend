@@ -34,12 +34,14 @@ type PunchHistory struct {
 	Month     int       `json:"month"`
 }
 
+/*
 type Achievement struct {
 	StudentID   string `json:"student_id"`
 	Achievement string `json:"achievement"`
-}
+}*/
 
 type PunchContent struct {
+	ID      int    `json:"id"`
 	Type    string `json:"type"`
 	Title   string `json:"title"`
 	Content string `json:"content"`
@@ -53,8 +55,8 @@ type UsersPunch struct {
 }
 
 type ListPrice struct {
-	Title string `json:"title"`
-	Price int    `json:"price"`
+	Ranking string `json:"ranking"`
+	Price   int    `json:"price"`
 }
 
 type UsersBackdrop struct {

@@ -3,8 +3,8 @@ package model
 //User结构体在MysqlStruct.go
 
 type UserHomePage struct {
-	Name        string `json:"student_id"`
-	UserPicture string `json:"name"`
+	Name        string `json:"name"`
+	UserPicture string `json:"user_picture"`
 }
 
 type Gold struct {
@@ -14,9 +14,10 @@ type Gold struct {
 type Choice struct {
 	Choice bool `json:"choice"`
 }
-type Achievements struct {
-	Achievements []string `json:"achievement"`
-}
+
+//type Achievements struct {
+//	Achievements []string `json:"achievements"`
+//}
 
 type Punch struct {
 	Title  string `json:"title"`
@@ -25,6 +26,7 @@ type Punch struct {
 
 type Punch2 struct {
 	Title string `json:"title"`
+	ID    int    `json:"id"`
 }
 
 type Privacy struct {

@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//Login 登录
 func Login(c *gin.Context) {
 	var p model.User
 	if err := c.BindJSON(&p); err != nil {
@@ -18,23 +19,27 @@ func Login(c *gin.Context) {
 	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
 	if err != nil {
 		//c.Abort()
-		c.JSON(400, "登录失败")
+		c.JSON(400, "用户名或密码错误")
 		return
 	}
-	if ok := model.DB.NewRecord(&p); ok {
+	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
+		//log.Printf(",,,,,,,\n")
 		p.Gold = 0
 		p.Name = "小樨"
 		p.Privacy = true
 		p.UserPicture = "www.baidu.com"
-		result := model.DB.Create(&p)
-		if result.Error != nil {
-			c.JSON(400, "登录失败")
-			panic(result.Error)
-		}
+		model.DB.Create(&p)
 	}
+	//log.Printf(",%v======\n", p)
+	//增加拥有默认背景
+	var usersBackdrop model.UsersBackdrop
+	usersBackdrop.BackdropID = 1
+	usersBackdrop.StudentID = p.StudentID
+	model.DB.Create(&usersBackdrop)
+
 	claims := &model.Jwt{StudentID: p.StudentID}
 
-	claims.ExpiresAt = time.Now().Add(2 * time.Hour).Unix()
+	claims.ExpiresAt = time.Now().Add(200 * time.Hour).Unix()
 	claims.IssuedAt = time.Now().Unix()
 
 	var Secret = "vinegar" //加醋

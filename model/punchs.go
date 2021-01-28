@@ -19,3 +19,7 @@ type ListPrices struct {
 type Backdrops struct {
 	Backdrop []Backdrop `json:"backdrop"`
 }
+
+type Histories struct {
+	Histories []GoldHistory `json:"histories"`
+}
