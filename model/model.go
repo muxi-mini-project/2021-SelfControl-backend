@@ -35,16 +35,12 @@ func VerifyToken(strToken string) (string, error) {
 	}
 	claims, ok := token.Claims.(*Jwt)
 	if !ok {
-		//log.Println("errs++++++++++")
-		//log.Println(err.Error())
-		return "", errors.New(ErrorReasonReLogin + "666")
-	}
-	if err := token.Claims.Valid(); err != nil {
-		//fmt.Println(err.Error())
 		return "", errors.New(ErrorReasonReLogin)
 	}
-
-	return claims.StudentID, nil //token.Jwt 结构体类型
+	if err := token.Claims.Valid(); err != nil {
+		return "", errors.New(ErrorReasonReLogin)
+	}
+	return claims.StudentID, nil
 }
 
 func GetUserInfo(id string) User {
@@ -72,8 +68,8 @@ func GetAchievement(id string) []string {
 
 //-----------------------------------------------
 //punch:
-//Punchs 是数组结构体 punchs 是 []Punch   Punch 为 Title 与 Number 的结构体类型
-func GetPunchAndNumber(id string) Punchs {
+//Punch 为 Title 与 Number 的结构体类型
+func GetPunchAndNumber(id string) []Punch {
 	var punchs []UsersPunch
 	DB.Where("student_id = ?", id).Find(&punchs)
 	var punchs2 []Punch
@@ -83,12 +79,12 @@ func GetPunchAndNumber(id string) Punchs {
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
 	}
-	Punchs := Punchs{Punchs: punchs2}
-	return Punchs
+	//Punchs := Punchs{Punchs: punchs2}
+	return punchs2
 
 }
 
-func GetPunchs(TypeID string) Punchs2 {
+func GetPunchs(TypeID string) []Punch2 {
 	Type := Type(TypeID)
 	var punchs []PunchContent
 	DB.Where("type = ?", Type).Find(&punchs)
@@ -99,11 +95,11 @@ func GetPunchs(TypeID string) Punchs2 {
 		Punch.ID = punchs[i].ID
 		punchs2 = append(punchs2, Punch)
 	}
-	Punchs := Punchs2{Punchs: punchs2}
-	return Punchs
+	//Punchs := Punchs2{Punchs: punchs2}
+	return punchs2
 }
 
-func GetMyPunch(id string) Punchs {
+func GetMyPunch(id string) []Punch {
 	var punchs []UsersPunch
 	DB.Where("student_id = ?", id).Find(&punchs)
 	var punchs2 []Punch
@@ -113,8 +109,7 @@ func GetMyPunch(id string) Punchs {
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
 	}
-	Punchs := Punchs{Punchs: punchs2}
-	return Punchs
+	return punchs2
 }
 
 func TodayPunch(StudentId string, TitleID int) Choice {
@@ -245,18 +240,16 @@ func GetOrder(s []string) ([]UserAndNumber, string) {
 	return Numbers, ""
 }
 
-func GetListPrice() ListPrices {
+func GetListPrice() []ListPrice {
 	var prices []ListPrice
 	DB.Find(&prices)
-	Prices := ListPrices{ListPrice: prices}
-	return Prices
+	return prices
 }
 
-func GetBackdropPrice() Backdrops {
+func GetBackdropPrice() []Backdrop {
 	var backdrop []Backdrop
 	DB.Find(&backdrop)
-	Backdrops := Backdrops{Backdrop: backdrop}
-	return Backdrops
+	return backdrop
 }
 
 func ChangeRanking(id string, ranking string) (error, string) {
@@ -312,11 +305,10 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 	return result.Error, ""
 }
 
-func GetBackdrop(id string) Backdrops {
+func GetBackdrop(id string) []Backdrop {
 	var backdrops []Backdrop
 	DB.Table("users_backdrops").Where("student_id = ? ", id).First(&backdrops)
-	Backdrops := Backdrops{Backdrop: backdrops}
-	return Backdrops
+	return backdrops
 }
 
 func GetGoldHistory(id string) []GoldHistory {

@@ -31,6 +31,7 @@ func Login(c *gin.Context) {
 		model.DB.Create(&p)
 	}
 	//log.Printf(",%v======\n", p)
+
 	//增加拥有默认背景
 	var usersBackdrop model.UsersBackdrop
 	usersBackdrop.BackdropID = 1

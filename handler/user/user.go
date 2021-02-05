@@ -64,8 +64,7 @@ func GoldHistory(c *gin.Context) {
 	}
 
 	histories := model.GetGoldHistory(id)
-	Histories := model.Histories{Histories: histories}
-	c.JSON(200, Histories)
+	c.JSON(200, histories)
 }
 
 /*

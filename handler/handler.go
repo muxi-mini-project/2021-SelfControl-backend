@@ -20,8 +20,7 @@ func List(c *gin.Context) {
 		numbers2 = append(numbers2, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8], numbers[9])
 		numbers = numbers2
 	}
-	Numbers := model.UserAndNumbers{UserAndNumber: numbers}
-	c.JSON(200, Numbers)
+	c.JSON(200, numbers)
 }
 
 func ChangeRanking(c *gin.Context) {
