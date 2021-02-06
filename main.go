@@ -9,6 +9,15 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+// @title Self_Control API
+// @version 1.0.0
+// @description 自控力API
+// @termsOfService http://swagger.io/terrms/
+
+// @contact.name TAODEI
+// @contact.email 864978550@qq.com
+// @host localhost
+// @BasePath: /api/v1
 var err error
 
 func main() {
@@ -16,7 +25,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Printf("%T", model.DB)
 	//自动建表 迁移？
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()

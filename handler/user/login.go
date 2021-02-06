@@ -9,7 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Login 登录
+type Token struct {
+	Token string `json:"token"`
+}
+
+// @Summary  登录
+// @Tags user
+// @Description 学号密码登录
+// @Accept application/json
+// @Produce application/json
+// @Param object body model.User true "登录的用户信息"
+// @Success 200 {object} Token "将student_id作为token保留"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Password or account wrong."} 身份认证失败 重新登录"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user [post]
 func Login(c *gin.Context) {
 	var p model.User
 	if err := c.BindJSON(&p); err != nil {
@@ -19,18 +33,16 @@ func Login(c *gin.Context) {
 	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
 	if err != nil {
 		//c.Abort()
-		c.JSON(400, "用户名或密码错误")
+		c.JSON(401, "用户名或密码错误")
 		return
 	}
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
-		//log.Printf(",,,,,,,\n")
 		p.Gold = 0
 		p.Name = "小樨"
 		p.Privacy = true
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
 	}
-	//log.Printf(",%v======\n", p)
 
 	//增加拥有默认背景
 	var usersBackdrop model.UsersBackdrop
@@ -50,5 +62,7 @@ func Login(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 	}
-	c.JSON(200, gin.H{"token": signedToken})
+	var Token Token
+	Token.Token = signedToken
+	c.JSON(200, Token)
 }

@@ -1,0 +1,305 @@
+definitions:
+  error.Error:
+    properties:
+      error_code:
+        type: string
+      message:
+        type: string
+    type: object
+  model.Gold:
+    properties:
+      gold:
+        type: integer
+    type: object
+  model.GoldHistory:
+    properties:
+      change_number:
+        type: integer
+      reason:
+        type: string
+      residual_number:
+        type: integer
+      student_id:
+        type: string
+      time:
+        type: string
+    type: object
+  model.Privacy:
+    properties:
+      privacy:
+        type: boolean
+    type: object
+  model.Punch:
+    properties:
+      number:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.User:
+    properties:
+      gold:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      privacy:
+        type: boolean
+      student_id:
+        type: string
+      user_picture:
+        type: string
+    type: object
+  model.UserHomePage:
+    properties:
+      name:
+        type: string
+      user_picture:
+        type: string
+    type: object
+  user.Token:
+    properties:
+      token:
+        type: string
+    type: object
+host: localhost
+info:
+  contact:
+    email: 864978550@qq.com
+    name: TAODEI
+  description: 自控力API
+  termsOfService: http://swagger.io/terrms/
+  title: Self_Control API
+  version: 1.0.0
+paths:
+  /user:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            $ref: '#/definitions/model.UserHomePage'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 用户主页
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: 学号密码登录
+      parameters:
+      - description: 登录的用户信息
+        in: body
+        name: object
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 将student_id作为token保留
+          schema:
+            $ref: '#/definitions/user.Token'
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Password or account wrong."}
+            身份认证失败 重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 登录
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: 接收新的User结构体来修改用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 需要修改的用户信息
+        in: body
+        name: User
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            $ref: '#/definitions/user.Token'
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 修改用户信息
+      tags:
+      - user
+  /user/gold:
+    get:
+      consumes:
+      - application/json
+      description: 获取金币数
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户金币数
+          schema:
+            $ref: '#/definitions/model.Gold'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 金币数
+      tags:
+      - user
+  /user/goldhistory:
+    get:
+      consumes:
+      - application/json
+      description: 获取金币历史
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.GoldHistory'
+            type: array
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 金币历史
+      tags:
+      - user
+  /user/privacy:
+    get:
+      consumes:
+      - application/json
+      description: 判断该用户是否选择公开自己的打卡标签
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: bool：默认为0 若要修改隐私 直接使用修改用户信息
+          schema:
+            $ref: '#/definitions/model.Privacy'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 隐私
+      tags:
+      - user
+  /user/punch:
+    get:
+      consumes:
+      - application/json
+      description: 获取我的打卡数
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 我的打卡数
+      tags:
+      - user
+swagger: "2.0"

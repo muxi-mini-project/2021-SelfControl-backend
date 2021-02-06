@@ -7,12 +7,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary  用户主页
+// @Tags user
+// @Description 获取用户信息
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} model.UserHomePage "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user [get]
 func Homepage(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -21,11 +32,23 @@ func Homepage(c *gin.Context) {
 	c.JSON(200, UserHomePage)
 }
 
+// @Summary  修改用户信息
+// @Tags user
+// @Description 接收新的User结构体来修改用户信息
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Param User body model.User true "需要修改的用户信息"
+// @Success 200 {object} Token "修改成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user [put]
 func ChangeUserInfo(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -42,11 +65,22 @@ func ChangeUserInfo(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "修改成功"})
 }
 
+// @Summary  金币数
+// @Tags user
+// @Description 获取金币数
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} model.Gold "用户金币数"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/gold [get]
 func Gold(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -55,11 +89,22 @@ func Gold(c *gin.Context) {
 	c.JSON(200, Gold)
 }
 
+// @Summary  金币历史
+// @Tags user
+// @Description 获取金币历史
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} []model.GoldHistory "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/goldhistory [get]
 func GoldHistory(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -72,7 +117,7 @@ func Achievement(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -81,11 +126,22 @@ func Achievement(c *gin.Context) {
 	c.JSON(200, Achievement)
 }*/
 
+// @Summary  我的打卡数
+// @Tags user
+// @Description 获取我的打卡数
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} []model.Punch "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/punch [get]
 func PunchAndNumber(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -93,11 +149,22 @@ func PunchAndNumber(c *gin.Context) {
 	c.JSON(200, punchs)
 }
 
+// @Summary  隐私
+// @Tags user
+// @Description 判断该用户是否选择公开自己的打卡标签
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} model.Privacy "bool：默认为0 若要修改隐私 直接使用修改用户信息"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/privacy [get]
 func GetPrivacy(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -111,7 +178,7 @@ func ChangePrivacy(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 	var privacy bool

@@ -27,7 +27,7 @@ func ChangeRanking(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -60,7 +60,7 @@ func ChangeBackdrop(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
@@ -85,7 +85,7 @@ func MyBackdrops(c *gin.Context) {
 	id, err := model.VerifyToken(token)
 	if err != nil {
 		log.Println(err)
-		c.JSON(404, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
 		return
 	}
 
