@@ -30,7 +30,7 @@ func main() {
 	r := gin.Default()
 	routers.Router(r)
 	dbtest()
-	r.Run(":3333")
+	r.Run(":1333")
 	defer model.DB.Close()
 }
 

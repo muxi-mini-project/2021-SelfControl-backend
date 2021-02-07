@@ -27,13 +27,13 @@ type Token struct {
 func Login(c *gin.Context) {
 	var p model.User
 	if err := c.BindJSON(&p); err != nil {
-		c.JSON(400, gin.H{"message": "输入有误，格式错误"})
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
 	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
 	if err != nil {
 		//c.Abort()
-		c.JSON(401, "用户名或密码错误")
+		c.JSON(401, "Password or account wrong.")
 		return
 	}
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {

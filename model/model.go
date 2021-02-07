@@ -3,7 +3,6 @@ package model
 import (
 	//"SC/util"
 	"errors"
-	"log"
 	"strconv"
 	"time"
 
@@ -189,19 +188,11 @@ func List(Type string) ([]UserAndNumber, string) {
 	if Type == "week" {
 		//result := DB.Where("day >= ?", int(time.Now().YearDay())-7).Find(&PunchHistory)
 		DB.Table("punch_histories").Select("student_id").Where("day >= ?", int(time.Now().YearDay())-7).Scan(&PunchHistory)
-		// if result.Error != nil {
-		// 	log.Println(result.Error)
-		// } else {
-		// 	log.Println("hhhhh")
-		// }
 	}
-	log.Printf("%v--------", Type)
-	log.Printf("%v========", PunchHistory)
 	var s []string
 	for i := 0; i < len(PunchHistory); i++ {
 		s = append(s, PunchHistory[i].StudentID)
 	}
-	log.Printf("%v+++++++++\n", len(s))
 	if len(s) == 0 {
 		var a []UserAndNumber
 		return a, "未检索到该时间段的打卡信息"

@@ -6,6 +6,25 @@ definitions:
       message:
         type: string
     type: object
+  model.Backdrop:
+    properties:
+      backdrop_id:
+        type: integer
+      picture_url:
+        type: string
+      price:
+        type: integer
+    type: object
+  model.BackdropID:
+    properties:
+      backdrop_id:
+        type: integer
+    type: object
+  model.Choice:
+    properties:
+      choice:
+        type: boolean
+    type: object
   model.Gold:
     properties:
       gold:
@@ -24,6 +43,13 @@ definitions:
       time:
         type: string
     type: object
+  model.ListPrice:
+    properties:
+      price:
+        type: integer
+      ranking:
+        type: string
+    type: object
   model.Privacy:
     properties:
       privacy:
@@ -32,6 +58,30 @@ definitions:
   model.Punch:
     properties:
       number:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.Punch2:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.Ranking:
+    properties:
+      ranking:
+        type: string
+    type: object
+  model.Title:
+    properties:
+      title:
+        type: string
+    type: object
+  model.TitleAndGold:
+    properties:
+      gold:
         type: integer
       title:
         type: string
@@ -49,6 +99,13 @@ definitions:
       student_id:
         type: string
       user_picture:
+        type: string
+    type: object
+  model.UserAndNumber:
+    properties:
+      number:
+        type: integer
+      student_id:
         type: string
     type: object
   model.UserHomePage:
@@ -73,6 +130,404 @@ info:
   title: Self_Control API
   version: 1.0.0
 paths:
+  /backdrop:
+    get:
+      description: 获取背景价格
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Backdrop'
+            type: array
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 背景价格
+    put:
+      consumes:
+      - application/json
+      description: 根据背景id兑换背景
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: backdrop_id
+        in: body
+        name: backdrop_id
+        required: true
+        schema:
+          $ref: '#/definitions/model.BackdropID'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 兑换成功
+        "204":
+          description: 金币不足
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 兑换背景
+  /backdrops:
+    get:
+      consumes:
+      - application/json
+      description: 获取我的背景id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Backdrop'
+            type: array
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 我的背景
+      tags:
+      - user
+  /list:
+    put:
+      consumes:
+      - application/json
+      description: 根据url末尾接收到的排名（第一名/第二名）
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: ranking
+        in: body
+        name: ranking
+        required: true
+        schema:
+          $ref: '#/definitions/model.Ranking'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 兑换成功
+        "204":
+          description: 金币不足
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 兑换排名
+  /list/:type:
+    get:
+      description: url最后面+week或month查询数据
+      parameters:
+      - description: type
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取前十用户
+          schema:
+            items:
+              $ref: '#/definitions/model.UserAndNumber'
+            type: array
+        "204":
+          description: 未检索到该时间段的打卡信息
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 排行榜数据
+  /listprice:
+    get:
+      consumes:
+      - application/json
+      description: 获取排名兑换价格
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.ListPrice'
+            type: array
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 排名兑换价格
+  /punch:
+    delete:
+      consumes:
+      - application/json
+      description: 获取金币历史
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: title
+        in: body
+        name: title
+        required: true
+        schema:
+          $ref: '#/definitions/model.Punch2'
+      - description: id
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/model.Punch2'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+        "204":
+          description: 删除失败,用户未选择该标签
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 金币历史
+      tags:
+      - punch
+    get:
+      consumes:
+      - application/json
+      description: 获取我的打卡（标签）
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 我的打卡
+      tags:
+      - punch
+    post:
+      consumes:
+      - application/json
+      description: 完成该用户今天的该打卡
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 卡的Title和完成本次打卡得到的金币数
+        in: body
+        name: title_and_gold
+        required: true
+        schema:
+          $ref: '#/definitions/model.TitleAndGold'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 打卡成功
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 完成打卡
+      tags:
+      - punch
+  /punch/create:
+    post:
+      consumes:
+      - application/json
+      description: 该用户新增一个打卡任务
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: title
+        in: body
+        name: title
+        required: true
+        schema:
+          $ref: '#/definitions/model.Title'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 新增标签成功
+        "204":
+          description: 该标签已选择
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 增加标签
+      tags:
+      - punch
+  /punch/today/:title_id:
+    get:
+      consumes:
+      - application/json
+      description: 在url末尾获取打卡的id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: title_id
+        in: path
+        name: title_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功（未打卡为false）
+          schema:
+            $ref: '#/definitions/model.Choice'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 判断今天是否已打卡
+      tags:
+      - punch
+  /punchs/type_id:
+    get:
+      description: 在url末尾获取类型id（1：健康 2：运动 3：学习）
+      parameters:
+      - description: type_id
+        in: path
+        name: type_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Punch2'
+            type: array
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 当前类型所有打卡
+      tags:
+      - punch
   /user:
     get:
       consumes:
@@ -159,8 +614,6 @@ paths:
       responses:
         "200":
           description: 修改成功
-          schema:
-            $ref: '#/definitions/user.Token'
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
             "message":"Lack Param Or Param Not Satisfiable."}'

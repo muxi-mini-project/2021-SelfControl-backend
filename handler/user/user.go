@@ -23,7 +23,7 @@ func Homepage(c *gin.Context) {
 	id, err := model.VerifyToken(token)
 	if err != nil {
 		fmt.Println(err)
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -39,7 +39,7 @@ func Homepage(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param User body model.User true "需要修改的用户信息"
-// @Success 200 {object} Token "修改成功"
+// @Success 200 "修改成功"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -48,13 +48,13 @@ func ChangeUserInfo(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
 	var user model.User
 	if err := c.BindJSON(&user); err != nil {
-		c.JSON(400, gin.H{"message": "输入有误，格式错误"})
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
 	user.StudentID = id
@@ -80,7 +80,7 @@ func Gold(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -104,7 +104,7 @@ func GoldHistory(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -117,7 +117,7 @@ func Achievement(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -141,7 +141,7 @@ func PunchAndNumber(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -164,7 +164,7 @@ func GetPrivacy(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
@@ -178,7 +178,7 @@ func ChangePrivacy(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
 	if err != nil {
-		c.JSON(401, gin.H{"message": "找不到该用户信息，请先登录"})
+		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 	var privacy bool
