@@ -120,7 +120,7 @@ definitions:
       token:
         type: string
     type: object
-host: localhost
+host: 124.71.184.107
 info:
   contact:
     email: 864978550@qq.com
@@ -262,7 +262,7 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 兑换排名
-  /list/:type:
+  /list/{type}:
     get:
       description: url最后面+week或month查询数据
       parameters:
@@ -322,15 +322,9 @@ paths:
         name: token
         required: true
         type: string
-      - description: title
+      - description: 需要删除的打卡title
         in: body
         name: title
-        required: true
-        schema:
-          $ref: '#/definitions/model.Punch2'
-      - description: id
-        in: body
-        name: id
         required: true
         schema:
           $ref: '#/definitions/model.Punch2'
@@ -468,7 +462,7 @@ paths:
       summary: 增加标签
       tags:
       - punch
-  /punch/today/:title_id:
+  /punch/today/{title_id}:
     get:
       consumes:
       - application/json
@@ -503,7 +497,7 @@ paths:
       summary: 判断今天是否已打卡
       tags:
       - punch
-  /punchs/type_id:
+  /punchs/{type_id}:
     get:
       description: 在url末尾获取类型id（1：健康 2：运动 3：学习）
       parameters:
@@ -755,4 +749,6 @@ paths:
       summary: 我的打卡数
       tags:
       - user
+schemes:
+- http
 swagger: "2.0"

@@ -18,7 +18,7 @@ import (
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punchs/type_id [get]
+// @Router /punchs/{type_id} [get]
 func Punchs(c *gin.Context) {
 	TypeID := c.Param("type_id")
 	punchs := model.GetPunchs(TypeID)
@@ -59,7 +59,7 @@ func MyPunch(c *gin.Context) {
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/today/:title_id [get]
+// @Router /punch/today/{title_id} [get]
 func TodayPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
@@ -157,8 +157,7 @@ func CreatePunch(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Param title body model.Punch2 true "title"
-// @Param id body model.Punch2 true "id"
+// @Param title body model.Punch2 true "需要删除的打卡title"
 // @Success 200 "删除成功"
 // @Failure 204 "删除失败,用户未选择该标签"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"

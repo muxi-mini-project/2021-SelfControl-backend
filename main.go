@@ -9,19 +9,20 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+var err error
+
 // @title Self_Control API
 // @version 1.0.0
 // @description 自控力API
 // @termsOfService http://swagger.io/terrms/
-
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
-// @host localhost
+// @host 124.71.184.107
 // @BasePath: /api/v1
-var err error
+// @Schemes http
 
 func main() {
-	model.DB, err = gorm.Open("mysql", "tao:12345678@(127.0.0.1:3306)/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +31,7 @@ func main() {
 	r := gin.Default()
 	routers.Router(r)
 	dbtest()
-	r.Run(":1333")
+	r.Run(":2333")
 	defer model.DB.Close()
 }
 

@@ -17,7 +17,7 @@ import (
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /list/:type [get]
+// @Router /list/{type} [get]
 func List(c *gin.Context) {
 	Type := c.Param("type")
 	numbers, message := model.List(Type)

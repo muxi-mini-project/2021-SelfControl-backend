@@ -220,7 +220,7 @@ var doc = `{
                 }
             }
         },
-        "/list/:type": {
+        "/list/{type}": {
             "get": {
                 "description": "url最后面+week或month查询数据",
                 "produces": [
@@ -414,17 +414,8 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "title",
+                        "description": "需要删除的打卡title",
                         "name": "title",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Punch2"
-                        }
-                    },
-                    {
-                        "description": "id",
-                        "name": "id",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -519,7 +510,7 @@ var doc = `{
                 }
             }
         },
-        "/punch/today/:title_id": {
+        "/punch/today/{title_id}": {
             "get": {
                 "description": "在url末尾获取打卡的id",
                 "consumes": [
@@ -570,7 +561,7 @@ var doc = `{
                 }
             }
         },
-        "/punchs/type_id": {
+        "/punchs/{type_id}": {
             "get": {
                 "description": "在url末尾获取类型id（1：健康 2：运动 3：学习）",
                 "produces": [
@@ -1145,9 +1136,9 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0.0",
-	Host:        "localhost",
+	Host:        "124.71.184.107",
 	BasePath:    "",
-	Schemes:     []string{},
+	Schemes:     []string{"http"},
 	Title:       "Self_Control API",
 	Description: "自控力API",
 }
