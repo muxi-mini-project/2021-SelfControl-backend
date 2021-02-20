@@ -101,11 +101,11 @@ func dbtest() {
 	listPrice2.Ranking = "第二名"
 
 	lstao.StudentID = "2020213675"
-	lstao.Name = "滔DEI"
+	lstao.Name = "TAODEI"
 	lstao.Gold = 520
 	lstao.Password = "2333333"
 	lstao.UserPicture = "www.muxi.com"
-	lstao.Privacy = false
+	lstao.Privacy = 1
 
 	model.DB.Create(&backdrop1)
 	model.DB.Create(&backdrop2)

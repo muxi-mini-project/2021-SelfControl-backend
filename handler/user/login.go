@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
 		p.Gold = 0
 		p.Name = "小樨"
-		p.Privacy = true
+		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
 	}

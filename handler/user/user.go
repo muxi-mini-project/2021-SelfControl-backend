@@ -57,6 +57,10 @@ func ChangeUserInfo(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
+	if user.Privacy != 0 || user.Privacy != 1 {
+		c.JSON(400, gin.H{"message": "Privacy参数错误(0 = 公开， 1 = 不公开)"})
+		return
+	}
 	user.StudentID = id
 	if err := model.UpdateUserInfo(user); err != nil {
 		c.JSON(400, gin.H{"message": "更新失败"})
@@ -155,7 +159,7 @@ func PunchAndNumber(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Success 200 {object} model.Privacy "bool：默认为0 若要修改隐私 直接使用修改用户信息"
+// @Success 200 {object} model.Privacy "bool：默认为1 若要修改隐私 直接使用修改用户信息"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"

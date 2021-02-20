@@ -8,7 +8,7 @@ type User struct {
 	Password    string `json:"password"`
 	UserPicture string `json:"user_picture"`
 	Gold        int    `json:"gold"`
-	Privacy     bool   `json:"privacy"`
+	Privacy     int    `json:"privacy"`
 }
 
 type GoldHistory struct {

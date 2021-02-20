@@ -30,7 +30,7 @@ type Punch2 struct {
 }
 
 type Privacy struct {
-	Privacy bool `json:"privacy"`
+	Privacy int `json:"privacy"`
 }
 
 type UserAndNumber struct {

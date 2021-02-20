@@ -1,3 +1,4 @@
+Create database Self_Control;
 Use Self_Control
 
 DROP TABLE IF EXISTS users;
@@ -7,7 +8,7 @@ create table users(
   user_picture varchar(100) not null ,
   gold         int          not null ,
   name         varchar(100) not null ,
-  privacy      boolean      not null ,
+  privacy      int          not null ,
   primary key (student_id)
 )ENGINE=InnoDB;
 
