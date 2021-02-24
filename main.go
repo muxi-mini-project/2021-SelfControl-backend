@@ -22,7 +22,7 @@ var err error
 // @Schemes http
 
 func main() {
-	model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
 	if err != nil {
 		panic(err)
 	}
@@ -40,6 +40,8 @@ func dbtest() {
 		backdrop1 model.Backdrop
 		backdrop2 model.Backdrop
 		backdrop3 model.Backdrop
+		backdrop4 model.Backdrop
+		backdrop5 model.Backdrop
 
 		punch1_1  = model.PunchContent{Type: "健康", Title: "吃水果"}
 		punch1_2  = model.PunchContent{Type: "健康", Title: "吃早餐"}
@@ -73,17 +75,18 @@ func dbtest() {
 		punch3_9  = model.PunchContent{Type: "学习", Title: "练字"}
 		punch3_10 = model.PunchContent{Type: "学习", Title: "英语阅读训练"}
 
-		listPrice1 model.ListPrice
-		listPrice2 model.ListPrice
-
 		lstao model.User
 	)
 	backdrop1.PictureUrl = "www.4399.com"
-	backdrop1.Price = 520
+	backdrop1.Price = 50
 	backdrop2.PictureUrl = "www.7k7k.com"
-	backdrop2.Price = 5
+	backdrop2.Price = 50
 	backdrop3.PictureUrl = "www.3839.com"
-	backdrop3.Price = 4
+	backdrop3.Price = 100
+	backdrop4.PictureUrl = "www.bilibili.com"
+	backdrop4.Price = 100
+	backdrop5.PictureUrl = "www.cf.qq.com"
+	backdrop5.Price = 100
 
 	// punch1.Content = "听分享时睡觉"
 	// punch1.Title = "睡觉"
@@ -95,11 +98,6 @@ func dbtest() {
 	// punch3.Title = "滑水"
 	// punch3.Type = "学习"
 
-	listPrice1.Price = 5
-	listPrice1.Ranking = "第一名"
-	listPrice2.Price = 4
-	listPrice2.Ranking = "第二名"
-
 	lstao.StudentID = "2020213675"
 	lstao.Name = "TAODEI"
 	lstao.Gold = 520
@@ -110,6 +108,8 @@ func dbtest() {
 	model.DB.Create(&backdrop1)
 	model.DB.Create(&backdrop2)
 	model.DB.Create(&backdrop3)
+	model.DB.Create(&backdrop4)
+	model.DB.Create(&backdrop5)
 
 	model.DB.Create(&punch1_1)
 	model.DB.Create(&punch1_2)
@@ -141,7 +141,5 @@ func dbtest() {
 	model.DB.Create(&punch3_9)
 	model.DB.Create(&punch3_10)
 
-	model.DB.Create(&listPrice1)
-	model.DB.Create(&listPrice2)
 	model.DB.Create(&lstao)
 }

@@ -68,22 +68,6 @@ func ChangeRanking(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "兑换成功"})
 }
 
-// @Summary  排名兑换价格
-// Tags user
-// @Description 获取排名兑换价格
-// @Accept application/json
-// @Produce application/json
-// Param token header string true "token"
-// @Success 200 {object} []model.ListPrice "获取成功"
-// Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
-// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
-// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /listprice [get]
-func ListPrice(c *gin.Context) {
-	prices := model.GetListPrice()
-	c.JSON(200, prices)
-}
-
 // @Summary  背景价格
 // Tags user
 // @Description 获取背景价格

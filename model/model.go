@@ -231,38 +231,31 @@ func GetOrder(s []string) ([]UserAndNumber, string) {
 	return Numbers, ""
 }
 
-func GetListPrice() []ListPrice {
-	var prices []ListPrice
-	DB.Find(&prices)
-	return prices
-}
-
 func GetBackdropPrice() []Backdrop {
 	var backdrop []Backdrop
 	DB.Find(&backdrop)
 	return backdrop
 }
 
-func ChangeRanking(id string, ranking string) (error, string) {
-	var listPrice ListPrice
-	DB.Where("ranking = ? ", ranking).First(&listPrice)
+func ChangeRanking(id string, ranking int) (error, string) {
+	gold := 48 + ranking*2
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
-	if user.Gold < listPrice.Price {
+	if user.Gold < gold {
 		return nil, "金币不足"
 	}
 
 	//修改用户金币
-	DB.Model(&user).Update("gold", user.Gold-listPrice.Price)
+	DB.Model(&user).Update("gold", user.Gold-gold)
 
 	//创建金币历史
-	price := listPrice.Price
+	price := gold
 	history := GoldHistory{
 		StudentID:      id,
 		Time:           time.Now(),
 		ChangeNumber:   -price,
 		ResidualNumber: user.Gold,
-		Reason:         "兑换排名：" + ranking,
+		Reason:         "兑换排名:前进" + string(ranking) + "名",
 	}
 	result := DB.Create(&history)
 	return result.Error, ""
@@ -287,7 +280,6 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 		ResidualNumber: user.Gold,
 		Reason:         "兑换背景 " + s,
 	}
-	//log.Printf("%v+++++++++\n---%v\n", BackdropID, backdrop.Price)
 	DB.Create(&history)
 	var usersBackdrop UsersBackdrop
 	usersBackdrop.BackdropID = BackdropID

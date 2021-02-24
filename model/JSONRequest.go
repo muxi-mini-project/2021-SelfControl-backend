@@ -5,7 +5,7 @@ type Title struct {
 }
 
 type Ranking struct {
-	Ranking string `json:"ranking"`
+	Ranking int `json:"ranking"`
 }
 
 type TitleAndGold struct {

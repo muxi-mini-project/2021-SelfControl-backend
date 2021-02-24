@@ -60,13 +60,6 @@ create table users_punches(
   primary key (id)
 )ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS list_prices;
-create table list_prices(
-  ranking varchar(100) not null ,
-  price   int          not null ,
-  primary key (ranking)
-)ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS users_backdrops;
 create table users_backdrops(
   id          int          not null auto_increment ,

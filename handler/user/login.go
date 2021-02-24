@@ -30,12 +30,12 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	_, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
-	if err != nil {
-		//c.Abort()
-		c.JSON(401, "Password or account wrong.")
-		return
-	}
+	// _, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
+	// if err != nil {
+	// 	//c.Abort()
+	// 	c.JSON(401, "Password or account wrong.")
+	// 	return
+	// }
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
 		p.Gold = 0
 		p.Name = "小樨"

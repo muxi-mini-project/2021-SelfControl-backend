@@ -54,11 +54,6 @@ type UsersPunch struct {
 	Number    int    `json:"number"`
 }
 
-type ListPrice struct {
-	Ranking string `json:"ranking"`
-	Price   int    `json:"price"`
-}
-
 type UsersBackdrop struct {
 	ID         int    `json:"id"`
 	StudentID  string `json:"student_id"`

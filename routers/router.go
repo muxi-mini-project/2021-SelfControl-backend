@@ -28,9 +28,6 @@ func Router(r *gin.Engine) {
 		//金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
 
-		//成就
-		//g1.GET("/achievement", user.Achievement)
-
 		//用户打卡数
 		g1.GET("/punch", user.PunchAndNumber)
 
@@ -65,9 +62,6 @@ func Router(r *gin.Engine) {
 
 	//兑换排名
 	r.PUT("/api/v1/list", handler.ChangeRanking)
-
-	//排名兑换价格
-	r.GET("/api/v1/listprice", handler.ListPrice)
 
 	//背景价格
 	r.GET("/api/v1/backdrop", handler.BackdropPrice)
