@@ -30,18 +30,26 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	// _, err := model.GetUserInfoFormOne(p.StudentID, p.Password)
-	// if err != nil {
-	// 	//c.Abort()
-	// 	c.JSON(401, "Password or account wrong.")
-	// 	return
-	// }
+
+	pwd := p.Password
+	//首次登录 验证一站式
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
+		_, err := model.GetUserInfoFormOne(p.StudentID, pwd)
+		if err != nil {
+			//c.Abort()
+			c.JSON(401, "Password or account wrong.")
+			return
+		}
 		p.Gold = 0
 		p.Name = "小樨"
 		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
+	} else {
+		if p.Password != pwd {
+			c.JSON(401, "Password or account wrong.")
+			return
+		}
 	}
 
 	//增加拥有默认背景
