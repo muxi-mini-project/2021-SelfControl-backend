@@ -16,14 +16,11 @@ func Router(r *gin.Engine) {
 		//登陆
 		g1.POST("/", user.Login)
 
-		//用户主页
-		g1.GET("/", user.Homepage)
+		//用户信息
+		g1.GET("/", user.UserInfo)
 
 		//修改用户信息
 		g1.PUT("/", user.ChangeUserInfo)
-
-		//金币数
-		g1.GET("/gold", user.Gold)
 
 		//金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
@@ -31,8 +28,8 @@ func Router(r *gin.Engine) {
 		//用户打卡数
 		g1.GET("/punch", user.PunchAndNumber)
 
-		//获取当前隐私
-		g1.GET("/privacy", user.GetPrivacy)
+		//获取某用户隐私
+		g1.GET("/privacy/:id", user.GetPrivacy)
 
 	}
 

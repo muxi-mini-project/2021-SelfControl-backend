@@ -13,7 +13,7 @@ import (
 // @Produce application/json
 // @Param type path string true "type"
 // @Success 200 {object} []model.UserAndNumber "获取前十用户"
-// @Failure 204 "未检索到该时间段的打卡信息"
+// @Failure 203 "未检索到该时间段的打卡信息"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -34,13 +34,13 @@ func List(c *gin.Context) {
 }
 
 // @Summary  兑换排名
-// @Description 根据url末尾接收到的排名（第一名/第二名）
+// @Description 需要前进的排名
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
 // @Param ranking body model.Ranking true "ranking"
 // @Success 200 "兑换成功"
-// @Failure 204 "金币不足"
+// @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -54,12 +54,13 @@ func ChangeRanking(c *gin.Context) {
 	}
 
 	var ranking model.Ranking
-	if err := c.BindJSON(&ranking); err != nil {
+	if err := c.BindJSON(&ranking); err != nil || ranking.Ranking < 1 || ranking.Ranking > 10 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
 	if err, message := model.ChangeRanking(id, ranking.Ranking); message != "" {
-		c.JSON(204, gin.H{"message": "金币不足"})
+		c.JSON(203, gin.H{"message": "金币不足"})
+		return
 	} else if err != nil {
 		c.JSON(400, gin.H{"message": "Fail."})
 		log.Println(err)
@@ -92,7 +93,7 @@ func BackdropPrice(c *gin.Context) {
 // @Param token header string true "token"
 // @Param backdrop_id body model.BackdropID true "backdrop_id"
 // @Success 200 "兑换成功"
-// @Failure 204 "金币不足"
+// @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -108,7 +109,8 @@ func ChangeBackdrop(c *gin.Context) {
 	var b model.BackdropID
 	c.BindJSON(&b)
 	if err, message := model.ChangeBackdrop(id, b.BackdropID); message != "" {
-		c.JSON(400, gin.H{"message": "金币不足"})
+		c.JSON(203, gin.H{"message": "金币不足"})
+		return
 	} else if err != nil {
 		log.Println(err)
 		c.JSON(400, gin.H{"message": "Fail."})

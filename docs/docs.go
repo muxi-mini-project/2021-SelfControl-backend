@@ -93,7 +93,7 @@ var doc = `{
                     "200": {
                         "description": "兑换成功"
                     },
-                    "204": {
+                    "203": {
                         "description": "金币不足"
                     },
                     "400": {
@@ -166,7 +166,7 @@ var doc = `{
         },
         "/list": {
             "put": {
-                "description": "根据url末尾接收到的排名（第一名/第二名）",
+                "description": "需要前进的排名",
                 "consumes": [
                     "application/json"
                 ],
@@ -196,7 +196,7 @@ var doc = `{
                     "200": {
                         "description": "兑换成功"
                     },
-                    "204": {
+                    "203": {
                         "description": "金币不足"
                     },
                     "400": {
@@ -246,42 +246,13 @@ var doc = `{
                             }
                         }
                     },
-                    "204": {
+                    "203": {
                         "description": "未检索到该时间段的打卡信息"
                     },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
                         "schema": {
                             "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/listprice": {
-            "get": {
-                "description": "获取排名兑换价格",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "排名兑换价格",
-                "responses": {
-                    "200": {
-                        "description": "获取成功",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.ListPrice"
-                            }
                         }
                     },
                     "500": {
@@ -611,7 +582,7 @@ var doc = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "用户主页",
+                "summary": "用户信息",
                 "parameters": [
                     {
                         "type": "string",
@@ -625,7 +596,7 @@ var doc = `{
                     "200": {
                         "description": "获取成功",
                         "schema": {
-                            "$ref": "#/definitions/model.UserHomePage"
+                            "$ref": "#/definitions/model.User"
                         }
                     },
                     "401": {
@@ -747,50 +718,6 @@ var doc = `{
                 }
             }
         },
-        "/user/gold": {
-            "get": {
-                "description": "获取金币数",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "金币数",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用户金币数",
-                        "schema": {
-                            "$ref": "#/definitions/model.Gold"
-                        }
-                    },
-                    "401": {
-                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/user/goldhistory": {
             "get": {
                 "description": "获取金币历史",
@@ -838,7 +765,7 @@ var doc = `{
                 }
             }
         },
-        "/user/privacy": {
+        "/user/privacy/{id}": {
             "get": {
                 "description": "判断该用户是否选择公开自己的打卡标签",
                 "consumes": [
@@ -853,16 +780,16 @@ var doc = `{
                 "summary": "隐私",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
                         "required": true
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "bool：默认为0 若要修改隐私 直接使用修改用户信息",
+                        "description": "bool：默认为1 若要修改隐私 直接使用修改用户信息",
                         "schema": {
                             "$ref": "#/definitions/model.Privacy"
                         }
@@ -972,14 +899,6 @@ var doc = `{
                 }
             }
         },
-        "model.Gold": {
-            "type": "object",
-            "properties": {
-                "gold": {
-                    "type": "integer"
-                }
-            }
-        },
         "model.GoldHistory": {
             "type": "object",
             "properties": {
@@ -1000,22 +919,11 @@ var doc = `{
                 }
             }
         },
-        "model.ListPrice": {
-            "type": "object",
-            "properties": {
-                "price": {
-                    "type": "integer"
-                },
-                "ranking": {
-                    "type": "string"
-                }
-            }
-        },
         "model.Privacy": {
             "type": "object",
             "properties": {
                 "privacy": {
-                    "type": "boolean"
+                    "type": "integer"
                 }
             }
         },
@@ -1045,7 +953,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "ranking": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -1081,7 +989,7 @@ var doc = `{
                     "type": "string"
                 },
                 "privacy": {
-                    "type": "boolean"
+                    "type": "integer"
                 },
                 "student_id": {
                     "type": "string"
@@ -1098,17 +1006,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "student_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.UserHomePage": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "user_picture": {
                     "type": "string"
                 }
             }

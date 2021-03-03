@@ -25,11 +25,6 @@ definitions:
       choice:
         type: boolean
     type: object
-  model.Gold:
-    properties:
-      gold:
-        type: integer
-    type: object
   model.GoldHistory:
     properties:
       change_number:
@@ -43,17 +38,10 @@ definitions:
       time:
         type: string
     type: object
-  model.ListPrice:
-    properties:
-      price:
-        type: integer
-      ranking:
-        type: string
-    type: object
   model.Privacy:
     properties:
       privacy:
-        type: boolean
+        type: integer
     type: object
   model.Punch:
     properties:
@@ -72,7 +60,7 @@ definitions:
   model.Ranking:
     properties:
       ranking:
-        type: string
+        type: integer
     type: object
   model.Title:
     properties:
@@ -95,7 +83,7 @@ definitions:
       password:
         type: string
       privacy:
-        type: boolean
+        type: integer
       student_id:
         type: string
       user_picture:
@@ -106,13 +94,6 @@ definitions:
       number:
         type: integer
       student_id:
-        type: string
-    type: object
-  model.UserHomePage:
-    properties:
-      name:
-        type: string
-      user_picture:
         type: string
     type: object
   user.Token:
@@ -174,7 +155,7 @@ paths:
       responses:
         "200":
           description: 兑换成功
-        "204":
+        "203":
           description: 金币不足
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
@@ -227,7 +208,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: 根据url末尾接收到的排名（第一名/第二名）
+      description: 需要前进的排名
       parameters:
       - description: token
         in: header
@@ -245,7 +226,7 @@ paths:
       responses:
         "200":
           description: 兑换成功
-        "204":
+        "203":
           description: 金币不足
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
@@ -280,7 +261,7 @@ paths:
             items:
               $ref: '#/definitions/model.UserAndNumber'
             type: array
-        "204":
+        "203":
           description: 未检索到该时间段的打卡信息
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
@@ -292,25 +273,6 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 排行榜数据
-  /listprice:
-    get:
-      consumes:
-      - application/json
-      description: 获取排名兑换价格
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            items:
-              $ref: '#/definitions/model.ListPrice'
-            type: array
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 排名兑换价格
   /punch:
     delete:
       consumes:
@@ -539,7 +501,7 @@ paths:
         "200":
           description: 获取成功
           schema:
-            $ref: '#/definitions/model.UserHomePage'
+            $ref: '#/definitions/model.User'
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -549,7 +511,7 @@ paths:
           description: '{"error_code":"30001", "message":"Fail."} 失败'
           schema:
             $ref: '#/definitions/error.Error'
-      summary: 用户主页
+      summary: 用户信息
       tags:
       - user
     post:
@@ -625,36 +587,6 @@ paths:
       summary: 修改用户信息
       tags:
       - user
-  /user/gold:
-    get:
-      consumes:
-      - application/json
-      description: 获取金币数
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 用户金币数
-          schema:
-            $ref: '#/definitions/model.Gold'
-        "401":
-          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
-            重新登录'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 金币数
-      tags:
-      - user
   /user/goldhistory:
     get:
       consumes:
@@ -687,22 +619,22 @@ paths:
       summary: 金币历史
       tags:
       - user
-  /user/privacy:
+  /user/privacy/{id}:
     get:
       consumes:
       - application/json
       description: 判断该用户是否选择公开自己的打卡标签
       parameters:
-      - description: token
-        in: header
-        name: token
+      - description: id
+        in: path
+        name: id
         required: true
-        type: string
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: bool：默认为0 若要修改隐私 直接使用修改用户信息
+          description: bool：默认为1 若要修改隐私 直接使用修改用户信息
           schema:
             $ref: '#/definitions/model.Privacy'
         "401":

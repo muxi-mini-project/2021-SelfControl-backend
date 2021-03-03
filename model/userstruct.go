@@ -7,17 +7,9 @@ type UserHomePage struct {
 	UserPicture string `json:"user_picture"`
 }
 
-type Gold struct {
-	Gold int `json:"gold"`
-}
-
 type Choice struct {
 	Choice bool `json:"choice"`
 }
-
-//type Achievements struct {
-//	Achievements []string `json:"achievements"`
-//}
 
 type Punch struct {
 	Title  string `json:"title"`

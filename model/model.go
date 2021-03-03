@@ -42,10 +42,10 @@ func VerifyToken(strToken string) (string, error) {
 	return claims.StudentID, nil
 }
 
-func GetUserInfo(id string) User {
+func GetUserInfo(id string) (error, User) {
 	var u User
-	DB.Where("student_id = ?", id).First(&u)
-	return u
+	result := DB.Where("student_id = ?", id).First(&u)
+	return result.Error, u
 }
 
 func UpdateUserInfo(user User) error {

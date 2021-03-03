@@ -22,7 +22,8 @@ var err error
 // @Schemes http
 
 func main() {
-	model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
+	//model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
 	if err != nil {
 		panic(err)
 	}
