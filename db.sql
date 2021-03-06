@@ -1,23 +1,26 @@
+Create database Self_Control;
+Use Self_Control
 
 DROP TABLE IF EXISTS users;
 create table users(
   student_id   varchar(100)	not null UNIQUE,
   password     varchar(100) not null ,
-  user_picture varchar(100) ,
-  gold         int          default 0 ,
-  name         varchar(100) default "小樨",
-  privacy      boolean      default true,
+  user_picture varchar(100) not null ,
+  gold         int          not null ,
+  name         varchar(100) not null ,
+  privacy      int          not null ,
   primary key (student_id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS gold_histories;
 create table gold_histories(
+  id              int          not null auto_increment ,
   student_id	    varchar(100) not null ,
   time			      datetime     not null ,
   change_number   int          not null ,
   residual_number int		       not null ,
   reason          varchar(200) not null ,
-  primary key (student_id)
+  primary key (id)
 )ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS backdrops;
@@ -34,33 +37,33 @@ create table punch_histories(
   student_id varchar(100) not null ,
   title      varchar(100) not null ,
   time       datetime     not null ,
+  day        int          not null ,
+  month      int          not null ,
   primary key (id)
 )ENGINE=InnoDB; 
 
-DROP TABLE IF EXISTS achievements;
-create table achievements(
-  student_id  varchar(100) not null ,
-  achievement text ,
-  primary key (student_id)
-)ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS punch_contents;
 create table punch_contents(
+  id          int          not null auto_increment ,
   type        varchar(100) not null ,
   title       varchar(100) not null UNIQUE ,
-  content     text ,
-  picture_url varchar(100) not null UNIQUE ,
-  primary key (title)
-)ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS users_punchs;
-create table users_punchs(
-  id         int          not null auto_increment ,
-  student_id varchar(100) not null ,
-  title      varchar(100) not null ,
-  number     int          default 0,
+  content     varchar(100) ,
   primary key (id)
 )ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS users_punches;
+create table users_punches(
+  id         int          not null auto_increment ,
+  student_id varchar(100) not null ,
+  title      varchar(100) not null ,
+  number     int          not null default 0,
+  primary key (id)
+)ENGINE=InnoDB;
 
-
+DROP TABLE IF EXISTS users_backdrops;
+create table users_backdrops(
+  id          int          not null auto_increment ,
+  student_id  varchar(100) not null ,
+  backdrop_id varchar(100) not null ,
+  primary key (id)
+)ENGINE=InnoDB;
