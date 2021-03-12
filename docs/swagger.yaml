@@ -424,6 +424,41 @@ paths:
       summary: 增加标签
       tags:
       - punch
+  /punch/punch/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
+        "203":
+          description: 未找到该用户
+        "204":
+          description: 获取失败,用户未公开标签
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 获取某用户标签
+      tags:
+      - punch
   /punch/today/{title_id}:
     get:
       consumes:
@@ -502,6 +537,10 @@ paths:
           description: 获取成功
           schema:
             $ref: '#/definitions/model.User'
+        "203":
+          description: '{"error_code":"20001", "message":"Fail."}'
+          schema:
+            $ref: '#/definitions/error.Error'
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -637,6 +676,8 @@ paths:
           description: bool：默认为1 若要修改隐私 直接使用修改用户信息
           schema:
             $ref: '#/definitions/model.Privacy'
+        "203":
+          description: 未找到该用户
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'

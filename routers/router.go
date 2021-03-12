@@ -52,6 +52,9 @@ func Router(r *gin.Engine) {
 
 		//移除标签
 		g2.DELETE("/", handler.DeletePunch)
+
+		//获取某用户标签
+		g1.GET("/punch/:id", handler.GetPunchs)
 	}
 	//default:
 	//排行榜

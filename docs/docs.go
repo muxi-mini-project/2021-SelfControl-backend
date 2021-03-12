@@ -481,6 +481,58 @@ var doc = `{
                 }
             }
         },
+        "/punch/punch/{id}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "获取某用户标签",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
+                        }
+                    },
+                    "203": {
+                        "description": "未找到该用户"
+                    },
+                    "204": {
+                        "description": "获取失败,用户未公开标签"
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/punch/today/{title_id}": {
             "get": {
                 "description": "在url末尾获取打卡的id",
@@ -597,6 +649,12 @@ var doc = `{
                         "description": "获取成功",
                         "schema": {
                             "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "203": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
                         }
                     },
                     "401": {
@@ -793,6 +851,9 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/model.Privacy"
                         }
+                    },
+                    "203": {
+                        "description": "未找到该用户"
                     },
                     "401": {
                         "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
