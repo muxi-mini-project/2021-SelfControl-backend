@@ -17,7 +17,7 @@ var err error
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
-// @host 124.71.184.107
+// @host 39.102.42.156
 // @BasePath: /api/v1
 // @Schemes http
 
