@@ -50,7 +50,7 @@ func GetUserInfo(id string) (error, User) {
 
 func UpdateUserInfo(user User) error {
 	var u User
-	result := DB.Model(&u).Update(user)
+	result := DB.Model(&u).Where("student_id = ?", user.StudentID).Update(user)
 	return result.Error
 }
 
@@ -144,7 +144,7 @@ func CompletePunch(id string, title string, gold int) error {
 	//修改用户金币
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
-	DB.Model(&user).Update("gold", gold+user.Gold)
+	DB.Model(&user).Where("student_id = ? ", id).Update("gold", gold+user.Gold)
 	// var u User
 	// u = user
 	// u.Gold += gold
@@ -246,7 +246,7 @@ func ChangeRanking(id string, ranking int) (error, string) {
 	}
 
 	//修改用户金币
-	DB.Model(&user).Update("gold", user.Gold-gold)
+	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-gold)
 
 	//创建金币历史
 	price := gold
@@ -270,7 +270,7 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 		return nil, "金币不足"
 	}
 	//修改用户金币
-	DB.Model(&user).Update("gold", user.Gold-backdrop.Price)
+	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-backdrop.Price)
 	//创建金币历史
 	s := strconv.Itoa(backdrop.BackdropID)
 	history := GoldHistory{

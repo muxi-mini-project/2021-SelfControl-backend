@@ -1095,7 +1095,7 @@ type swaggerInfo struct {
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0.0",
 	Host:        "39.102.42.156",
-	BasePath:    "",
+	BasePath:    "/api/v1",
 	Schemes:     []string{"http"},
 	Title:       "Self_Control API",
 	Description: "自控力API",

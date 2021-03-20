@@ -18,7 +18,7 @@ var err error
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
 // @host 39.102.42.156
-// @BasePath: /api/v1
+// @BasePath /api/v1
 // @Schemes http
 
 func main() {
