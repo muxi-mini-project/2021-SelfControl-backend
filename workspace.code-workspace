@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../2021-TheEventsGarden-backend"
+		},
+		{
+			"path": "../2021-ZeroGravity-backend"
+		},
+		{
+			"path": "../LoginCCNU"
+		},
+		{
+			"path": "../go_practice"
+		}
+	],
+	"settings": {}
+}

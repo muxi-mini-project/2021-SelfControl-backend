@@ -40,23 +40,23 @@ func Login(c *gin.Context) {
 			c.JSON(401, "Password or account wrong.")
 			return
 		}
+		p.CurrentBackdrop = 0
 		p.Gold = 0
 		p.Name = "小樨"
 		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
+		//增加拥有默认背景
+		var usersBackdrop model.UsersBackdrop
+		usersBackdrop.BackdropID = 0
+		usersBackdrop.StudentID = p.StudentID
+		model.DB.Create(&usersBackdrop)
 	} else {
 		if p.Password != pwd {
 			c.JSON(401, "Password or account wrong.")
 			return
 		}
 	}
-
-	//增加拥有默认背景
-	var usersBackdrop model.UsersBackdrop
-	usersBackdrop.BackdropID = 1
-	usersBackdrop.StudentID = p.StudentID
-	model.DB.Create(&usersBackdrop)
 
 	claims := &model.Jwt{StudentID: p.StudentID}
 

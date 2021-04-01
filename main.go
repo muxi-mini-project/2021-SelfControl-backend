@@ -17,8 +17,8 @@ var err error
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
-// @host 124.71.184.107
-// @BasePath: /api/v1
+// @host 39.102.42.156
+// @BasePath /api/v1
 // @Schemes http
 
 func main() {
@@ -78,14 +78,19 @@ func dbtest() {
 
 		lstao model.User
 	)
+	backdrop1.BackdropID = 1
 	backdrop1.PictureUrl = "www.4399.com"
 	backdrop1.Price = 50
+	backdrop2.BackdropID = 2
 	backdrop2.PictureUrl = "www.7k7k.com"
 	backdrop2.Price = 50
+	backdrop3.BackdropID = 3
 	backdrop3.PictureUrl = "www.3839.com"
 	backdrop3.Price = 100
+	backdrop4.BackdropID = 4
 	backdrop4.PictureUrl = "www.bilibili.com"
 	backdrop4.Price = 100
+	backdrop5.BackdropID = 5
 	backdrop5.PictureUrl = "www.cf.qq.com"
 	backdrop5.Price = 100
 

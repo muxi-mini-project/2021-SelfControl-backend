@@ -3,12 +3,13 @@ Use Self_Control
 
 DROP TABLE IF EXISTS users;
 create table users(
-  student_id   varchar(100)	not null UNIQUE,
-  password     varchar(100) not null ,
-  user_picture varchar(100) not null ,
-  gold         int          not null ,
-  name         varchar(100) not null ,
-  privacy      int          not null ,
+  student_id       varchar(100)	not null ,
+  password         varchar(100) not null ,
+  user_picture     varchar(100) not null ,
+  gold             int          not null ,
+  name             varchar(100) not null ,
+  privacy          int          not null ,
+  current_backdrop int          not null ,
   primary key (student_id)
 )ENGINE=InnoDB;
 
@@ -16,7 +17,7 @@ DROP TABLE IF EXISTS gold_histories;
 create table gold_histories(
   id              int          not null auto_increment ,
   student_id	    varchar(100) not null ,
-  time			      datetime     not null ,
+  time			      varchar(100) not null ,
   change_number   int          not null ,
   residual_number int		       not null ,
   reason          varchar(200) not null ,
@@ -36,7 +37,7 @@ create table punch_histories(
   id         int          not null auto_increment ,
   student_id varchar(100) not null ,
   title      varchar(100) not null ,
-  time       datetime     not null ,
+  time       varchar(100) not null ,
   day        int          not null ,
   month      int          not null ,
   primary key (id)
@@ -65,5 +66,25 @@ create table users_backdrops(
   id          int          not null auto_increment ,
   student_id  varchar(100) not null ,
   backdrop_id varchar(100) not null ,
+  primary key (id)
+)ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS week_list;
+create table week_list(
+  id         int          not null auto_increment ,
+  ranking    int          not null ,
+  student_id varchar(100) not null ,
+  number     int          not null ,
+  day        int          not null ,
+  primary key (id)
+)ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS month_list;
+create table month_list(
+  id         int          not null auto_increment ,
+  ranking    int          not null ,
+  student_id varchar(100) not null ,
+  number     int          not null ,
+  month      int          not null ,
   primary key (id)
 )ENGINE=InnoDB;

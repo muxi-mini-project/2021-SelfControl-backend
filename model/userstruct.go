@@ -29,3 +29,18 @@ type UserAndNumber struct {
 	StudentId string `json:"student_id"`
 	Number    int    `json:"number"`
 }
+
+type BackdropRes struct {
+	B1 int `json:"b_1"`
+	B2 int `json:"b_2"`
+	B3 int `json:"b_3"`
+	B4 int `json:"b_4"`
+	B5 int `json:"b_5"`
+	B6 int `json:"b_6"`
+}
+
+type UserRanking struct {
+	StudentId string `json:"student_id"`
+	Number    int    `json:"number"`
+	Ranking   int    `json:"ranking"`
+}

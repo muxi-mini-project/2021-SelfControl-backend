@@ -68,10 +68,8 @@ func TodayPunch(c *gin.Context) {
 		return
 	}
 
-	TitleID := c.Param("title_id")
-	//title := c.Request.Header.Get("title")
-	TitleId, _ := strconv.Atoi(TitleID)
-	choice := model.TodayPunch(id, TitleId)
+	TitleID, err := strconv.Atoi(c.Param("title_id"))
+	choice := model.TodayPunch(id, TitleID)
 	c.JSON(200, choice)
 }
 
@@ -182,4 +180,31 @@ func DeletePunch(c *gin.Context) {
 		return
 	}
 	c.JSON(200, gin.H{"message": "删除成功"})
+}
+
+// @Summary  获取某用户标签
+// @Tags punch
+// @Accept application/json
+// @Produce application/json
+// @Param id path int true "id"
+// @Success 200 {object} []model.Punch "获取成功"
+// @Failure 204 "获取失败,用户未公开标签"
+// @Failure 203 "未找到该用户"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /punch/punch/{id} [get]
+func GetPunchs(c *gin.Context) {
+	id := c.Param("id")
+	err, u := model.GetUserInfo(id)
+	if err != nil {
+		c.JSON(203, gin.H{"message": "未找到该用户"})
+		return
+	}
+
+	if u.Privacy == 0 {
+		c.JSON(204, gin.H{"message": "获取失败,用户未公开标签"})
+		return
+	}
+	punchs := model.GetPunchAndNumber(id)
+	c.JSON(200, punchs)
 }
