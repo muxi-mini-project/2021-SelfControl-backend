@@ -21,6 +21,21 @@ definitions:
       backdrop_id:
         type: integer
     type: object
+  model.BackdropRes:
+    properties:
+      b_1:
+        type: integer
+      b_2:
+        type: integer
+      b_3:
+        type: integer
+      b_4:
+        type: integer
+      b_5:
+        type: integer
+      b_6:
+        type: integer
+    type: object
   model.Choice:
     properties:
       choice:
@@ -77,6 +92,8 @@ definitions:
     type: object
   model.User:
     properties:
+      current_backdrop:
+        type: integer
       gold:
         type: integer
       name:
@@ -90,9 +107,11 @@ definitions:
       user_picture:
         type: string
     type: object
-  model.UserAndNumber:
+  model.UserRanking:
     properties:
       number:
+        type: integer
+      ranking:
         type: integer
       student_id:
         type: string
@@ -135,6 +154,8 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 背景价格
+      tags:
+      - Backdrop
     put:
       consumes:
       - application/json
@@ -173,6 +194,8 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 兑换背景
+      tags:
+      - Backdrop
   /backdrops:
     get:
       consumes:
@@ -190,9 +213,7 @@ paths:
         "200":
           description: 获取成功
           schema:
-            items:
-              $ref: '#/definitions/model.Backdrop'
-            type: array
+            $ref: '#/definitions/model.BackdropRes'
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -204,8 +225,38 @@ paths:
             $ref: '#/definitions/error.Error'
       summary: 我的背景
       tags:
-      - user
-  /list:
+      - Backdrop
+  /list/{id}/{type}:
+    get:
+      consumes:
+      - application/json
+      description: 根据 type 和 id 获取用户排名
+      parameters:
+      - description: type
+        in: path
+        name: type
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            $ref: '#/definitions/model.Ranking'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 用户排名
+      tags:
+      - List
+  /list/{type}:
     put:
       consumes:
       - application/json
@@ -214,6 +265,11 @@ paths:
       - description: token
         in: header
         name: token
+        required: true
+        type: string
+      - description: type
+        in: path
+        name: type
         required: true
         type: string
       - description: ranking
@@ -244,7 +300,9 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 兑换排名
-  /list/{type}:
+      tags:
+      - List
+  /lists/{type}:
     get:
       description: url最后面+week或month查询数据
       parameters:
@@ -257,10 +315,10 @@ paths:
       - application/json
       responses:
         "200":
-          description: 获取前十用户
+          description: 获取前五用户
           schema:
             items:
-              $ref: '#/definitions/model.UserAndNumber'
+              $ref: '#/definitions/model.UserRanking'
             type: array
         "203":
           description: 未检索到该时间段的打卡信息
@@ -274,6 +332,8 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 排行榜数据
+      tags:
+      - List
   /punch:
     delete:
       consumes:

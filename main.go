@@ -22,8 +22,8 @@ var err error
 // @Schemes http
 
 func main() {
-	//model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
-	model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
+	//model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
 	if err != nil {
 		panic(err)
 	}
@@ -78,14 +78,19 @@ func dbtest() {
 
 		lstao model.User
 	)
+	backdrop1.BackdropID = 1
 	backdrop1.PictureUrl = "www.4399.com"
 	backdrop1.Price = 50
+	backdrop2.BackdropID = 2
 	backdrop2.PictureUrl = "www.7k7k.com"
 	backdrop2.Price = 50
+	backdrop3.BackdropID = 3
 	backdrop3.PictureUrl = "www.3839.com"
 	backdrop3.Price = 100
+	backdrop4.BackdropID = 4
 	backdrop4.PictureUrl = "www.bilibili.com"
 	backdrop4.Price = 100
+	backdrop5.BackdropID = 5
 	backdrop5.PictureUrl = "www.cf.qq.com"
 	backdrop5.Price = 100
 

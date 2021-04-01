@@ -93,6 +93,10 @@ func GoldHistory(c *gin.Context) {
 	}
 
 	histories := model.GetGoldHistory(id)
+	if len(histories) > 3 {
+		histories = histories[len(histories)-3:]
+	}
+
 	c.JSON(200, histories)
 }
 

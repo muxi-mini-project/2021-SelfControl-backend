@@ -9,42 +9,51 @@ import (
 
 // @Summary  排行榜数据
 // @Description url最后面+week或month查询数据
+// @Tags List
 // Accept application/json
 // @Produce application/json
 // @Param type path string true "type"
-// @Success 200 {object} []model.UserAndNumber "获取前十用户"
+// @Success 200 {object} []model.UserRanking "获取前五用户"
 // @Failure 203 "未检索到该时间段的打卡信息"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /list/{type} [get]
+// @Router /lists/{type} [get]
 func List(c *gin.Context) {
 	Type := c.Param("type")
-	numbers, message := model.List(Type)
+	var numbers []model.UserRanking
+	var message string
+	if Type == "month" {
+		numbers, message = model.GetMonthList()
+	} else if Type == "week" {
+		numbers, message = model.GetWeekList()
+	} else {
+		c.JSON(400, gin.H{"message": "url最后面+ week或month查询数据"})
+	}
 	if message != "" {
 		c.JSON(400, gin.H{"message": message})
 		return
 	}
-	if len(numbers) > 10 {
-		var numbers2 []model.UserAndNumber
-		numbers2 = append(numbers2, numbers[0], numbers[1], numbers[2], numbers[3], numbers[4], numbers[5], numbers[6], numbers[7], numbers[8], numbers[9])
-		numbers = numbers2
+	if len(numbers) > 5 {
+		numbers = numbers[5:]
 	}
 	c.JSON(200, numbers)
 }
 
 // @Summary  兑换排名
 // @Description 需要前进的排名
+// @Tags List
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
+// @Param type path string true "type"
 // @Param ranking body model.Ranking true "ranking"
 // @Success 200 "兑换成功"
 // @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /list [put]
+// @Router /list/{type} [put]
 func ChangeRanking(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
@@ -53,24 +62,39 @@ func ChangeRanking(c *gin.Context) {
 		return
 	}
 
+	Type := c.Param("type")
 	var ranking model.Ranking
 	if err := c.BindJSON(&ranking); err != nil || ranking.Ranking < 1 || ranking.Ranking > 10 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	if err, message := model.ChangeRanking(id, ranking.Ranking); message != "" {
-		c.JSON(203, gin.H{"message": "金币不足"})
-		return
-	} else if err != nil {
-		c.JSON(400, gin.H{"message": "Fail."})
-		log.Println(err)
+	if Type == "week" {
+		if err, message := model.ChangeWeekRanking(id, ranking.Ranking); message != "" {
+			c.JSON(203, gin.H{"message": "金币不足"})
+			return
+		} else if err != nil {
+			c.JSON(400, gin.H{"message": "Fail."})
+			log.Println(err)
+			return
+		}
+	} else if Type == "month" {
+		if err, message := model.ChangeMonthRanking(id, ranking.Ranking); message != "" {
+			c.JSON(203, gin.H{"message": "金币不足"})
+			return
+		} else if err != nil {
+			c.JSON(400, gin.H{"message": "Fail."})
+			log.Println(err)
+			return
+		}
+	} else {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
 	c.JSON(200, gin.H{"message": "兑换成功"})
 }
 
 // @Summary  背景价格
-// Tags user
+// @Tags Backdrop
 // @Description 获取背景价格
 // Accept application/json
 // @Produce application/json
@@ -86,7 +110,7 @@ func BackdropPrice(c *gin.Context) {
 }
 
 // @Summary 兑换背景
-// Tags user
+// @Tags Backdrop
 // @Description 根据背景id兑换背景
 // @Accept application/json
 // @Produce application/json
@@ -121,12 +145,12 @@ func ChangeBackdrop(c *gin.Context) {
 }
 
 // @Summary  我的背景
-// @Tags user
+// @Tags Backdrop
 // @Description 获取我的背景id
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Success 200 {object} []model.Backdrop "获取成功"
+// @Success 200 {object} model.BackdropRes "获取成功"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -141,5 +165,44 @@ func MyBackdrops(c *gin.Context) {
 	}
 
 	backdrops := model.GetBackdrop(id)
-	c.JSON(200, backdrops)
+	var Backdrops model.BackdropRes
+	for _, value := range backdrops {
+		switch value.BackdropID {
+		case 1:
+			Backdrops.B1 = 1
+		case 2:
+			Backdrops.B2 = 1
+		case 3:
+			Backdrops.B3 = 1
+		case 4:
+			Backdrops.B4 = 1
+		case 5:
+			Backdrops.B5 = 1
+		case 6:
+			Backdrops.B6 = 1
+		}
+	}
+	c.JSON(200, Backdrops)
+}
+
+// @Summary  用户排名
+// @Tags List
+// @Description 根据 type 和 id 获取用户排名
+// @Accept application/json
+// @Produce application/json
+// @Param type path string true "type"
+// @Param id path string true "id"
+// @Success 200 {object} model.Ranking "获取成功"
+// Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /list/{id}/{type} [get]
+func UserRanking(c *gin.Context) {
+	id := c.Param("id")
+	Type := c.Param("type")
+	rank := model.GetUserRanking(id, Type)
+	r := model.Ranking{
+		Ranking: rank,
+	}
+	c.JSON(200, r)
 }

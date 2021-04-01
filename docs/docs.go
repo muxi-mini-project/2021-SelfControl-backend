@@ -34,6 +34,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Backdrop"
+                ],
                 "summary": "背景价格",
                 "parameters": [
                     {
@@ -69,6 +72,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Backdrop"
                 ],
                 "summary": "兑换背景",
                 "parameters": [
@@ -127,7 +133,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "Backdrop"
                 ],
                 "summary": "我的背景",
                 "parameters": [
@@ -143,10 +149,7 @@ var doc = `{
                     "200": {
                         "description": "获取成功",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Backdrop"
-                            }
+                            "$ref": "#/definitions/model.BackdropRes"
                         }
                     },
                     "401": {
@@ -164,7 +167,52 @@ var doc = `{
                 }
             }
         },
-        "/list": {
+        "/list/{id}/{type}": {
+            "get": {
+                "description": "根据 type 和 id 获取用户排名",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "用户排名",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "type",
+                        "name": "type",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "$ref": "#/definitions/model.Ranking"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/list/{type}": {
             "put": {
                 "description": "需要前进的排名",
                 "consumes": [
@@ -173,6 +221,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "List"
+                ],
                 "summary": "兑换排名",
                 "parameters": [
                     {
@@ -180,6 +231,13 @@ var doc = `{
                         "description": "token",
                         "name": "token",
                         "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "type",
+                        "name": "type",
+                        "in": "path",
                         "required": true
                     },
                     {
@@ -220,11 +278,14 @@ var doc = `{
                 }
             }
         },
-        "/list/{type}": {
+        "/lists/{type}": {
             "get": {
                 "description": "url最后面+week或month查询数据",
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "List"
                 ],
                 "summary": "排行榜数据",
                 "parameters": [
@@ -238,11 +299,11 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取前十用户",
+                        "description": "获取前五用户",
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.UserAndNumber"
+                                "$ref": "#/definitions/model.UserRanking"
                             }
                         }
                     },
@@ -952,6 +1013,29 @@ var doc = `{
                 }
             }
         },
+        "model.BackdropRes": {
+            "type": "object",
+            "properties": {
+                "b_1": {
+                    "type": "integer"
+                },
+                "b_2": {
+                    "type": "integer"
+                },
+                "b_3": {
+                    "type": "integer"
+                },
+                "b_4": {
+                    "type": "integer"
+                },
+                "b_5": {
+                    "type": "integer"
+                },
+                "b_6": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.Choice": {
             "type": "object",
             "properties": {
@@ -1040,6 +1124,9 @@ var doc = `{
         "model.User": {
             "type": "object",
             "properties": {
+                "current_backdrop": {
+                    "type": "integer"
+                },
                 "gold": {
                     "type": "integer"
                 },
@@ -1060,10 +1147,13 @@ var doc = `{
                 }
             }
         },
-        "model.UserAndNumber": {
+        "model.UserRanking": {
             "type": "object",
             "properties": {
                 "number": {
+                    "type": "integer"
+                },
+                "ranking": {
                     "type": "integer"
                 },
                 "student_id": {

@@ -68,10 +68,8 @@ func TodayPunch(c *gin.Context) {
 		return
 	}
 
-	TitleID := c.Param("title_id")
-	//title := c.Request.Header.Get("title")
-	TitleId, _ := strconv.Atoi(TitleID)
-	choice := model.TodayPunch(id, TitleId)
+	TitleID, err := strconv.Atoi(c.Param("title_id"))
+	choice := model.TodayPunch(id, TitleID)
 	c.JSON(200, choice)
 }
 

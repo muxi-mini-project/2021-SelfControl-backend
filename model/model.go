@@ -132,7 +132,7 @@ func CompletePunch(id string, title string, gold int) error {
 	//result:=DB.Model(&punch).Where("id = ? AND title = ?",id ,title).Update("choice", "hello")
 	punch.Title = title
 	punch.StudentID = id
-	punch.Time = time.Now()
+	punch.Time = time.Now().Format("2006-01-02 15:04:05")
 	punch.Month = int(time.Now().Month())
 	//punch.Week=time.Now().ISOWeek()
 	punch.Day = time.Now().YearDay()
@@ -158,7 +158,7 @@ func CompletePunch(id string, title string, gold int) error {
 	//创建金币历史
 	history := GoldHistory{
 		StudentID:      id,
-		Time:           time.Now(),
+		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   gold,
 		ResidualNumber: user.Gold,
 		Reason:         "完成打卡+" + s + "金币",
@@ -176,33 +176,102 @@ func DeletePunch(id string, title string) (string, error) {
 	return "", result.Error
 }
 
-//-----------------------------------------------
 //default:
 
-func List(Type string) ([]UserAndNumber, string) {
-	var PunchHistory []PunchHistory
-	if Type == "month" {
+func GetMonthList() ([]UserRanking, string) {
+	var (
+		PunchHistory []PunchHistory
+		ranks        []UserRanking
+		Ranks        []MonthList
+		s            []string
+		Rank         MonthList
+	)
+	if DB.Where("month").First(&Rank); Rank.Month != int(time.Now().Month()) {
+		DB.Delete(Rank, "month < ? ", int(time.Now().Month()))
 		DB.Where("month = ?", int(time.Now().Month())).Find(&PunchHistory)
-		//DB.Table("punch_histories").Select("student_id").Where("month = ?", int(time.Now().Month())).Scan(&PunchHistory)
+		for _, ph := range PunchHistory {
+			s = append(s, ph.StudentID)
+		}
+		UserNumbers := GetOrder(s)
+		r := 1
+		for i, num := range UserNumbers {
+			if i > 0 && num.Number < UserNumbers[i-1].Number {
+				r++
+			}
+			Rank = MonthList{
+				StudentID: num.StudentId,
+				Ranking:   r,
+				Month:     int(time.Now().Month()),
+				Number:    num.Number,
+			}
+			DB.Create(&Rank)
+		}
 	}
-	if Type == "week" {
-		//result := DB.Where("day >= ?", int(time.Now().YearDay())-7).Find(&PunchHistory)
+	for i := 1; i <= 5; i++ {
+		var Rank []MonthList
+		DB.Where("ranking = ? ", i).Find(&Rank)
+		Ranks = append(Ranks, Rank...)
+	}
+	for _, ran := range Ranks {
+		var rank UserRanking
+		rank.Number = ran.Number
+		rank.Ranking = ran.Ranking
+		rank.StudentId = ran.StudentID
+		ranks = append(ranks, rank)
+	}
+	return ranks, ""
+}
+func GetWeekList() ([]UserRanking, string) {
+	var (
+		PunchHistory []PunchHistory
+		ranks        []UserRanking
+		Ranks        []WeekList
+		s            []string
+		Rank         WeekList
+	)
+	if DB.Where("day").First(&Rank); Rank.Day != int(time.Now().Month()) {
+		DB.Delete(Rank, "day < ? ", time.Now().YearDay())
 		DB.Table("punch_histories").Select("student_id").Where("day >= ?", int(time.Now().YearDay())-7).Scan(&PunchHistory)
+		for _, ph := range PunchHistory {
+			s = append(s, ph.StudentID)
+		}
+		UserNumbers := GetOrder(s)
+		r := 1
+		for i, num := range UserNumbers {
+			if i > 0 && num.Number < UserNumbers[i-1].Number {
+				r++
+			}
+			Rank := WeekList{
+				StudentID: num.StudentId,
+				Ranking:   r,
+				Day:       time.Now().YearDay(),
+				Number:    num.Number,
+			}
+			DB.Create(&Rank)
+		}
 	}
-	var s []string
-	for i := 0; i < len(PunchHistory); i++ {
-		s = append(s, PunchHistory[i].StudentID)
+	for i := 1; i <= 5; i++ {
+		var Rank []WeekList
+		DB.Where("ranking = ? ", i).Find(&Rank)
+		Ranks = append(Ranks, Rank...)
 	}
-	if len(s) == 0 {
-		var a []UserAndNumber
-		return a, "未检索到该时间段的打卡信息"
+	for _, ran := range Ranks {
+		var rank UserRanking
+		rank.Number = ran.Number
+		rank.Ranking = ran.Ranking
+		rank.StudentId = ran.StudentID
+		ranks = append(ranks, rank)
 	}
-	return GetOrder(s)
+
+	// if len(PunchHistory) == 0 {
+	// 	return nil, "未检索到该时间段的打卡信息"
+	// }
+	return ranks, ""
 	//var punch PunchHistory
 	//DB.Where("student_id = ? AND month = ? ", int(time.Now().Month())).Find(&punch)
 
 }
-func GetOrder(s []string) ([]UserAndNumber, string) {
+func GetOrder(s []string) []UserAndNumber {
 	var Numbers []UserAndNumber
 	Number := UserAndNumber{StudentId: s[0], Number: 1}
 	Numbers = append(Numbers, Number)
@@ -228,7 +297,7 @@ func GetOrder(s []string) ([]UserAndNumber, string) {
 		}
 		Numbers[i], Numbers[max] = Numbers[max], Numbers[i]
 	}
-	return Numbers, ""
+	return Numbers
 }
 
 func GetBackdropPrice() []Backdrop {
@@ -237,7 +306,7 @@ func GetBackdropPrice() []Backdrop {
 	return backdrop
 }
 
-func ChangeRanking(id string, ranking int) (error, string) {
+func ChangeWeekRanking(id string, ranking int) (error, string) {
 	gold := 48 + ranking*2
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
@@ -252,15 +321,57 @@ func ChangeRanking(id string, ranking int) (error, string) {
 	price := gold
 	history := GoldHistory{
 		StudentID:      id,
-		Time:           time.Now(),
+		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   -price,
 		ResidualNumber: user.Gold,
 		Reason:         "兑换排名:前进" + string(ranking) + "名",
 	}
-	result := DB.Create(&history)
-	return result.Error, ""
+	if result := DB.Create(&history); result.Error != nil {
+		return result.Error, ""
+	}
+
+	//修改排行榜
+	rank := WeekList{
+		StudentID: id,
+		Ranking:   ranking,
+		Day:       time.Now().YearDay(),
+		Number:    0,
+	}
+	UserNumber, str := GetWeekList()
+	if str != "" {
+		return nil, str
+	}
+	for _, UandN := range UserNumber {
+		if UandN.StudentId == id {
+			rank.Number = UandN.Number
+			break
+		}
+	}
+	err := ChangeWeekList(rank)
+	return err, ""
 }
 
+func ChangeWeekList(rank WeekList) error {
+	var r WeekList
+	var ranks []WeekList
+	if err := DB.Where("student_id = ? ", rank.StudentID).First(&r).Error; err != nil {
+		DB.Model(r).Where("ranking < ? AND ranking >= ? ", rank.Ranking, r.Ranking).Find(&ranks)
+	} else {
+		DB.Model(r).Where("ranking < ? ", rank.Ranking).Find(&ranks)
+	}
+	//后面的排名++
+	for _, Rank := range ranks {
+		Rank.Ranking++
+		DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)
+	}
+	DB.Delete(&r)
+	err := DB.Create(&rank).Error
+	return err
+}
+
+func ChangeMonthRanking(id string, rank int) (error, string) {
+	return nil, ""
+}
 func ChangeBackdrop(id string, BackdropID int) (error, string) {
 	var backdrop Backdrop
 	DB.Where("backdrop_id = ? ", BackdropID).First(&backdrop)
@@ -272,10 +383,10 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 	//修改用户金币
 	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-backdrop.Price)
 	//创建金币历史
-	s := strconv.Itoa(backdrop.BackdropID)
+	s := strconv.Itoa(BackdropID)
 	history := GoldHistory{
 		StudentID:      id,
-		Time:           time.Now(),
+		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   -backdrop.Price,
 		ResidualNumber: user.Gold,
 		Reason:         "兑换背景 " + s,
@@ -290,7 +401,7 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 
 func GetBackdrop(id string) []Backdrop {
 	var backdrops []Backdrop
-	DB.Table("users_backdrops").Where("student_id = ? ", id).First(&backdrops)
+	DB.Table("users_backdrops").Where("student_id = ? ", id).Find(&backdrops)
 	return backdrops
 }
 
@@ -319,4 +430,13 @@ func Type(id string) string {
 	} else {
 		return "学习"
 	}
+}
+
+func GetUserRanking(id string, Type string) int {
+	var u WeekList
+	err := DB.Where("student_id = ? ", id).First(&u).Error
+	if err != nil {
+		return u.Ranking
+	}
+	return -1
 }
