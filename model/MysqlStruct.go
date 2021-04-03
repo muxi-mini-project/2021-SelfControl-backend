@@ -74,3 +74,12 @@ type MonthList struct {
 	Number    int    `json:"number"`
 	Month     int    `json:"month"`
 }
+
+type ListHistory struct {
+	ID int `json:"id"`
+	// 1为周 2为月
+	StudentID string `json:"student_id"`
+	Type      int    `json:"type"`
+	Former    int    `json:"former"`
+	After     int    `json:"after"`
+}

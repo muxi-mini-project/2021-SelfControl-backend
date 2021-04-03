@@ -167,7 +167,53 @@ var doc = `{
                 }
             }
         },
-        "/list/{id}/{type}": {
+        "/list/history": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "List"
+                ],
+                "summary": "获取兑换排名",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ListHistories"
+                        }
+                    },
+                    "203": {
+                        "description": "金币不足"
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/list/user/{id}/{type}": {
             "get": {
                 "description": "根据 type 和 id 获取用户排名",
                 "consumes": [
@@ -1061,6 +1107,26 @@ var doc = `{
                 },
                 "time": {
                     "type": "string"
+                }
+            }
+        },
+        "model.ListHistories": {
+            "type": "object",
+            "properties": {
+                "month_after": {
+                    "type": "integer"
+                },
+                "month_former": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "week_after": {
+                    "type": "integer"
+                },
+                "week_former": {
+                    "type": "integer"
                 }
             }
         },

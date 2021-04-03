@@ -60,8 +60,11 @@ func Router(r *gin.Engine) {
 	//排行榜
 	r.GET("/api/v1/lists/:type", handler.List)
 
+	//兑换排行历史
+	r.GET("/api/v1/list/history", handler.ListHistory)
+
 	//用户排名
-	r.GET("/api/v1/list/:id/:type", handler.UserRanking)
+	r.GET("/api/v1/list/user/:id/:type", handler.UserRanking)
 
 	//兑换排名
 	r.PUT("/api/v1/list", handler.ChangeRanking)

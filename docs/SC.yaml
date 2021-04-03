@@ -54,6 +54,19 @@ definitions:
       time:
         type: string
     type: object
+  model.ListHistories:
+    properties:
+      month_after:
+        type: integer
+      month_former:
+        type: integer
+      student_id:
+        type: string
+      week_after:
+        type: integer
+      week_former:
+        type: integer
+    type: object
   model.Privacy:
     properties:
       privacy:
@@ -226,36 +239,6 @@ paths:
       summary: 我的背景
       tags:
       - Backdrop
-  /list/{id}/{type}:
-    get:
-      consumes:
-      - application/json
-      description: 根据 type 和 id 获取用户排名
-      parameters:
-      - description: type
-        in: path
-        name: type
-        required: true
-        type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            $ref: '#/definitions/model.Ranking'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 用户排名
-      tags:
-      - List
   /list/{type}:
     put:
       consumes:
@@ -300,6 +283,67 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 兑换排名
+      tags:
+      - List
+  /list/history:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ListHistories'
+        "203":
+          description: 金币不足
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 获取兑换排名
+      tags:
+      - List
+  /list/user/{id}/{type}:
+    get:
+      consumes:
+      - application/json
+      description: 根据 type 和 id 获取用户排名
+      parameters:
+      - description: type
+        in: path
+        name: type
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            $ref: '#/definitions/model.Ranking'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 用户排名
       tags:
       - List
   /lists/{type}:
