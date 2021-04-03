@@ -29,6 +29,7 @@ func List(c *gin.Context) {
 		numbers, message = model.GetWeekList()
 	} else {
 		c.JSON(400, gin.H{"message": "url最后面+ week或month查询数据"})
+		return
 	}
 	if message != "" {
 		c.JSON(400, gin.H{"message": message})

@@ -186,7 +186,7 @@ func GetMonthList() ([]UserRanking, string) {
 		s            []string
 		Rank         MonthList
 	)
-	if DB.Where("month").First(&Rank); Rank.Month != int(time.Now().Month()) {
+	if err := DB.Where("month < ? ", int(time.Now().Month())).First(&Rank).Error; err == nil {
 		DB.Delete(Rank, "month < ? ", int(time.Now().Month()))
 		DB.Where("month = ?", int(time.Now().Month())).Find(&PunchHistory)
 		for _, ph := range PunchHistory {
@@ -213,10 +213,13 @@ func GetMonthList() ([]UserRanking, string) {
 		Ranks = append(Ranks, Rank...)
 	}
 	for _, ran := range Ranks {
+		var u User
+		DB.Where("student_id = ? ", ran.StudentID).First(&u)
 		var rank UserRanking
 		rank.Number = ran.Number
 		rank.Ranking = ran.Ranking
 		rank.StudentId = ran.StudentID
+		rank.Name = u.Name
 		ranks = append(ranks, rank)
 	}
 	return ranks, ""
@@ -229,7 +232,7 @@ func GetWeekList() ([]UserRanking, string) {
 		s            []string
 		Rank         WeekList
 	)
-	if DB.Where("day").First(&Rank); Rank.Day != int(time.Now().Month()) {
+	if err := DB.Where("day <= ? ", time.Now().YearDay()-7).First(&Rank).Error; err == nil {
 		DB.Delete(Rank, "day <= ? ", time.Now().YearDay()-7)
 		DB.Table("punch_histories").Select("student_id").Where("day >= ?", int(time.Now().YearDay())-7).Scan(&PunchHistory)
 		for _, ph := range PunchHistory {
@@ -256,10 +259,13 @@ func GetWeekList() ([]UserRanking, string) {
 		Ranks = append(Ranks, Rank...)
 	}
 	for _, ran := range Ranks {
+		var u User
+		DB.Where("student_id = ? ", ran.StudentID).First(&u)
 		var rank UserRanking
 		rank.Number = ran.Number
 		rank.Ranking = ran.Ranking
 		rank.StudentId = ran.StudentID
+		rank.Name = u.Name
 		ranks = append(ranks, rank)
 	}
 

@@ -178,7 +178,7 @@ var doc = `{
                 "tags": [
                     "List"
                 ],
-                "summary": "获取兑换排名",
+                "summary": "获取兑换排名历史",
                 "parameters": [
                     {
                         "type": "string",
@@ -1216,6 +1216,9 @@ var doc = `{
         "model.UserRanking": {
             "type": "object",
             "properties": {
+                "name": {
+                    "type": "string"
+                },
                 "number": {
                     "type": "integer"
                 },

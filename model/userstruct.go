@@ -41,6 +41,7 @@ type BackdropRes struct {
 
 type UserRanking struct {
 	StudentId string `json:"student_id"`
+	Name      string `json:"name"`
 	Number    int    `json:"number"`
 	Ranking   int    `json:"ranking"`
 }
