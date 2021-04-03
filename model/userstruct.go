@@ -44,3 +44,11 @@ type UserRanking struct {
 	Number    int    `json:"number"`
 	Ranking   int    `json:"ranking"`
 }
+
+type ListHistories struct {
+	StudentID   string `json:"student_id"`
+	WeekFormer  int    `json:"week_former"`
+	WeekAfter   int    `json:"week_after"`
+	MonthFormer int    `json:"month_former"`
+	MonthAfter  int    `json:"month_after"`
+}
