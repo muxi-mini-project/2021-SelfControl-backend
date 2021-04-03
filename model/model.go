@@ -341,7 +341,7 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   -price,
 		ResidualNumber: user.Gold,
-		Reason:         "兑换周排名:前进" + string(ranking) + "名",
+		Reason:         "兑换周排名:前进" + strconv.Itoa(ranking) + "名",
 	}
 	if result := DB.Create(&history); result.Error != nil {
 		return result.Error, ""
@@ -426,7 +426,7 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   -price,
 		ResidualNumber: user.Gold,
-		Reason:         "兑换月排名:前进" + string(ranking) + "名",
+		Reason:         "兑换月排名:前进" + strconv.Itoa(ranking) + "名",
 	}
 	if result := DB.Create(&history); result.Error != nil {
 		return result.Error, ""
@@ -534,13 +534,15 @@ func CreatePunch(id string, title string) (error, string) {
 }
 
 func Type(id string) string {
-	if id == "1" {
+	switch id {
+	case "1":
 		return "健康"
-	} else if id == "2" {
+	case "2":
 		return "运动"
-	} else {
+	case "3":
 		return "学习"
 	}
+	return "typeID错误"
 }
 
 func GetUserRanking(id string, Type string) int {
