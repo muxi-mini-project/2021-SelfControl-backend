@@ -69,8 +69,8 @@ create table users_backdrops(
   primary key (id)
 )ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS week_list;
-create table week_list(
+DROP TABLE IF EXISTS week_lists;
+create table week_lists(
   id         int          not null auto_increment ,
   ranking    int          not null ,
   student_id varchar(100) not null ,
@@ -79,8 +79,8 @@ create table week_list(
   primary key (id)
 )ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS month_list;
-create table month_list(
+DROP TABLE IF EXISTS month_lists;
+create table month_lists(
   id         int          not null auto_increment ,
   ranking    int          not null ,
   student_id varchar(100) not null ,
@@ -89,8 +89,8 @@ create table month_list(
   primary key (id)
 )ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS list_history;
-create table month_list(
+DROP TABLE IF EXISTS list_histories;
+create table list_histories(
   id         int          not null auto_increment ,
   type       int          not null ,
   student_id varchar(100) not null ,

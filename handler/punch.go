@@ -45,6 +45,9 @@ func MyPunch(c *gin.Context) {
 	}
 
 	punchs := model.GetMyPunch(id)
+	if len(punchs) == 0 {
+		punchs = punchs[:0]
+	}
 	c.JSON(200, punchs)
 }
 

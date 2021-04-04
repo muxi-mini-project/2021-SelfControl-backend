@@ -67,7 +67,7 @@ func Router(r *gin.Engine) {
 	r.GET("/api/v1/list/user/:id/:type", handler.UserRanking)
 
 	//兑换排名
-	r.PUT("/api/v1/list", handler.ChangeRanking)
+	r.PUT("/api/v1/list/:type", handler.ChangeRanking)
 
 	//背景价格
 	r.GET("/api/v1/backdrop", handler.BackdropPrice)

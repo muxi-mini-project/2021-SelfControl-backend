@@ -61,6 +61,9 @@ func ChangeUserInfo(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
+	if user.Password == "" {
+		c.JSON(400, gin.H{"message": "密码不能为空"})
+	}
 	if user.Privacy != 0 && user.Privacy != 1 {
 		c.JSON(400, gin.H{"message": "Privacy参数错误(0 = 公开， 1 = 不公开)"})
 		return
