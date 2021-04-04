@@ -69,6 +69,10 @@ func ChangeRanking(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
+	if ranking.Ranking == 0 {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	if Type == "week" {
 		if err, message := model.ChangeWeekRanking(id, ranking.Ranking); message != "" {
 			c.JSON(203, gin.H{"message": "金币不足"})
@@ -155,7 +159,15 @@ func ChangeBackdrop(c *gin.Context) {
 	}
 
 	var b model.BackdropID
-	c.BindJSON(&b)
+	if err := c.BindJSON(&b); err != nil {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+
+	if b.BackdropID == 0 {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	if err, message := model.ChangeBackdrop(id, b.BackdropID); message != "" {
 		c.JSON(203, gin.H{"message": "金币不足"})
 		return
@@ -202,8 +214,6 @@ func MyBackdrops(c *gin.Context) {
 			Backdrops.B4 = 1
 		case 5:
 			Backdrops.B5 = 1
-		case 6:
-			Backdrops.B6 = 1
 		}
 	}
 	c.JSON(200, Backdrops)

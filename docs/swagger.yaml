@@ -384,7 +384,6 @@ paths:
     delete:
       consumes:
       - application/json
-      description: 获取金币历史
       parameters:
       - description: token
         in: header
@@ -396,7 +395,7 @@ paths:
         name: title
         required: true
         schema:
-          $ref: '#/definitions/model.Punch2'
+          $ref: '#/definitions/model.Title'
       produces:
       - application/json
       responses:
@@ -418,7 +417,7 @@ paths:
           description: '{"error_code":"30001", "message":"Fail."} 失败'
           schema:
             $ref: '#/definitions/error.Error'
-      summary: 金币历史
+      summary: 删除标签
       tags:
       - punch
     get:

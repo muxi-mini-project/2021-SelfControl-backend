@@ -30,7 +30,10 @@ func Login(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-
+	if p.StudentID == "" {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	pwd := p.Password
 	//首次登录 验证一站式
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {

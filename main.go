@@ -22,8 +22,8 @@ var err error
 // @Schemes http
 
 func main() {
-	model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
-	//model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
+	//model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +31,7 @@ func main() {
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
 	routers.Router(r)
-	dbtest()
+	//dbtest()
 	r.Run(":2333")
 	defer model.DB.Close()
 }

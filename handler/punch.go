@@ -44,10 +44,16 @@ func MyPunch(c *gin.Context) {
 		return
 	}
 
-	punchs := model.GetMyPunch(id)
-	if len(punchs) == 0 {
-		punchs = punchs[:0]
+	var Punchs []model.UsersPunch
+	model.DB.Where("student_id = ?", id).Find(&Punchs)
+	if len(Punchs) == 0 {
+		c.JSON(200, Punchs)
+		return
 	}
+	punchs := model.GetMyPunch(id)
+	// if len(punchs) == 0 {
+	// 	punchs = punchs[:0]
+	// }
 	c.JSON(200, punchs)
 }
 
@@ -97,6 +103,10 @@ func CompletePunch(c *gin.Context) {
 	}
 
 	var a model.TitleAndGold
+	if a.Title == "" {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	//title := c.Param("title")
 	//Gold := c.Param("gold")
 	//Gold := c.Request.Header.Get("gold")
@@ -122,7 +132,7 @@ func CompletePunch(c *gin.Context) {
 // @Param token header string true "token"
 // @Param title body model.Title true "title"
 // @Success 200 "新增标签成功"
-// @Failure 204 "该标签已选择"
+// @Failure 203 "该标签已选择"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -140,10 +150,14 @@ func CreatePunch(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
+	if title.Title == "" {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	//title := c.Param("title")
 	//title := c.Request.Header.Get("title")
 	if err, message := model.CreatePunch(id, title.Title); message != "" {
-		c.JSON(204, gin.H{"message": message})
+		c.JSON(203, gin.H{"message": message})
 		return
 	} else if err != nil {
 		c.JSON(400, gin.H{"message": "Fail."})
@@ -152,15 +166,14 @@ func CreatePunch(c *gin.Context) {
 	c.JSON(200, gin.H{"message": "新增标签成功"})
 }
 
-// @Summary  金币历史
+// @Summary  删除标签
 // @Tags punch
-// @Description 获取金币历史
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Param title body model.Punch2 true "需要删除的打卡title"
+// @Param title body model.Title true "需要删除的打卡title"
 // @Success 200 "删除成功"
-// @Failure 204 "删除失败,用户未选择该标签"
+// @Failure 203 "删除失败,用户未选择该标签"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -173,10 +186,18 @@ func DeletePunch(c *gin.Context) {
 		return
 	}
 
-	var punch model.Punch2
-	c.BindJSON(&punch)
+	var punch model.Title
+	if err := c.BindJSON(&punch); err != nil {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+
+	if punch.Title == "" {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	if s, err := model.DeletePunch(id, punch.Title); s != "" {
-		c.JSON(204, gin.H{"message": "删除失败,用户未选择该标签"})
+		c.JSON(203, gin.H{"message": "删除失败,用户未选择该标签"})
 		return
 	} else if err != nil {
 		c.JSON(400, gin.H{"message": "Fail."})
@@ -191,7 +212,7 @@ func DeletePunch(c *gin.Context) {
 // @Produce application/json
 // @Param id path int true "id"
 // @Success 200 {object} []model.Punch "获取成功"
-// @Failure 204 "获取失败,用户未公开标签"
+// @Failure 203 "获取失败,用户未公开标签"
 // @Failure 203 "未找到该用户"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -205,7 +226,7 @@ func GetPunchs(c *gin.Context) {
 	}
 
 	if u.Privacy == 0 {
-		c.JSON(204, gin.H{"message": "获取失败,用户未公开标签"})
+		c.JSON(203, gin.H{"message": "获取失败,用户未公开标签"})
 		return
 	}
 	punchs := model.GetPunchAndNumber(id)

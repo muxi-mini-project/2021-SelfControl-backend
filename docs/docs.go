@@ -472,7 +472,6 @@ var doc = `{
                 }
             },
             "delete": {
-                "description": "获取金币历史",
                 "consumes": [
                     "application/json"
                 ],
@@ -482,7 +481,7 @@ var doc = `{
                 "tags": [
                     "punch"
                 ],
-                "summary": "金币历史",
+                "summary": "删除标签",
                 "parameters": [
                     {
                         "type": "string",
@@ -497,7 +496,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Punch2"
+                            "$ref": "#/definitions/model.Title"
                         }
                     }
                 ],

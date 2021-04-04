@@ -36,7 +36,6 @@ type BackdropRes struct {
 	B3 int `json:"b_3"`
 	B4 int `json:"b_4"`
 	B5 int `json:"b_5"`
-	B6 int `json:"b_6"`
 }
 
 type UserRanking struct {
