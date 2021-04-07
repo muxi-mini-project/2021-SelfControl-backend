@@ -8,11 +8,15 @@ type Ranking struct {
 	Ranking int `json:"ranking"`
 }
 
-type TitleAndGold struct {
-	Gold  int    `json:"gold"`
-	Title string `json:"title"`
-}
+// type TitleAndGold struct {
+// 	Gold  int    `json:"gold"`
+// 	Title string `json:"title"`
+// }
 
 type BackdropID struct {
 	BackdropID int `json:"backdrop_id"`
+}
+
+type Day struct {
+	Day int `json:"day"`
 }

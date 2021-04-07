@@ -74,6 +74,7 @@ func GetPunchAndNumber(id string) []Punch {
 	var punchs2 []Punch
 	var Punch Punch
 	for i := 0; i < len(punchs); i++ {
+		Punch.ID = punchs[i].ID
 		Punch.Title = punchs[i].Title
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
@@ -104,6 +105,7 @@ func GetMyPunch(id string) []Punch {
 	var punchs2 []Punch
 	var Punch Punch
 	for i := 0; i < len(punchs); i++ {
+		Punch.ID = punchs[i].ID
 		Punch.Title = punchs[i].Title
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
@@ -127,7 +129,20 @@ func TodayPunch(StudentId string, TitleID int) Choice {
 	return Choice
 }
 
-func CompletePunch(id string, title string, gold int) error {
+func GetDayPunchs(StudentId string, day int) []Punch {
+	var punchs []PunchHistory
+	DB.Where("student_id = ? AND day = ?", StudentId, day).Find(&punchs)
+	var punchs2 []Punch
+	var Punch Punch
+	for i := 0; i < len(punchs); i++ {
+		Punch.ID = punchs[i].ID
+		Punch.Title = punchs[i].Title
+		punchs2 = append(punchs2, Punch)
+	}
+	return punchs2
+}
+
+func CompletePunch(id string, title string) error {
 	var pun UsersPunch
 	err := DB.Where("student_id = ? AND title = ? ", id, title).First(pun).Error
 	if err == nil {
@@ -144,7 +159,22 @@ func CompletePunch(id string, title string, gold int) error {
 	if result := DB.Create(&punch); result.Error != nil {
 		return result.Error
 	}
+	var punchss []UsersPunch
+	DB.Where("student_id = ? ", id).Find(punchss)
+	puns := GetDayPunchs(id, time.Now().Day())
+	if len(puns) == len(punchss) {
+		gold := 0
+		if len(puns) <= 5 {
+			gold = len(puns) * 10
+		} else {
+			gold = ((len(puns)-5)*2 + 10) * len(puns)
+		}
+		return CompleteAllPunch(id, gold)
+	}
+	return nil
+}
 
+func CompleteAllPunch(id string, gold int) error {
 	//修改用户金币
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
@@ -156,7 +186,7 @@ func CompletePunch(id string, title string, gold int) error {
 		Time:           time.Now().Format("2006-01-02 15:04:05"),
 		ChangeNumber:   gold,
 		ResidualNumber: user.Gold,
-		Reason:         "完成打卡+" + s + "金币",
+		Reason:         "完成今日打卡+" + s + "金币",
 	}
 	result := DB.Create(&history)
 	return result.Error

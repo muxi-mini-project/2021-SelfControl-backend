@@ -58,6 +58,10 @@ func Router(r *gin.Engine) {
 
 		//月报
 		g2.GET("/month", handler.Monthly)
+
+		//获取用户某天的打卡
+		g2.GET("/day/:day", handler.GetDayPunchs)
+
 	}
 	//default:
 	//排行榜

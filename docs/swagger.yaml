@@ -39,6 +39,11 @@ definitions:
       choice:
         type: boolean
     type: object
+  model.Day:
+    properties:
+      day:
+        type: integer
+    type: object
   model.GoldHistory:
     properties:
       change_number:
@@ -72,6 +77,8 @@ definitions:
     type: object
   model.Punch:
     properties:
+      id:
+        type: integer
       number:
         type: integer
       title:
@@ -91,13 +98,6 @@ definitions:
     type: object
   model.Title:
     properties:
-      title:
-        type: string
-    type: object
-  model.TitleAndGold:
-    properties:
-      gold:
-        type: integer
       title:
         type: string
     type: object
@@ -421,13 +421,18 @@ paths:
     get:
       consumes:
       - application/json
-      description: 获取我的打卡（标签）
       parameters:
       - description: token
         in: header
         name: token
         required: true
         type: string
+      - description: 天数
+        in: body
+        name: day
+        required: true
+        schema:
+          $ref: '#/definitions/model.Day'
       produces:
       - application/json
       responses:
@@ -446,7 +451,7 @@ paths:
           description: '{"error_code":"30001", "message":"Fail."} 失败'
           schema:
             $ref: '#/definitions/error.Error'
-      summary: 我的打卡
+      summary: 获取用户某天的打卡
       tags:
       - punch
     post:
@@ -459,12 +464,12 @@ paths:
         name: token
         required: true
         type: string
-      - description: 卡的Title和完成本次打卡得到的金币数
+      - description: 卡的Title
         in: body
-        name: title_and_gold
+        name: title
         required: true
         schema:
-          $ref: '#/definitions/model.TitleAndGold'
+          $ref: '#/definitions/model.Title'
       produces:
       - application/json
       responses:

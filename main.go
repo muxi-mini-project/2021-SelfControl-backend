@@ -44,37 +44,37 @@ func dbtest() {
 		backdrop4 model.Backdrop
 		backdrop5 model.Backdrop
 
-		punch1_1  = model.PunchContent{Type: "健康", Title: "吃水果"}
-		punch1_2  = model.PunchContent{Type: "健康", Title: "吃早餐"}
-		punch1_3  = model.PunchContent{Type: "健康", Title: "多喝水"}
-		punch1_4  = model.PunchContent{Type: "健康", Title: "拒绝宵夜"}
-		punch1_5  = model.PunchContent{Type: "健康", Title: "拒绝饮料"}
-		punch1_6  = model.PunchContent{Type: "健康", Title: "拒绝久坐"}
-		punch1_7  = model.PunchContent{Type: "健康", Title: "早起"}
-		punch1_8  = model.PunchContent{Type: "健康", Title: "不要熬夜"}
-		punch1_9  = model.PunchContent{Type: "健康", Title: "不翘二郎腿"}
-		punch1_10 = model.PunchContent{Type: "健康", Title: "早起空腹喝水"}
+		punch1_1  = model.PunchContent{Type: "健康", Title: "吃水果", ID: 1500045}
+		punch1_2  = model.PunchContent{Type: "健康", Title: "吃早餐", ID: 1500057}
+		punch1_3  = model.PunchContent{Type: "健康", Title: "多喝水", ID: 1500007}
+		punch1_4  = model.PunchContent{Type: "健康", Title: "拒绝宵夜", ID: 1500068}
+		punch1_5  = model.PunchContent{Type: "健康", Title: "拒绝饮料", ID: 1500043}
+		punch1_6  = model.PunchContent{Type: "健康", Title: "拒绝久坐", ID: 1500083}
+		punch1_7  = model.PunchContent{Type: "健康", Title: "早起", ID: 1500024}
+		punch1_8  = model.PunchContent{Type: "健康", Title: "早睡", ID: 1500046}
+		punch1_9  = model.PunchContent{Type: "健康", Title: "不翘二郎腿", ID: 1500031}
+		punch1_10 = model.PunchContent{Type: "健康", Title: "早起空腹喝水", ID: 1500041}
 
-		punch2_1 = model.PunchContent{Type: "运动", Title: "跑步"}
-		punch2_2 = model.PunchContent{Type: "运动", Title: "俯卧撑"}
-		punch2_3 = model.PunchContent{Type: "运动", Title: "跳绳"}
-		punch2_4 = model.PunchContent{Type: "运动", Title: "仰卧起坐"}
-		punch2_5 = model.PunchContent{Type: "运动", Title: "散步"}
-		punch2_6 = model.PunchContent{Type: "运动", Title: "拉伸"}
-		punch2_7 = model.PunchContent{Type: "运动", Title: "打篮球"}
-		punch2_8 = model.PunchContent{Type: "运动", Title: "健身"}
-		punch2_9 = model.PunchContent{Type: "运动", Title: "骑车"}
+		punch2_1 = model.PunchContent{Type: "运动", Title: "跑步", ID: 1500026}
+		punch2_2 = model.PunchContent{Type: "运动", Title: "俯卧撑", ID: 1500008}
+		punch2_3 = model.PunchContent{Type: "运动", Title: "跳绳", ID: 1500074}
+		punch2_4 = model.PunchContent{Type: "运动", Title: "仰卧起坐", ID: 1500066}
+		punch2_5 = model.PunchContent{Type: "运动", Title: "散步", ID: 1500033}
+		punch2_6 = model.PunchContent{Type: "运动", Title: "拉伸", ID: 1500073}
+		punch2_7 = model.PunchContent{Type: "运动", Title: "打篮球", ID: 1500071}
+		punch2_8 = model.PunchContent{Type: "运动", Title: "健身", ID: 1500020}
+		punch2_9 = model.PunchContent{Type: "运动", Title: "骑车", ID: 1500065}
 
-		punch3_1  = model.PunchContent{Type: "学习", Title: "自习"}
-		punch3_2  = model.PunchContent{Type: "学习", Title: "阅读新闻"}
-		punch3_3  = model.PunchContent{Type: "学习", Title: "练习乐器"}
-		punch3_4  = model.PunchContent{Type: "学习", Title: "学习新语言"}
-		punch3_5  = model.PunchContent{Type: "学习", Title: "背单词"}
-		punch3_6  = model.PunchContent{Type: "学习", Title: "看纪录片"}
-		punch3_7  = model.PunchContent{Type: "学习", Title: "做今日计划"}
-		punch3_8  = model.PunchContent{Type: "学习", Title: "听力练习"}
-		punch3_9  = model.PunchContent{Type: "学习", Title: "练字"}
-		punch3_10 = model.PunchContent{Type: "学习", Title: "英语阅读训练"}
+		punch3_1  = model.PunchContent{Type: "学习", Title: "自习", ID: 1500060}
+		punch3_2  = model.PunchContent{Type: "学习", Title: "阅读新闻", ID: 1500025}
+		punch3_3  = model.PunchContent{Type: "学习", Title: "练习乐器", ID: 1500069}
+		punch3_4  = model.PunchContent{Type: "学习", Title: "学习新语言", ID: 1500044}
+		punch3_5  = model.PunchContent{Type: "学习", Title: "背单词", ID: 1500010}
+		punch3_6  = model.PunchContent{Type: "学习", Title: "看纪录片", ID: 1500028}
+		punch3_7  = model.PunchContent{Type: "学习", Title: "做今日计划", ID: 1500067}
+		punch3_8  = model.PunchContent{Type: "学习", Title: "听力练习", ID: 1500011}
+		punch3_9  = model.PunchContent{Type: "学习", Title: "练字", ID: 1500059}
+		punch3_10 = model.PunchContent{Type: "学习", Title: "英语阅读训练", ID: 1500085}
 
 		lstao model.User
 	)

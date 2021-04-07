@@ -373,7 +373,6 @@ var doc = `{
         },
         "/punch": {
             "get": {
-                "description": "获取我的打卡（标签）",
                 "consumes": [
                     "application/json"
                 ],
@@ -383,7 +382,7 @@ var doc = `{
                 "tags": [
                     "punch"
                 ],
-                "summary": "我的打卡",
+                "summary": "获取用户某天的打卡",
                 "parameters": [
                     {
                         "type": "string",
@@ -391,6 +390,15 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "description": "天数",
+                        "name": "day",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Day"
+                        }
                     }
                 ],
                 "responses": {
@@ -438,12 +446,12 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "description": "卡的Title和完成本次打卡得到的金币数",
-                        "name": "title_and_gold",
+                        "description": "卡的Title",
+                        "name": "title",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.TitleAndGold"
+                            "$ref": "#/definitions/model.Title"
                         }
                     }
                 ],
@@ -1129,6 +1137,14 @@ var doc = `{
                 }
             }
         },
+        "model.Day": {
+            "type": "object",
+            "properties": {
+                "day": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.GoldHistory": {
             "type": "object",
             "properties": {
@@ -1180,6 +1196,9 @@ var doc = `{
         "model.Punch": {
             "type": "object",
             "properties": {
+                "id": {
+                    "type": "integer"
+                },
                 "number": {
                     "type": "integer"
                 },
@@ -1210,17 +1229,6 @@ var doc = `{
         "model.Title": {
             "type": "object",
             "properties": {
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.TitleAndGold": {
-            "type": "object",
-            "properties": {
-                "gold": {
-                    "type": "integer"
-                },
                 "title": {
                     "type": "string"
                 }

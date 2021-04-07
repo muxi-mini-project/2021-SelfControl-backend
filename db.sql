@@ -45,7 +45,7 @@ create table punch_histories(
 
 DROP TABLE IF EXISTS punch_contents;
 create table punch_contents(
-  id          int          not null auto_increment ,
+  id          int          not null ,
   type        varchar(100) not null ,
   title       varchar(100) not null UNIQUE ,
   content     varchar(100) ,

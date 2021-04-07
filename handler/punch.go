@@ -88,7 +88,7 @@ func TodayPunch(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Param title_and_gold body model.TitleAndGold true "卡的Title和完成本次打卡得到的金币数"
+// @Param title body model.Title true "卡的Title"
 // @Success 200 "打卡成功"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -102,7 +102,7 @@ func CompletePunch(c *gin.Context) {
 		return
 	}
 
-	var a model.TitleAndGold
+	var a model.Title
 	if err := c.BindJSON(&a); err != nil {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
@@ -116,12 +116,62 @@ func CompletePunch(c *gin.Context) {
 	//Gold := c.Request.Header.Get("gold")
 	//gold, _ := strconv.Atoi(Gold)
 	//title := c.Request.Header.Get("title")
-	if err := model.CompletePunch(id, a.Title, a.Gold); err != nil {
+	if err := model.CompletePunch(id, a.Title); err != nil {
 		log.Println(err)
 		c.JSON(400, gin.H{"message": "Fail."})
 		return
 	}
 	c.JSON(200, gin.H{"message": "打卡成功"})
+}
+
+// @Summary 获取用户某天的打卡
+// @Tags punch
+// Description 获取我的打卡（标签）
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Param day body model.Day true "天数"
+// @Success 200 {object} []model.Punch "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /punch/day/{day} [get]
+func GetDayPunchs(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := model.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	var a model.Day
+	if err := c.BindJSON(&a); err != nil {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+	if a.Day == 0 {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+	punchs := model.GetDayPunchs(id, a.Day)
+	histories := model.GetGoldHistory(id)
+	for _, history := range histories {
+		Time := []byte(history.Time)
+		Time = Time[8:10]
+		Time2 := string(Time)
+		Time3, _ := strconv.Atoi(Time2)
+		if Time3 == a.Day {
+			c.JSON(200, gin.H{
+				"ok": 1,
+			})
+			c.JSON(200, punchs)
+			return
+		}
+	}
+	c.JSON(200, gin.H{
+		"ok": 0,
+	})
+	c.JSON(200, punchs)
 }
 
 // @Summary  增加标签

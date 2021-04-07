@@ -14,6 +14,7 @@ type Choice struct {
 type Punch struct {
 	Title  string `json:"title"`
 	Number int    `json:"number"`
+	ID     int    `json:"id"`
 }
 
 type Punch2 struct {
