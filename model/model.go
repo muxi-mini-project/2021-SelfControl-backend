@@ -171,6 +171,29 @@ func DeletePunch(id string, title string) (string, error) {
 	return "", result.Error
 }
 
+func GetMonthly(id string) []Punch {
+	var punchs []PunchHistory
+	DB.Where("student_id = ? AND month = ? ", id, time.Now().Month()-1).Find(&punchs)
+	var Punchs []Punch
+	for _, punch := range punchs {
+		tag := 0
+		for i, punch2 := range Punchs {
+			if punch2.Title == punch.Title {
+				Punchs[i].Number++
+				tag = 1
+				break
+			}
+		}
+		if tag == 0 {
+			var Punch Punch
+			Punch.Title = punch.Title
+			Punch.Number++
+			Punchs = append(Punchs, Punch)
+		}
+	}
+	return Punchs
+}
+
 //default:
 
 func GetMonthList() ([]UserRanking, string) {

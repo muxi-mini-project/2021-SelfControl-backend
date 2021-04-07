@@ -504,7 +504,7 @@ var doc = `{
                     "200": {
                         "description": "删除成功"
                     },
-                    "204": {
+                    "203": {
                         "description": "删除失败,用户未选择该标签"
                     },
                     "400": {
@@ -563,13 +563,59 @@ var doc = `{
                     "200": {
                         "description": "新增标签成功"
                     },
-                    "204": {
+                    "203": {
                         "description": "该标签已选择"
                     },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
                         "schema": {
                             "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/punch/month": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "获取某用户月报",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "401": {
@@ -620,9 +666,6 @@ var doc = `{
                     },
                     "203": {
                         "description": "未找到该用户"
-                    },
-                    "204": {
-                        "description": "获取失败,用户未公开标签"
                     },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
@@ -1074,9 +1117,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "b_5": {
-                    "type": "integer"
-                },
-                "b_6": {
                     "type": "integer"
                 }
             }

@@ -55,12 +55,15 @@ func Router(r *gin.Engine) {
 
 		//获取某用户标签
 		g1.GET("/punch/:id", handler.GetPunchs)
+
+		//月报
+		g2.GET("/month", handler.Monthly)
 	}
 	//default:
 	//排行榜
 	r.GET("/api/v1/lists/:type", handler.List)
 
-	//兑换排行历史
+	//获取兑换排行历史
 	r.GET("/api/v1/list/history", handler.ListHistory)
 
 	//用户排名

@@ -77,7 +77,7 @@ func TodayPunch(c *gin.Context) {
 		return
 	}
 
-	TitleID, err := strconv.Atoi(c.Param("title_id"))
+	TitleID, _ := strconv.Atoi(c.Param("title_id"))
 	choice := model.TodayPunch(id, TitleID)
 	c.JSON(200, choice)
 }
@@ -103,6 +103,10 @@ func CompletePunch(c *gin.Context) {
 	}
 
 	var a model.TitleAndGold
+	if err := c.BindJSON(&a); err != nil {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
 	if a.Title == "" {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
@@ -112,10 +116,6 @@ func CompletePunch(c *gin.Context) {
 	//Gold := c.Request.Header.Get("gold")
 	//gold, _ := strconv.Atoi(Gold)
 	//title := c.Request.Header.Get("title")
-	if err := c.BindJSON(&a); err != nil {
-		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
-		return
-	}
 	if err := model.CompletePunch(id, a.Title, a.Gold); err != nil {
 		log.Println(err)
 		c.JSON(400, gin.H{"message": "Fail."})
@@ -231,4 +231,25 @@ func GetPunchs(c *gin.Context) {
 	}
 	punchs := model.GetPunchAndNumber(id)
 	c.JSON(200, punchs)
+}
+
+// @Summary  获取某用户月报
+// @Tags punch
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} []model.Punch "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /punch/month [get]
+func Monthly(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := model.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	punch := model.GetMonthly(id)
+	c.JSON(200, punch)
 }

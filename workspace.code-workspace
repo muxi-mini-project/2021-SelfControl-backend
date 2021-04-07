@@ -10,10 +10,13 @@
 			"path": "../2021-ZeroGravity-backend"
 		},
 		{
-			"path": "../LoginCCNU"
+			"path": "../go_practice"
 		},
 		{
-			"path": "../go_practice"
+			"path": "../leetcode"
+		},
+		{
+			"path": "../c_something"
 		}
 	],
 	"settings": {}

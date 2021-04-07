@@ -49,11 +49,11 @@ func Login(c *gin.Context) {
 		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
-		//增加拥有默认背景
-		var usersBackdrop model.UsersBackdrop
-		usersBackdrop.BackdropID = 0
-		usersBackdrop.StudentID = p.StudentID
-		model.DB.Create(&usersBackdrop)
+		// //增加拥有默认背景
+		// var usersBackdrop model.UsersBackdrop
+		// usersBackdrop.BackdropID = 0
+		// usersBackdrop.StudentID = p.StudentID
+		// model.DB.Create(&usersBackdrop)
 	} else {
 		if p.Password != pwd {
 			c.JSON(401, "Password or account wrong.")
