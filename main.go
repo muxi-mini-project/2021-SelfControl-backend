@@ -72,7 +72,7 @@ func dbtest() {
 		punch3_5  = model.PunchContent{Type: "学习", Title: "背单词", ID: 1500010}
 		punch3_6  = model.PunchContent{Type: "学习", Title: "看纪录片", ID: 1500028}
 		punch3_7  = model.PunchContent{Type: "学习", Title: "做今日计划", ID: 1500067}
-		punch3_8  = model.PunchContent{Type: "学习", Title: "听力练习", ID: 1500011}
+		punch3_8  = model.PunchContent{Type: "学习", Title: "听力训练", ID: 1500011}
 		punch3_9  = model.PunchContent{Type: "学习", Title: "练字", ID: 1500059}
 		punch3_10 = model.PunchContent{Type: "学习", Title: "英语阅读训练", ID: 1500085}
 

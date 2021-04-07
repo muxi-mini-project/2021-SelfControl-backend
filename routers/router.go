@@ -59,6 +59,9 @@ func Router(r *gin.Engine) {
 		//月报
 		g2.GET("/month", handler.Monthly)
 
+		//获取用户某月的周打卡
+		g2.GET("/week/:month", handler.GetWeekPunchs)
+
 		//获取用户某天的打卡
 		g2.GET("/day/:day", handler.GetDayPunchs)
 

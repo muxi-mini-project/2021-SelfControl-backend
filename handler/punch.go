@@ -130,10 +130,10 @@ func CompletePunch(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Param day body model.Day true "天数"
+// @Param day path int true "day"
 // @Success 200 {object} []model.Punch "获取成功"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
-// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
 // @Router /punch/day/{day} [get]
 func GetDayPunchs(c *gin.Context) {
@@ -143,24 +143,20 @@ func GetDayPunchs(c *gin.Context) {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
-
-	var a model.Day
-	if err := c.BindJSON(&a); err != nil {
+	a := c.Param("day")
+	x, _ := strconv.Atoi(a)
+	if x == 0 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	if a.Day == 0 {
-		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
-		return
-	}
-	punchs := model.GetDayPunchs(id, a.Day)
+	punchs := model.GetDayPunchs(id, x)
 	histories := model.GetGoldHistory(id)
 	for _, history := range histories {
 		Time := []byte(history.Time)
 		Time = Time[8:10]
 		Time2 := string(Time)
 		Time3, _ := strconv.Atoi(Time2)
-		if Time3 == a.Day {
+		if Time3 == x {
 			c.JSON(200, gin.H{
 				"ok": 1,
 			})
@@ -172,6 +168,40 @@ func GetDayPunchs(c *gin.Context) {
 		"ok": 0,
 	})
 	c.JSON(200, punchs)
+}
+
+// @Summary 获取用户月报的周数据
+// @Tags punch
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Param month path int true "month"
+// @Success 200 {object} []int "获取成功"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /punch/month/{month} [get]
+func GetWeekPunchs(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := model.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	a := c.Param("month")
+	x, _ := strconv.Atoi(a)
+	if x == 0 {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+	if x == 0 {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+
+	nums := model.GetWeekPunchs(id, x)
+	c.JSON(200, nums)
 }
 
 // @Summary  增加标签

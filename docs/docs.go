@@ -373,6 +373,7 @@ var doc = `{
         },
         "/punch": {
             "get": {
+                "description": "获取我的打卡（标签）",
                 "consumes": [
                     "application/json"
                 ],
@@ -382,7 +383,7 @@ var doc = `{
                 "tags": [
                     "punch"
                 ],
-                "summary": "获取用户某天的打卡",
+                "summary": "我的打卡",
                 "parameters": [
                     {
                         "type": "string",
@@ -390,15 +391,6 @@ var doc = `{
                         "name": "token",
                         "in": "header",
                         "required": true
-                    },
-                    {
-                        "description": "天数",
-                        "name": "day",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/model.Day"
-                        }
                     }
                 ],
                 "responses": {
@@ -595,6 +587,65 @@ var doc = `{
                 }
             }
         },
+        "/punch/day/{day}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "获取用户某天的打卡",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "day",
+                        "name": "day",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/punch/month": {
             "get": {
                 "consumes": [
@@ -624,6 +675,65 @@ var doc = `{
                             "items": {
                                 "$ref": "#/definitions/model.Punch"
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/punch/month/{month}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "获取用户月报的周数据",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "month",
+                        "name": "month",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "获取成功",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
                         }
                     },
                     "401": {
@@ -1134,14 +1244,6 @@ var doc = `{
             "properties": {
                 "choice": {
                     "type": "boolean"
-                }
-            }
-        },
-        "model.Day": {
-            "type": "object",
-            "properties": {
-                "day": {
-                    "type": "integer"
                 }
             }
         },

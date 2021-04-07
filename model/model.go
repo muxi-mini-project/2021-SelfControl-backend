@@ -74,7 +74,9 @@ func GetPunchAndNumber(id string) []Punch {
 	var punchs2 []Punch
 	var Punch Punch
 	for i := 0; i < len(punchs); i++ {
-		Punch.ID = punchs[i].ID
+		var p PunchContent
+		DB.Where("title = ? ", punchs[i].Title).First(&p)
+		Punch.ID = p.ID
 		Punch.Title = punchs[i].Title
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
@@ -84,6 +86,7 @@ func GetPunchAndNumber(id string) []Punch {
 
 }
 
+//根据 类型 获取其全部打卡
 func GetPunchs(TypeID string) []Punch2 {
 	Type := Type(TypeID)
 	var punchs []PunchContent
@@ -105,7 +108,9 @@ func GetMyPunch(id string) []Punch {
 	var punchs2 []Punch
 	var Punch Punch
 	for i := 0; i < len(punchs); i++ {
-		Punch.ID = punchs[i].ID
+		var p PunchContent
+		DB.Where("title = ? ", punchs[i].Title).First(&p)
+		Punch.ID = p.ID
 		Punch.Title = punchs[i].Title
 		Punch.Number = punchs[i].Number
 		punchs2 = append(punchs2, Punch)
@@ -135,17 +140,55 @@ func GetDayPunchs(StudentId string, day int) []Punch {
 	var punchs2 []Punch
 	var Punch Punch
 	for i := 0; i < len(punchs); i++ {
-		Punch.ID = punchs[i].ID
+		var p PunchContent
+		DB.Where("title = ? ", punchs[i].Title).First(&p)
+		Punch.ID = p.ID
 		Punch.Title = punchs[i].Title
 		punchs2 = append(punchs2, Punch)
 	}
 	return punchs2
 }
 
+func GetWeekPunchs(id string, month int) []int {
+	var histories []PunchHistory
+	DB.Where("month = ? ", month).Find(&histories)
+	var days, Nums []int
+	var nums [10]int
+	days = append(days, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
+	//w := (20/4 - 2*20 + 21 + 21/4 + 13*(month+1)/5) % 7
+	w := (-9 + 13*(month+1)/5) % 7
+	for _, history := range histories {
+		history.Day = history.Day - days[month-1]
+		if history.Day <= 8-w {
+			nums[0]++
+			continue
+		} else if history.Day <= 15-w {
+			nums[1]++
+			continue
+		} else if history.Day <= 22-w {
+			nums[2]++
+			continue
+		} else if history.Day <= 29-w {
+			nums[3]++
+			continue
+		} else if history.Day <= 36-w {
+			nums[4]++
+			continue
+		} else {
+			nums[5]++
+			continue
+		}
+	}
+	for _, num := range nums {
+		Nums = append(Nums, num)
+	}
+	return Nums
+}
+
 func CompletePunch(id string, title string) error {
 	var pun UsersPunch
-	err := DB.Where("student_id = ? AND title = ? ", id, title).First(pun).Error
-	if err == nil {
+	err := DB.Where("student_id = ? AND title = ? ", id, title).First(&pun).Error
+	if err != nil {
 		return err
 	}
 	var punch PunchHistory
@@ -160,7 +203,7 @@ func CompletePunch(id string, title string) error {
 		return result.Error
 	}
 	var punchss []UsersPunch
-	DB.Where("student_id = ? ", id).Find(punchss)
+	DB.Where("student_id = ? ", id).Find(&punchss)
 	puns := GetDayPunchs(id, time.Now().Day())
 	if len(puns) == len(punchss) {
 		gold := 0
@@ -440,7 +483,6 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 	}
 	err := ChangeWeekList(rank)
 	return err, ""
-
 }
 
 func CreateRankingHistory(history ListHistory) error {
@@ -534,7 +576,6 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 	}
 	err := ChangeMonthList(rank)
 	return err, ""
-
 }
 
 func ChangeMonthList(rank MonthList) error {

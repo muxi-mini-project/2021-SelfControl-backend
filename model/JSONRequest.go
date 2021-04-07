@@ -16,7 +16,3 @@ type Ranking struct {
 type BackdropID struct {
 	BackdropID int `json:"backdrop_id"`
 }
-
-type Day struct {
-	Day int `json:"day"`
-}
