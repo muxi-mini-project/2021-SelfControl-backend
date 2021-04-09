@@ -134,6 +134,21 @@ func TodayPunch(StudentId string, TitleID int) Choice {
 	return Choice
 }
 
+func TodayPunchs(id string) int {
+	var histories []PunchHistory
+	DB.Where("student_id = ? AND day = ? ", id, time.Now().Day()).Find(&histories)
+	var Punchs []UsersPunch
+	DB.Where("student_id = ? ", id).Find(&Punchs)
+	//无打卡信息
+	if len(Punchs) == 0 {
+		return 0
+	} //未全部完成
+	if len(Punchs) > len(histories) {
+		return -1
+	} //返回全部完成的打卡数量
+	return len(Punchs)
+}
+
 func GetDayPunchs(StudentId string, day int) []Punch {
 	var punchs []PunchHistory
 	DB.Where("student_id = ? AND day = ?", StudentId, day).Find(&punchs)
@@ -204,12 +219,10 @@ func CompletePunch(id string, title string) error {
 		return err
 	}
 	var punch PunchHistory
-	//result:=DB.Model(&punch).Where("id = ? AND title = ?",id ,title).Update("choice", "hello")
 	punch.Title = title
 	punch.StudentID = id
 	punch.Time = time.Now().Format("2006-01-02 15:04:05")
 	punch.Month = int(time.Now().Month())
-	//punch.Week=time.Now().ISOWeek()
 	punch.Day = time.Now().YearDay()
 	if result := DB.Create(&punch); result.Error != nil {
 		return result.Error
@@ -649,10 +662,10 @@ func GetGoldHistory(id string) []GoldHistory {
 }
 
 func CreatePunch(id string, title string) (error, string) {
-	var u UsersPunch
-	if result := DB.Where("student_id = ? AND title = ? ", id, title).First(&u); result.Error == nil {
-		return nil, "用户已选择该标签"
-	}
+	// var u UsersPunch
+	// if result := DB.Where("student_id = ? AND title = ? ", id, title).First(&u); result.Error == nil {
+	// 	return nil, "用户已选择该标签"
+	// }
 	var punch UsersPunch
 	punch.StudentID = id
 	punch.Title = title

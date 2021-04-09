@@ -44,6 +44,9 @@ func Router(r *gin.Engine) {
 		//判断今天是否已打卡
 		g2.GET("/today/:title_id", handler.TodayPunch)
 
+		//判断今天是否已全部打卡
+		g2.GET("/todayall", handler.TodayPunchs)
+
 		//完成打卡
 		g2.POST("/", handler.CompletePunch)
 

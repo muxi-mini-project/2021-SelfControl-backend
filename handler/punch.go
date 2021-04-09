@@ -15,6 +15,9 @@ type Response struct {
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
+type Data struct {
+	Data interface{} `json:"data"`
+}
 
 func SendResponse(c *gin.Context, message string, data interface{}) {
 	c.JSON(http.StatusOK, Response{
@@ -96,6 +99,30 @@ func TodayPunch(c *gin.Context) {
 	TitleID, _ := strconv.Atoi(c.Param("title_id"))
 	choice := model.TodayPunch(id, TitleID)
 	c.JSON(200, choice)
+}
+
+// @Summary  判断今天是否已完成全部打卡
+// @Tags punch
+// @Accept application/json
+// @Produce application/json
+// @Param token header string true "token"
+// @Success 200 {object} Data " -1 为未完成；0 为未选择打卡；  其他 为已全部完成且总数为该数字"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /punch/todayall [get]
+func TodayPunchs(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := model.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	ok := model.TodayPunchs(id)
+	c.JSON(200, Data{
+		Data: ok,
+	})
 }
 
 // @Summary  完成打卡
@@ -234,7 +261,7 @@ func GetWeekPunchs(c *gin.Context) {
 // @Param token header string true "token"
 // @Param title body model.Title true "title"
 // @Success 200 "新增标签成功"
-// @Failure 203 "该标签已选择"
+// @Failure 203 "该标签已选择" or "今日已完成全部打卡，不能再新增标签"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -258,6 +285,11 @@ func CreatePunch(c *gin.Context) {
 	}
 	//title := c.Param("title")
 	//title := c.Request.Header.Get("title")
+	num := model.TodayPunchs(id)
+	if num > 0 {
+		c.JSON(203, gin.H{"message": "今日已完成全部打卡，不能再新增标签"})
+		return
+	}
 	if err, message := model.CreatePunch(id, title.Title); message != "" {
 		c.JSON(203, gin.H{"message": message})
 		return

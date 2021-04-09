@@ -7,6 +7,11 @@ definitions:
       message:
         type: string
     type: object
+  handler.Data:
+    properties:
+      data:
+        type: object
+    type: object
   model.Backdrop:
     properties:
       backdrop_id:
@@ -123,6 +128,13 @@ definitions:
         type: integer
       student_id:
         type: string
+    type: object
+  model.WeekPunch:
+    properties:
+      number:
+        type: integer
+      week:
+        type: integer
     type: object
   user.Token:
     properties:
@@ -505,7 +517,7 @@ paths:
         "200":
           description: 新增标签成功
         "203":
-          description: 该标签已选择
+          description: 该标签已选择" or "今日已完成全部打卡，不能再新增标签
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
             "message":"Lack Param Or Param Not Satisfiable."}'
@@ -595,47 +607,6 @@ paths:
       summary: 获取某用户月报
       tags:
       - punch
-  /punch/month/{month}:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      - description: month
-        in: path
-        name: month
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取成功
-          schema:
-            items:
-              type: integer
-            type: array
-        "400":
-          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
-            "message":"Lack Param Or Param Not Satisfiable."}'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "401":
-          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
-            重新登录'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 获取用户月报的周数据
-      tags:
-      - punch
   /punch/punch/{id}:
     get:
       consumes:
@@ -702,6 +673,76 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 判断今天是否已打卡
+      tags:
+      - punch
+  /punch/todayall:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ' -1 为未完成；0 为未选择打卡；  其他 为已全部完成且总数为该数字'
+          schema:
+            $ref: '#/definitions/handler.Data'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 判断今天是否已完成全部打卡
+      tags:
+      - punch
+  /punch/week/{month}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: month
+        in: path
+        name: month
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            items:
+              $ref: '#/definitions/model.WeekPunch'
+            type: array
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 获取用户月报的周数据
       tags:
       - punch
   /punchs/{type_id}:

@@ -74,8 +74,11 @@ func ChangeRanking(c *gin.Context) {
 		return
 	}
 	if Type == "week" {
-		if err, message := model.ChangeWeekRanking(id, ranking.Ranking); message != "" {
-			c.JSON(203, gin.H{"message": "金币不足"})
+		if err, message := model.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
+			c.JSON(203, gin.H{"message": message})
+			return
+		} else if message != "" {
+			c.JSON(201, gin.H{"message": message})
 			return
 		} else if err != nil {
 			c.JSON(400, gin.H{"message": "Fail."})
@@ -83,8 +86,11 @@ func ChangeRanking(c *gin.Context) {
 			return
 		}
 	} else if Type == "month" {
-		if err, message := model.ChangeMonthRanking(id, ranking.Ranking); message != "" {
-			c.JSON(203, gin.H{"message": "金币不足"})
+		if err, message := model.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
+			c.JSON(203, gin.H{"message": message})
+			return
+		} else if message != "" {
+			c.JSON(201, gin.H{"message": message})
 			return
 		} else if err != nil {
 			c.JSON(400, gin.H{"message": "Fail."})
