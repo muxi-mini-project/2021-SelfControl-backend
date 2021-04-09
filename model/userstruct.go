@@ -53,3 +53,8 @@ type ListHistories struct {
 	MonthFormer int    `json:"month_former"`
 	MonthAfter  int    `json:"month_after"`
 }
+
+type WeekPunch struct {
+	Week   int `json:"week"`
+	Number int `json:"number"`
+}

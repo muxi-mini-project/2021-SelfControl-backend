@@ -153,10 +153,16 @@ func GetWeekPunchs(id string, month int) []int {
 	var histories []PunchHistory
 	DB.Where("month = ? ", month).Find(&histories)
 	var days, Nums []int
-	var nums [10]int
-	days = append(days, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
+	var nums [6]int
+	tag := 0
+	days = append(days, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
 	//w := (20/4 - 2*20 + 21 + 21/4 + 13*(month+1)/5) % 7
 	w := (-9 + 13*(month+1)/5) % 7
+	day := days[month] - days[month-1]
+	//一个月6周 tag 就为1
+	if day+w > 35 {
+		tag = 1
+	}
 	for _, history := range histories {
 		history.Day = history.Day - days[month-1]
 		if history.Day <= 8-w {
@@ -179,8 +185,14 @@ func GetWeekPunchs(id string, month int) []int {
 			continue
 		}
 	}
-	for _, num := range nums {
-		Nums = append(Nums, num)
+	if tag == 1 {
+		for _, num := range nums {
+			Nums = append(Nums, num)
+		}
+	} else {
+		for i := 0; i < len(nums)-1; i++ {
+			Nums = append(Nums, nums[i])
+		}
 	}
 	return Nums
 }

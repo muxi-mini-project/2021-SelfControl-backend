@@ -62,8 +62,8 @@ func ChangeUserInfo(c *gin.Context) {
 		return
 	}
 
-	if user.Privacy != 0 && user.Privacy != 1 {
-		c.JSON(400, gin.H{"message": "Privacy参数错误(0 = 公开， 1 = 不公开)"})
+	if user.Privacy != 2 && user.Privacy != 1 && user.Privacy != 0 {
+		c.JSON(400, gin.H{"message": "Privacy参数错误(2 = 公开， 1 = 不公开)"})
 		return
 	}
 	user.StudentID = id

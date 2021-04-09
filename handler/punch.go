@@ -3,10 +3,26 @@ package handler
 import (
 	"SC/model"
 	"log"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
+
+// Response 请求响应
+type Response struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+func SendResponse(c *gin.Context, message string, data interface{}) {
+	c.JSON(http.StatusOK, Response{
+		Code:    200,
+		Message: message,
+		Data:    data,
+	})
+}
 
 // @Summary  当前类型所有打卡
 // @Tags punch
@@ -176,11 +192,11 @@ func GetDayPunchs(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param month path int true "month"
-// @Success 200 {object} []int "获取成功"
+// @Success 200 {object} []model.WeekPunch "获取成功"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/month/{month} [get]
+// @Router /punch/week/{month} [get]
 func GetWeekPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := model.VerifyToken(token)
@@ -195,13 +211,19 @@ func GetWeekPunchs(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	if x == 0 {
-		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
-		return
-	}
-
 	nums := model.GetWeekPunchs(id, x)
-	c.JSON(200, nums)
+	var weekPunch []model.WeekPunch
+	for i, num := range nums {
+		var WeekPunch model.WeekPunch
+		WeekPunch.Week = i + 1
+		WeekPunch.Number = num
+		weekPunch = append(weekPunch, WeekPunch)
+	}
+	SendResponse(c, "", weekPunch)
+	// c.JSON(200, Data{
+	// 	Data: weekPunch,
+	// })
+	// c.JSON(200, weekPunch)
 }
 
 // @Summary  增加标签
@@ -305,7 +327,7 @@ func GetPunchs(c *gin.Context) {
 		return
 	}
 
-	if u.Privacy == 0 {
+	if u.Privacy == 2 {
 		c.JSON(203, gin.H{"message": "获取失败,用户未公开标签"})
 		return
 	}

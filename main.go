@@ -47,7 +47,7 @@ func dbtest() {
 		punch1_1  = model.PunchContent{Type: "健康", Title: "吃水果", ID: 1500045}
 		punch1_2  = model.PunchContent{Type: "健康", Title: "吃早餐", ID: 1500057}
 		punch1_3  = model.PunchContent{Type: "健康", Title: "多喝水", ID: 1500007}
-		punch1_4  = model.PunchContent{Type: "健康", Title: "拒绝宵夜", ID: 1500068}
+		punch1_4  = model.PunchContent{Type: "健康", Title: "拒绝夜宵", ID: 1500068}
 		punch1_5  = model.PunchContent{Type: "健康", Title: "拒绝饮料", ID: 1500043}
 		punch1_6  = model.PunchContent{Type: "健康", Title: "拒绝久坐", ID: 1500083}
 		punch1_7  = model.PunchContent{Type: "健康", Title: "早起", ID: 1500024}
