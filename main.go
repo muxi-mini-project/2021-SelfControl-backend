@@ -17,13 +17,12 @@ var err error
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
-// @host 39.102.42.156
+// @host 39.99.53.8
 // @BasePath /api/v1
 // @Schemes http
 
 func main() {
-	//model.DB, err = gorm.Open("mysql", "tao:12345678@/Self_Control?parseTime=True")
-	model.DB, err = gorm.Open("mysql", "root:1234@/Self_Control?parseTime=True")
+	model.DB, err = gorm.Open("mysql", "root:12345678@/SC?parseTime=True")
 	if err != nil {
 		panic(err)
 	}

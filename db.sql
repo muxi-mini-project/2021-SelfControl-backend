@@ -1,5 +1,5 @@
-Create database Self_Control;
-Use Self_Control
+Create database SC;
+Use SC
 
 DROP TABLE IF EXISTS users;
 create table users(
