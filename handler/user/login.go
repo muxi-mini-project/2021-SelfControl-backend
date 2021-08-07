@@ -1,6 +1,7 @@
 package user
 
 import (
+	"SC/handler"
 	"SC/model"
 	"log"
 	"time"
@@ -9,17 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Token struct {
-	Token string `json:"token"`
-}
-
 // @Summary  登录
 // @Tags user
 // @Description 学号密码登录
 // @Accept application/json
 // @Produce application/json
 // @Param object body model.User true "登录的用户信息"
-// @Success 200 {object} Token "将student_id作为token保留"
+// Success 200 {object} Token "将student_id作为token保留"
+// @Success 200 {object} handler.Response "{"msg":"将student_id作为token保留"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Password or account wrong."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -73,7 +71,6 @@ func Login(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 	}
-	var Token Token
-	Token.Token = signedToken
-	c.JSON(200, Token)
+
+	handler.SendResponse(c, "将student_id作为token保留", signedToken)
 }

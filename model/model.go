@@ -118,7 +118,7 @@ func GetMyPunch(id string) []Punch {
 	return punchs2
 }
 
-func TodayPunch(StudentId string, TitleID int) Choice {
+func TodayPunch(StudentId string, TitleID int) bool {
 	var Punch PunchContent
 	DB.Where("id = ?", TitleID).First(&Punch)
 	var punch PunchHistory
@@ -130,8 +130,7 @@ func TodayPunch(StudentId string, TitleID int) Choice {
 	} else {
 		choice = true
 	}
-	Choice := Choice{Choice: choice}
-	return Choice
+	return choice
 }
 
 func TodayPunchs(id string) int {

@@ -1,6 +1,7 @@
 package user
 
 import (
+	"SC/handler"
 	"SC/model"
 	"fmt"
 
@@ -13,7 +14,8 @@ import (
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Success 200 {object} model.User "获取成功"
+// Success 200 {object} model.User "获取成功"
+// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
 // @Failure 203 {object} error.Error "{"error_code":"20001", "message":"Fail."}
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -33,7 +35,7 @@ func UserInfo(c *gin.Context) {
 		c.JSON(203, gin.H{"message": "Fail."})
 		return
 	}
-	c.JSON(200, u)
+	handler.SendResponse(c, "获取成功", u)
 }
 
 // @Summary  修改用户信息
@@ -43,7 +45,8 @@ func UserInfo(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param User body model.User true "需要修改的用户信息"
-// @Success 200 "修改成功"
+// Success 200 "修改成功"
+// @Success 200 {object} handler.Response "{"msg":"修改成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -71,7 +74,7 @@ func ChangeUserInfo(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "更新失败"})
 		return
 	}
-	c.JSON(200, gin.H{"message": "修改成功"})
+	handler.SendResponse(c, "修改成功", nil)
 }
 
 // @Summary  金币历史
@@ -80,7 +83,8 @@ func ChangeUserInfo(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Success 200 {object} []model.GoldHistory "获取成功"
+// Success 200 {object} []model.GoldHistory "获取成功"
+// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -98,7 +102,7 @@ func GoldHistory(c *gin.Context) {
 		histories = histories[len(histories)-3:]
 	}
 
-	c.JSON(200, histories)
+	handler.SendResponse(c, "获取成功", histories)
 }
 
 // @Summary  我的打卡数
@@ -107,7 +111,8 @@ func GoldHistory(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Success 200 {object} []model.Punch "获取成功"
+// Success 200 {object} []model.Punch "获取成功"
+// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -121,7 +126,8 @@ func PunchAndNumber(c *gin.Context) {
 	}
 
 	punchs := model.GetPunchAndNumber(id)
-	c.JSON(200, punchs)
+
+	handler.SendResponse(c, "获取成功", punchs)
 }
 
 // @Summary  隐私
@@ -130,7 +136,8 @@ func PunchAndNumber(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param id path int true "id"
-// @Success 200 {object} model.Privacy "bool：默认为1 若要修改隐私 直接使用修改用户信息"
+// Success 200 {object} model.Privacy ""
+// @Success 200 {object} handler.Response "{"msg":"默认为1 若要修改隐私 直接使用修改用户信息"}"
 // @Failure 203 "未找到该用户"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -143,6 +150,6 @@ func GetPrivacy(c *gin.Context) {
 		c.JSON(203, gin.H{"message": "未找到该用户"})
 		return
 	}
-	privacy := model.Privacy{Privacy: u.Privacy}
-	c.JSON(200, privacy)
+
+	handler.SendResponse(c, "默认为1 若要修改隐私 直接使用修改用户信息", u.Privacy)
 }

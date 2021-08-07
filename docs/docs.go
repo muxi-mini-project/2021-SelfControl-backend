@@ -49,12 +49,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Backdrop"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "500": {
@@ -97,7 +94,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "兑换成功"
+                        "description": "{\"msg\":\"兑换成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "203": {
                         "description": "金币不足"
@@ -147,9 +147,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.BackdropRes"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -190,9 +190,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.ListHistories"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "203": {
@@ -244,9 +244,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.Ranking"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "500": {
@@ -298,7 +298,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "兑换成功"
+                        "description": "{\"msg\":\"兑换成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "203": {
                         "description": "金币不足"
@@ -345,12 +348,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取前五用户",
+                        "description": "{\"msg\":\"获取前五用户\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.UserRanking"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "203": {
@@ -395,12 +395,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -449,7 +446,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "打卡成功"
+                        "description": "{\"msg\":\"打卡成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
@@ -502,7 +502,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "删除成功"
+                        "description": "{\"msg\":\"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "203": {
                         "description": "删除失败,用户未选择该标签"
@@ -561,7 +564,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "新增标签成功"
+                        "description": "{\"msg\":\"新增标签成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "203": {
                         "description": "该标签已选择\" or \"今日已完成全部打卡，不能再新增标签"
@@ -617,12 +623,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"1\"}/{\"msg\":\"0\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "400": {
@@ -669,12 +672,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -715,12 +715,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "203": {
@@ -772,9 +769,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功（未打卡为false）",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.Choice"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -815,9 +812,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": " -1 为未完成；0 为未选择打卡；  其他 为已全部完成且总数为该数字",
+                        "description": "{\"msg\":\"未完成\"}/{\"msg\":\"未选择打卡\"}/{\"msg\":\"已全部完成且数量为返回的值\"}",
                         "schema": {
-                            "$ref": "#/definitions/handler.Data"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -865,12 +862,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"打卡成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.WeekPunch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "400": {
@@ -883,44 +877,6 @@ var doc = `{
                         "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
                         "schema": {
                             "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/punchs/{type_id}": {
-            "get": {
-                "description": "在url末尾获取类型id（1：健康 2：运动 3：学习）",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "punch"
-                ],
-                "summary": "当前类型所有打卡",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "type_id",
-                        "name": "type_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "获取成功",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch2"
-                            }
                         }
                     },
                     "500": {
@@ -956,9 +912,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.User"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "203": {
@@ -1013,7 +969,10 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "修改成功"
+                        "description": "{\"msg\":\"修改成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
                     },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
@@ -1060,9 +1019,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "将student_id作为token保留",
+                        "description": "{\"msg\":\"将student_id作为token保留\"}",
                         "schema": {
-                            "$ref": "#/definitions/user.Token"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "400": {
@@ -1110,12 +1069,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.GoldHistory"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -1157,9 +1113,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "bool：默认为1 若要修改隐私 直接使用修改用户信息",
+                        "description": "{\"msg\":\"默认为1 若要修改隐私 直接使用修改用户信息\"}",
                         "schema": {
-                            "$ref": "#/definitions/model.Privacy"
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "203": {
@@ -1204,12 +1160,9 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "获取成功",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/model.Punch"
-                            }
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -1229,6 +1182,20 @@ var doc = `{
         }
     },
     "definitions": {
+        "Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
         "error.Error": {
             "type": "object",
             "properties": {
@@ -1240,134 +1207,11 @@ var doc = `{
                 }
             }
         },
-        "handler.Data": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object"
-                }
-            }
-        },
-        "model.Backdrop": {
-            "type": "object",
-            "properties": {
-                "backdrop_id": {
-                    "type": "integer"
-                },
-                "picture_url": {
-                    "type": "string"
-                },
-                "price": {
-                    "type": "integer"
-                }
-            }
-        },
         "model.BackdropID": {
             "type": "object",
             "properties": {
                 "backdrop_id": {
                     "type": "integer"
-                }
-            }
-        },
-        "model.BackdropRes": {
-            "type": "object",
-            "properties": {
-                "b_1": {
-                    "type": "integer"
-                },
-                "b_2": {
-                    "type": "integer"
-                },
-                "b_3": {
-                    "type": "integer"
-                },
-                "b_4": {
-                    "type": "integer"
-                },
-                "b_5": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.Choice": {
-            "type": "object",
-            "properties": {
-                "choice": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "model.GoldHistory": {
-            "type": "object",
-            "properties": {
-                "change_number": {
-                    "type": "integer"
-                },
-                "reason": {
-                    "type": "string"
-                },
-                "residual_number": {
-                    "type": "integer"
-                },
-                "student_id": {
-                    "type": "string"
-                },
-                "time": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.ListHistories": {
-            "type": "object",
-            "properties": {
-                "month_after": {
-                    "type": "integer"
-                },
-                "month_former": {
-                    "type": "integer"
-                },
-                "student_id": {
-                    "type": "string"
-                },
-                "week_after": {
-                    "type": "integer"
-                },
-                "week_former": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.Privacy": {
-            "type": "object",
-            "properties": {
-                "privacy": {
-                    "type": "integer"
-                }
-            }
-        },
-        "model.Punch": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.Punch2": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "title": {
-                    "type": "string"
                 }
             }
         },
@@ -1412,42 +1256,6 @@ var doc = `{
                     "type": "string"
                 }
             }
-        },
-        "model.UserRanking": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "number": {
-                    "type": "integer"
-                },
-                "ranking": {
-                    "type": "integer"
-                },
-                "student_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.WeekPunch": {
-            "type": "object",
-            "properties": {
-                "number": {
-                    "type": "integer"
-                },
-                "week": {
-                    "type": "integer"
-                }
-            }
-        },
-        "user.Token": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
         }
     }
 }`
@@ -1464,7 +1272,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0.0",
-	Host:        "39.99.53.8",
+	Host:        "39.99.53.8:2333",
 	BasePath:    "/api/v1",
 	Schemes:     []string{"http"},
 	Title:       "Self_Control API",

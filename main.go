@@ -17,7 +17,7 @@ var err error
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email 864978550@qq.com
-// @host 39.99.53.8
+// @host 39.99.53.8:2333
 // @BasePath /api/v1
 // @Schemes http
 
@@ -30,7 +30,7 @@ func main() {
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
 	routers.Router(r)
-	//dbtest()
+	dbtest()
 	r.Run(":2333")
 	defer model.DB.Close()
 }
