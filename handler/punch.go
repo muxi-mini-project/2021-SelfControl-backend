@@ -31,8 +31,7 @@ func Punchs(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} []model.Punch "获取成功"
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.Punch "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -141,11 +140,7 @@ func CompletePunch(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	//title := c.Param("title")
-	//Gold := c.Param("gold")
-	//Gold := c.Request.Header.Get("gold")
-	//gold, _ := strconv.Atoi(Gold)
-	//title := c.Request.Header.Get("title")
+
 	if err := model.CompletePunch(id, title.Title); err != nil {
 		log.Println(err)
 		c.JSON(400, gin.H{"message": "Fail."})
@@ -161,8 +156,7 @@ func CompletePunch(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param day path int true "day"
-// @Success 200 {object} Response "{"msg":"1"}/{"msg":"0"}"
-// Success 200 {object} []model.Punch ""
+// @Success 200 {object} []model.Punch "{"msg":"1"}/{"msg":"0"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -201,8 +195,7 @@ func GetDayPunchs(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param month path int true "month"
-// Success 200 {object} []model.WeekPunch "获取成功"
-// @Success 200 {object} Response "{"msg":"打卡成功"}"
+// @Success 200 {object} []model.WeekPunch "{"msg":"打卡成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -239,7 +232,6 @@ func GetWeekPunchs(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param title body model.Title true "title"
-// Success 200 "新增标签成功"
 // @Success 200 {object} Response "{"msg":"新增标签成功"}"
 // @Failure 203 "该标签已选择" or "今日已完成全部打卡，不能再新增标签"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
@@ -263,8 +255,6 @@ func CreatePunch(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	//title := c.Param("title")
-	//title := c.Request.Header.Get("title")
 	num := model.TodayPunchs(id)
 
 	if num > 0 {
@@ -287,7 +277,6 @@ func CreatePunch(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param title body model.Title true "需要删除的打卡title"
-// Success 200 "删除成功"
 // @Success 200 {object} Response "{"msg":"删除成功"}"
 // @Failure 203 "删除失败,用户未选择该标签"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
@@ -327,8 +316,7 @@ func DeletePunch(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param id path int true "id"
-// Success 200 {object} []model.Punch "获取成功"
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.Punch "{"msg":"获取成功"}"
 // @Failure 203 "获取失败,用户未公开标签"
 // @Failure 203 "未找到该用户"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -355,8 +343,7 @@ func GetPunchs(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} []model.Punch "获取成功"
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.Punch "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
 // @Router /punch/month [get]

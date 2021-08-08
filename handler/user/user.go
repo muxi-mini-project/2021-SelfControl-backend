@@ -15,7 +15,7 @@ import (
 // @Produce application/json
 // @Param token header string true "token"
 // Success 200 {object} model.User "获取成功"
-// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
+// @Success 200 {object} model.User "{"msg":"获取成功"}"
 // @Failure 203 {object} error.Error "{"error_code":"20001", "message":"Fail."}
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -83,8 +83,7 @@ func ChangeUserInfo(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} []model.GoldHistory "获取成功"
-// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.GoldHistory "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -111,8 +110,7 @@ func GoldHistory(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} []model.Punch "获取成功"
-// @Success 200 {object} handler.Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.Punch "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -136,7 +134,6 @@ func PunchAndNumber(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param id path int true "id"
-// Success 200 {object} model.Privacy ""
 // @Success 200 {object} handler.Response "{"msg":"默认为1 若要修改隐私 直接使用修改用户信息"}"
 // @Failure 203 "未找到该用户"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"

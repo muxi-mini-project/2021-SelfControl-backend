@@ -16,10 +16,67 @@ definitions:
       message:
         type: string
     type: object
+  model.Backdrop:
+    properties:
+      backdrop_id:
+        type: integer
+      picture_url:
+        type: string
+      price:
+        type: integer
+    type: object
   model.BackdropID:
     properties:
       backdrop_id:
         type: integer
+    type: object
+  model.BackdropRes:
+    properties:
+      b_1:
+        type: integer
+      b_2:
+        type: integer
+      b_3:
+        type: integer
+      b_4:
+        type: integer
+      b_5:
+        type: integer
+    type: object
+  model.GoldHistory:
+    properties:
+      change_number:
+        type: integer
+      reason:
+        type: string
+      residual_number:
+        type: integer
+      student_id:
+        type: string
+      time:
+        type: string
+    type: object
+  model.ListHistories:
+    properties:
+      month_after:
+        type: integer
+      month_former:
+        type: integer
+      student_id:
+        type: string
+      week_after:
+        type: integer
+      week_former:
+        type: integer
+    type: object
+  model.Punch:
+    properties:
+      id:
+        type: integer
+      number:
+        type: integer
+      title:
+        type: string
     type: object
   model.Ranking:
     properties:
@@ -48,6 +105,24 @@ definitions:
       user_picture:
         type: string
     type: object
+  model.UserRanking:
+    properties:
+      name:
+        type: string
+      number:
+        type: integer
+      ranking:
+        type: integer
+      student_id:
+        type: string
+    type: object
+  model.WeekPunch:
+    properties:
+      number:
+        type: integer
+      week:
+        type: integer
+    type: object
 host: 39.99.53.8:2333
 info:
   contact:
@@ -73,7 +148,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Backdrop'
+            type: array
         "500":
           description: '{"error_code":"30001", "message":"Fail."} 失败'
           schema:
@@ -140,7 +217,7 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            $ref: '#/definitions/model.BackdropRes'
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -217,7 +294,7 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            $ref: '#/definitions/model.ListHistories'
         "203":
           description: 金币不足
         "401":
@@ -277,7 +354,9 @@ paths:
         "200":
           description: '{"msg":"获取前五用户"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.UserRanking'
+            type: array
         "203":
           description: 未检索到该时间段的打卡信息
         "400":
@@ -350,7 +429,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -467,7 +548,9 @@ paths:
         "200":
           description: '{"msg":"1"}/{"msg":"0"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
             "message":"Lack Param Or Param Not Satisfiable."}'
@@ -501,7 +584,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -530,7 +615,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
         "203":
           description: 未找到该用户
         "400":
@@ -630,7 +717,9 @@ paths:
         "200":
           description: '{"msg":"打卡成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.WeekPunch'
+            type: array
         "400":
           description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
             "message":"Lack Param Or Param Not Satisfiable."}'
@@ -665,7 +754,7 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            $ref: '#/definitions/model.User'
         "203":
           description: '{"error_code":"20001", "message":"Fail."}'
           schema:
@@ -774,7 +863,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.GoldHistory'
+            type: array
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'
@@ -836,7 +927,9 @@ paths:
         "200":
           description: '{"msg":"获取成功"}'
           schema:
-            $ref: '#/definitions/Response'
+            items:
+              $ref: '#/definitions/model.Punch'
+            type: array
         "401":
           description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
             重新登录'

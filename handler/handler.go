@@ -13,8 +13,7 @@ import (
 // Accept application/json
 // @Produce application/json
 // @Param type path string true "type"
-// Success 200 {object} []model.UserRanking "获取前五用户"
-// @Success 200 {object} Response "{"msg":"获取前五用户"}"
+// @Success 200 {object} []model.UserRanking "{"msg":"获取前五用户"}"
 // @Failure 203 "未检索到该时间段的打卡信息"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -51,7 +50,6 @@ func List(c *gin.Context) {
 // @Param token header string true "token"
 // @Param type path string true "type"
 // @Param ranking body model.Ranking true "ranking"
-// Success 200 "兑换成功"
 // @Success 200 {object} Response "{"msg":"兑换成功"}"
 // @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
@@ -112,8 +110,7 @@ func ChangeRanking(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} model.ListHistories
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} model.ListHistories "{"msg":"获取成功"}"
 // @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -137,8 +134,7 @@ func ListHistory(c *gin.Context) {
 // Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} []model.Backdrop "获取成功"
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} []model.Backdrop "{"msg":"获取成功"}"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -155,7 +151,6 @@ func BackdropPrice(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param backdrop_id body model.BackdropID true "backdrop_id"
-// Success 200 "兑换成功"
 // @Success 200 {object} Response "{"msg":"兑换成功"}"
 // @Failure 203 "金币不足"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
@@ -197,8 +192,7 @@ func ChangeBackdrop(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// Success 200 {object} model.BackdropRes "获取成功"
-// @Success 200 {object} Response "{"msg":"获取成功"}"
+// @Success 200 {object} model.BackdropRes "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -238,7 +232,6 @@ func MyBackdrops(c *gin.Context) {
 // @Produce application/json
 // @Param type path string true "type"
 // @Param id path string true "id"
-// Success 200 {object} model.Ranking "获取成功"
 // @Success 200 {object} Response "{"msg":"获取成功"}"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"

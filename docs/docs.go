@@ -51,7 +51,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Backdrop"
+                            }
                         }
                     },
                     "500": {
@@ -149,7 +152,7 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "$ref": "#/definitions/model.BackdropRes"
                         }
                     },
                     "401": {
@@ -192,7 +195,7 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "$ref": "#/definitions/model.ListHistories"
                         }
                     },
                     "203": {
@@ -350,7 +353,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取前五用户\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.UserRanking"
+                            }
                         }
                     },
                     "203": {
@@ -397,7 +403,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "401": {
@@ -625,7 +634,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"1\"}/{\"msg\":\"0\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "400": {
@@ -674,7 +686,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "401": {
@@ -717,7 +732,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "203": {
@@ -864,7 +882,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"打卡成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.WeekPunch"
+                            }
                         }
                     },
                     "400": {
@@ -914,7 +935,7 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "$ref": "#/definitions/model.User"
                         }
                     },
                     "203": {
@@ -1071,7 +1092,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.GoldHistory"
+                            }
                         }
                     },
                     "401": {
@@ -1162,7 +1186,10 @@ var doc = `{
                     "200": {
                         "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
-                            "$ref": "#/definitions/Response"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Punch"
+                            }
                         }
                     },
                     "401": {
@@ -1207,11 +1234,99 @@ var doc = `{
                 }
             }
         },
+        "model.Backdrop": {
+            "type": "object",
+            "properties": {
+                "backdrop_id": {
+                    "type": "integer"
+                },
+                "picture_url": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        },
         "model.BackdropID": {
             "type": "object",
             "properties": {
                 "backdrop_id": {
                     "type": "integer"
+                }
+            }
+        },
+        "model.BackdropRes": {
+            "type": "object",
+            "properties": {
+                "b_1": {
+                    "type": "integer"
+                },
+                "b_2": {
+                    "type": "integer"
+                },
+                "b_3": {
+                    "type": "integer"
+                },
+                "b_4": {
+                    "type": "integer"
+                },
+                "b_5": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.GoldHistory": {
+            "type": "object",
+            "properties": {
+                "change_number": {
+                    "type": "integer"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "residual_number": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ListHistories": {
+            "type": "object",
+            "properties": {
+                "month_after": {
+                    "type": "integer"
+                },
+                "month_former": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "week_after": {
+                    "type": "integer"
+                },
+                "week_former": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Punch": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -1254,6 +1369,34 @@ var doc = `{
                 },
                 "user_picture": {
                     "type": "string"
+                }
+            }
+        },
+        "model.UserRanking": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "ranking": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.WeekPunch": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "integer"
+                },
+                "week": {
+                    "type": "integer"
                 }
             }
         }
