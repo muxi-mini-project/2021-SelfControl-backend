@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS users_backdrops;
 create table users_backdrops(
   id          int          not null auto_increment ,
   student_id  varchar(100) not null ,
-  backdrop_id varchar(100) not null ,
+  backdrop_id int          not null ,
   primary key (id)
 )ENGINE=InnoDB;
 

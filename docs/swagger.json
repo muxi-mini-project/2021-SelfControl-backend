@@ -16,6 +16,130 @@
     "host": "39.99.53.8:2333",
     "basePath": "/api/v1",
     "paths": {
+        "/adm/del_backdrop/{student_id}": {
+            "get": {
+                "description": "管理员直接删除用户拥有的背景",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "administrator"
+                ],
+                "summary": "(管理员)清除用户背景",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "student_id",
+                        "name": "student_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"删除成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/adm/goldhistory": {
+            "post": {
+                "description": "管理员给某用户新增金币历史",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "administrator"
+                ],
+                "summary": "(管理员)新增金币历史",
+                "parameters": [
+                    {
+                        "description": "需要新增的金币历史:time和student_id重要,其他参数非必须 time格式 2021-08-06 19:04:05",
+                        "name": "goldhistory",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.GoldHistory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"新增成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/adm/punch": {
+            "post": {
+                "description": "管理员给某用户新增打卡记录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "administrator"
+                ],
+                "summary": "(管理员)新增打卡记录",
+                "parameters": [
+                    {
+                        "description": "需要新增的打卡记录:student_id month day为重要参数其他参数非必须 day是指这天为今年的第几天 time格式 2021-08-06 19:04:05",
+                        "name": "punch",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.PunchHistory"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"新增成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/backdrop": {
             "get": {
                 "description": "获取背景价格",
@@ -1312,6 +1436,29 @@
                 },
                 "number": {
                     "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.PunchHistory": {
+            "type": "object",
+            "properties": {
+                "day": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "month": {
+                    "type": "integer"
+                },
+                "student_id": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"

@@ -33,12 +33,6 @@ type PunchHistory struct {
 	Month     int    `json:"month"`
 }
 
-/*
-type Achievement struct {
-	StudentID   string `json:"student_id"`
-	Achievement string `json:"achievement"`
-}*/
-
 type PunchContent struct {
 	ID      int    `json:"id"`
 	Type    string `json:"type"`

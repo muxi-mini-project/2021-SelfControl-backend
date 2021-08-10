@@ -30,7 +30,7 @@ func main() {
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
 	routers.Router(r)
-	dbtest()
+	// dbtest()
 	r.Run(":2333")
 	defer model.DB.Close()
 }

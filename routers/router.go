@@ -2,6 +2,7 @@ package routers
 
 import (
 	"SC/handler"
+	"SC/handler/adm"
 	"SC/handler/user"
 
 	"github.com/gin-gonic/gin"
@@ -90,4 +91,16 @@ func Router(r *gin.Engine) {
 
 	//我的背景
 	r.GET("/api/v1/backdrops", handler.MyBackdrops)
+
+	g3 := r.Group("/api/v1/adm")
+	{
+		//新增金币历史
+		g3.POST("/goldhistory", adm.GoldHistory)
+
+		//新增打卡记录
+		g3.POST("/punch", adm.PunchRecord)
+
+		//清除用户背景
+		g3.GET("/del_backdrop/:student_id", adm.DeleteBackdrop)
+	}
 }

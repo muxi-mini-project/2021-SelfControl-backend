@@ -99,6 +99,7 @@ func TodayPunchs(c *gin.Context) {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
+
 	num := model.TodayPunchs(id)
 	switch num {
 	case -1:

@@ -226,6 +226,9 @@ func CompletePunch(id string, title string) error {
 	if result := DB.Create(&punch); result.Error != nil {
 		return result.Error
 	}
+
+	DB.Model(&pun).Where("student_id = ? ", id).Update("gold", 1+pun.Number)
+
 	var punchss []UsersPunch
 	DB.Where("student_id = ? ", id).Find(&punchss)
 	puns := GetDayPunchs(id, time.Now().Day())
