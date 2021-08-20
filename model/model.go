@@ -1,7 +1,6 @@
 package model
 
 import (
-	//"SC/util"
 	"errors"
 	"strconv"
 	"time"
@@ -53,17 +52,6 @@ func UpdateUserInfo(user User) error {
 	result := DB.Model(&u).Where("student_id = ?", user.StudentID).Update(user)
 	return result.Error
 }
-
-/*
-func GetAchievement(id string) []string {
-	var achievements []Achievement
-	DB.Where("student_id = ?", id).Find(&achievements)
-	var achs []string
-	for i := 0; i < len(achievements); i++ {
-		achs[i] = achievements[i].Achievement
-	}
-	return achs
-}*/
 
 //-----------------------------------------------
 //punch:
@@ -325,7 +313,8 @@ func GetMonthList() ([]UserRanking, string) {
 			DB.Create(&Rank)
 		}
 	}
-	for i := 1; i <= 5; i++ {
+	// 把排名前10的加进来
+	for i := 1; i <= 10; i++ {
 		var Rank []MonthList
 		DB.Where("ranking = ? ", i).Find(&Rank)
 		Ranks = append(Ranks, Rank...)
@@ -372,7 +361,7 @@ func GetWeekList() ([]UserRanking, string) {
 			DB.Create(&Rank)
 		}
 	}
-	for i := 1; i <= 5; i++ {
+	for i := 1; i <= 10; i++ {
 		var Rank []WeekList
 		DB.Where("ranking = ? ", i).Find(&Rank)
 		Ranks = append(Ranks, Rank...)
@@ -388,14 +377,7 @@ func GetWeekList() ([]UserRanking, string) {
 		rank.UserPicture = u.UserPicture
 		ranks = append(ranks, rank)
 	}
-
-	// if len(PunchHistory) == 0 {
-	// 	return nil, "未检索到该时间段的打卡信息"
-	// }
 	return ranks, ""
-	//var punch PunchHistory
-	//DB.Where("student_id = ? AND month = ? ", int(time.Now().Month())).Find(&punch)
-
 }
 func GetOrder(s []string) []UserAndNumber {
 	var Numbers []UserAndNumber

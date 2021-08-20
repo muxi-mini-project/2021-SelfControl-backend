@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/net/publicsuffix"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,6 +12,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"golang.org/x/net/publicsuffix"
 )
 
 type accountReqeustParams struct {
@@ -159,7 +160,7 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 
 	if JSESSIONID == "" {
 		log.Println("Can not get JSESSIONID")
-		return params, errors.New("Can not get JSESSIONID")
+		return params, errors.New("can not get JSESSIONID")
 	}
 
 	// 正则匹配 HTML 返回的表单字段
@@ -172,21 +173,21 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 	ltArr := ltReg.FindStringSubmatch(bodyStr)
 	if len(ltArr) != 2 {
 		log.Println("Can not get form paramater: lt")
-		return params, errors.New("Can not get form paramater: lt")
+		return params, errors.New("can not get form paramater: lt")
 	}
 	lt = ltArr[1]
 
 	execArr := executionReg.FindStringSubmatch(bodyStr)
 	if len(execArr) != 2 {
 		log.Println("Can not get form paramater: execution")
-		return params, errors.New("Can not get form paramater: execution")
+		return params, errors.New("can not get form paramater: execution")
 	}
 	execution = execArr[1]
 
 	_eventIdArr := _eventIdReg.FindStringSubmatch(bodyStr)
 	if len(_eventIdArr) != 2 {
 		log.Println("Can not get form paramater: _eventId")
-		return params, errors.New("Can not get form paramater: _eventId")
+		return params, errors.New("can not get form paramater: _eventId")
 	}
 	_eventId = _eventIdArr[1]
 
@@ -209,8 +210,10 @@ func makeAccountRequest(sid, password string, params *accountReqeustParams, clie
 	v.Set("execution", params.execution)
 	v.Set("_eventId", params._eventId)
 	v.Set("submit", params.submit)
-	//fmt.Println(strings.NewReader(v.Encode()))
 	request, err := http.NewRequest("POST", "https://account.ccnu.edu.cn/cas/login;jsessionid="+params.JSESSIONID, strings.NewReader(v.Encode()))
+	if err != nil {
+		log.Print(err)
+	}
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	request.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
 
@@ -231,7 +234,7 @@ func makeAccountRequest(sid, password string, params *accountReqeustParams, clie
 	matched := reg.MatchString(string(body))
 	if !matched {
 		log.Println("Wrong sid or pwd")
-		return errors.New("Wrong sid or pwd.")
+		return errors.New("wrong sid or pwd")
 	}
 
 	log.Println("Login successfully")
