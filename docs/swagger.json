@@ -463,7 +463,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"msg\":\"获取前五用户\"}",
+                        "description": "{\"msg\":\"获取所有用户\"}",
                         "schema": {
                             "type": "array",
                             "items": {
@@ -1520,6 +1520,9 @@
                     "type": "integer"
                 },
                 "student_id": {
+                    "type": "string"
+                },
+                "user_picture": {
                     "type": "string"
                 }
             }

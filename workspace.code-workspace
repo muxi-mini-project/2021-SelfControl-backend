@@ -4,19 +4,16 @@
 			"path": "."
 		},
 		{
-			"path": "../2021-TheEventsGarden-backend"
+			"path": "../go_practise"
 		},
 		{
-			"path": "../2021-ZeroGravity-backend"
+			"path": "../kube-state-metrics"
 		},
 		{
-			"path": "../go_practice"
+			"path": "../kruise"
 		},
 		{
-			"path": "../leetcode"
-		},
-		{
-			"path": "../c_something"
+			"path": "../kruise-state-metrics"
 		}
 	],
 	"settings": {}

@@ -42,10 +42,10 @@ func VerifyToken(strToken string) (string, error) {
 	return claims.StudentID, nil
 }
 
-func GetUserInfo(id string) (error, User) {
+func GetUserInfo(id string) (User, error) {
 	var u User
 	result := DB.Where("student_id = ?", id).First(&u)
-	return result.Error, u
+	return u, result.Error
 }
 
 func UpdateUserInfo(user User) error {
@@ -338,6 +338,7 @@ func GetMonthList() ([]UserRanking, string) {
 		rank.Ranking = ran.Ranking
 		rank.StudentId = ran.StudentID
 		rank.Name = u.Name
+		rank.UserPicture = u.UserPicture
 		ranks = append(ranks, rank)
 	}
 	return ranks, ""
@@ -384,6 +385,7 @@ func GetWeekList() ([]UserRanking, string) {
 		rank.Ranking = ran.Ranking
 		rank.StudentId = ran.StudentID
 		rank.Name = u.Name
+		rank.UserPicture = u.UserPicture
 		ranks = append(ranks, rank)
 	}
 
@@ -447,12 +449,12 @@ func GetBackdropPrice() []Backdrop {
 	return backdrop
 }
 
-func ChangeWeekRanking(id string, ranking int) (error, string) {
+func ChangeWeekRanking(id string, ranking int) (string, error) {
 	gold := 48 + ranking*2
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
 	if user.Gold < gold {
-		return nil, "金币不足"
+		return "金币不足", nil
 	}
 
 	//创建修改历史
@@ -462,7 +464,7 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 	}
 	UserNumber, str := GetWeekList()
 	if str != "" {
-		return nil, str
+		return str, nil
 	}
 	former := 0
 	number := 0
@@ -470,7 +472,7 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 		if UandN.StudentId == id {
 			former = UandN.Ranking
 			if former <= ranking {
-				return nil, "超出可兑换限制"
+				return "超出可兑换限制", nil
 			}
 			History.Former = former
 			History.After = former - ranking
@@ -479,7 +481,7 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 		}
 	}
 	if former == 0 || number == 0 {
-		return nil, "错误:该用户兑换排名前没有该排名"
+		return "错误:该用户兑换排名前没有该排名", nil
 	}
 	//修改用户金币
 	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-gold)
@@ -494,11 +496,11 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 		Reason:         "兑换周排名:前进" + strconv.Itoa(ranking) + "名",
 	}
 	if result := DB.Create(&history); result.Error != nil {
-		return result.Error, ""
+		return "", result.Error
 	}
 
 	if err := CreateRankingHistory(History); err != nil {
-		return err, ""
+		return "", err
 	}
 
 	//修改排行榜
@@ -509,7 +511,7 @@ func ChangeWeekRanking(id string, ranking int) (error, string) {
 		Number:    number,
 	}
 	err := ChangeWeekList(rank)
-	return err, ""
+	return "", err
 }
 
 func CreateRankingHistory(history ListHistory) error {
@@ -541,12 +543,12 @@ func ChangeWeekList(rank WeekList) error {
 	return err
 }
 
-func ChangeMonthRanking(id string, ranking int) (error, string) {
+func ChangeMonthRanking(id string, ranking int) (string, error) {
 	gold := 48 + ranking*2
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
 	if user.Gold < gold {
-		return nil, "金币不足"
+		return "金币不足", nil
 	}
 
 	//创建修改历史
@@ -556,7 +558,7 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 	}
 	UserNumber, str := GetMonthList()
 	if str != "" {
-		return nil, str
+		return str, nil
 	}
 	former := 0
 	number := 0
@@ -564,7 +566,7 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 		if UandN.StudentId == id {
 			former = UandN.Ranking
 			if former <= ranking {
-				return nil, "超出可兑换限制"
+				return "超出可兑换限制", nil
 			}
 			History.Former = former
 			History.After = former - ranking
@@ -573,7 +575,7 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 		}
 	}
 	if former == 0 || number == 0 {
-		return nil, "错误:该用户兑换排名前没有该排名"
+		return "错误:该用户兑换排名前没有该排名", nil
 	}
 	//修改用户金币
 	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-gold)
@@ -588,11 +590,11 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 		Reason:         "兑换月排名:前进" + strconv.Itoa(ranking) + "名",
 	}
 	if result := DB.Create(&history); result.Error != nil {
-		return result.Error, ""
+		return "", result.Error
 	}
 
 	if err := CreateRankingHistory(History); err != nil {
-		return err, ""
+		return "", err
 	}
 	//修改排行榜
 	rank := MonthList{
@@ -602,7 +604,7 @@ func ChangeMonthRanking(id string, ranking int) (error, string) {
 		Number:    number,
 	}
 	err := ChangeMonthList(rank)
-	return err, ""
+	return "", err
 }
 
 func ChangeMonthList(rank MonthList) error {
@@ -624,13 +626,13 @@ func ChangeMonthList(rank MonthList) error {
 	return err
 }
 
-func ChangeBackdrop(id string, BackdropID int) (error, string) {
+func ChangeBackdrop(id string, BackdropID int) (string, error) {
 	var backdrop Backdrop
 	DB.Where("backdrop_id = ? ", BackdropID).First(&backdrop)
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
 	if user.Gold < backdrop.Price {
-		return nil, "金币不足"
+		return "金币不足", nil
 	}
 	//修改用户金币
 	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-backdrop.Price)
@@ -648,7 +650,7 @@ func ChangeBackdrop(id string, BackdropID int) (error, string) {
 	usersBackdrop.BackdropID = BackdropID
 	usersBackdrop.StudentID = id
 	result := DB.Create(&usersBackdrop)
-	return result.Error, ""
+	return "", result.Error
 }
 
 func GetBackdrop(id string) []Backdrop {
@@ -663,7 +665,7 @@ func GetGoldHistory(id string) []GoldHistory {
 	return histories
 }
 
-func CreatePunch(id string, title string) (error, string) {
+func CreatePunch(id string, title string) (string, error) {
 	// var u UsersPunch
 	// if result := DB.Where("student_id = ? AND title = ? ", id, title).First(&u); result.Error == nil {
 	// 	return nil, "用户已选择该标签"
@@ -672,10 +674,10 @@ func CreatePunch(id string, title string) (error, string) {
 	punch.StudentID = id
 	punch.Title = title
 	if result := DB.Where("student_id = ? AND title = ？", id, title).First(&punch); result.Error == nil {
-		return nil, "该标签已选择"
+		return "该标签已选择", nil
 	}
 	result := DB.Create(&punch)
-	return result.Error, ""
+	return "", result.Error
 }
 
 func Type(id string) string {

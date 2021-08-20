@@ -30,7 +30,7 @@ func UserInfo(c *gin.Context) {
 		return
 	}
 
-	err, u := model.GetUserInfo(id)
+	u, err := model.GetUserInfo(id)
 	if err != nil {
 		c.JSON(203, gin.H{"message": "Fail."})
 		return
@@ -142,7 +142,7 @@ func PunchAndNumber(c *gin.Context) {
 // @Router /user/privacy/{id} [get]
 func GetPrivacy(c *gin.Context) {
 	id := c.Param("id")
-	err, u := model.GetUserInfo(id)
+	u, err := model.GetUserInfo(id)
 	if err != nil {
 		c.JSON(203, gin.H{"message": "未找到该用户"})
 		return

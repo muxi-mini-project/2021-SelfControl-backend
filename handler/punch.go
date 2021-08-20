@@ -262,7 +262,7 @@ func CreatePunch(c *gin.Context) {
 		c.JSON(203, gin.H{"message": "今日已完成全部打卡，不能再新增标签"})
 		return
 	}
-	if err, message := model.CreatePunch(id, title.Title); message != "" {
+	if message, err := model.CreatePunch(id, title.Title); message != "" {
 		c.JSON(203, gin.H{"message": message})
 		return
 	} else if err != nil {
@@ -325,7 +325,7 @@ func DeletePunch(c *gin.Context) {
 // @Router /punch/punch/{id} [get]
 func GetPunchs(c *gin.Context) {
 	id := c.Param("id")
-	err, u := model.GetUserInfo(id)
+	u, err := model.GetUserInfo(id)
 	if err != nil {
 		c.JSON(203, gin.H{"message": "未找到该用户"})
 		return

@@ -130,6 +130,8 @@ definitions:
         type: integer
       student_id:
         type: string
+      user_picture:
+        type: string
     type: object
   model.WeekPunch:
     properties:
@@ -451,7 +453,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"msg":"获取前五用户"}'
+          description: '{"msg":"获取所有用户"}'
           schema:
             items:
               $ref: '#/definitions/model.UserRanking'

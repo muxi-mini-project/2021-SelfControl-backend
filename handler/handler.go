@@ -13,7 +13,7 @@ import (
 // Accept application/json
 // @Produce application/json
 // @Param type path string true "type"
-// @Success 200 {object} []model.UserRanking "{"msg":"获取前五用户"}"
+// @Success 200 {object} []model.UserRanking "{"msg":"获取所有用户"}"
 // @Failure 203 "未检索到该时间段的打卡信息"
 // Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -35,11 +35,11 @@ func List(c *gin.Context) {
 		c.JSON(400, gin.H{"message": message})
 		return
 	}
-	if len(numbers) > 5 {
-		numbers = numbers[5:]
-	}
+	// if len(numbers) > 5 {
+	// 	numbers = numbers[5:]
+	// }
 
-	SendResponse(c, "获取前五用户", numbers)
+	SendResponse(c, "获取所有用户", numbers)
 }
 
 // @Summary  兑换排名
@@ -75,7 +75,7 @@ func ChangeRanking(c *gin.Context) {
 		return
 	}
 	if Type == "week" {
-		if err, message := model.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
+		if message, err := model.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
@@ -87,7 +87,7 @@ func ChangeRanking(c *gin.Context) {
 			return
 		}
 	} else if Type == "month" {
-		if err, message := model.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
+		if message, err := model.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
@@ -175,7 +175,7 @@ func ChangeBackdrop(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	if err, message := model.ChangeBackdrop(id, b.BackdropID); message != "" {
+	if message, err := model.ChangeBackdrop(id, b.BackdropID); message != "" {
 		c.JSON(203, gin.H{"message": "金币不足"})
 		return
 	} else if err != nil {
