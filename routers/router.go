@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Router 1
 func Router(r *gin.Engine) {
 
 	//user:
@@ -35,7 +34,7 @@ func Router(r *gin.Engine) {
 	}
 
 	//显示当前类型所有打卡
-	r.GET("/api/v1/punchs/:type_id", handler.Punchs)
+	// r.GET("/api/v1/punchs/:type_id", handler.Punchs)
 
 	g2 := r.Group("/api/v1/punch")
 	{
@@ -68,29 +67,31 @@ func Router(r *gin.Engine) {
 
 		//获取用户某天的打卡
 		g2.GET("/day/:day", handler.GetDayPunchs)
-
 	}
+
 	//default:
 	//排行榜
-	r.GET("/api/v1/lists/:type", handler.List)
+	{
+		r.GET("/api/v1/lists/:type", handler.List)
 
-	//获取兑换排行历史
-	r.GET("/api/v1/list/history", handler.ListHistory)
+		//获取兑换排行历史
+		r.GET("/api/v1/list/history", handler.ListHistory)
 
-	//用户排名
-	r.GET("/api/v1/list/user/:id/:type", handler.UserRanking)
+		//用户排名
+		r.GET("/api/v1/list/user/:id/:type", handler.UserRanking)
 
-	//兑换排名
-	r.PUT("/api/v1/list/:type", handler.ChangeRanking)
+		//兑换排名
+		r.PUT("/api/v1/list/:type", handler.ChangeRanking)
 
-	//背景价格
-	r.GET("/api/v1/backdrop", handler.BackdropPrice)
+		//背景价格
+		r.GET("/api/v1/backdrop", handler.BackdropPrice)
 
-	//兑换背景
-	r.PUT("/api/v1/backdrop", handler.ChangeBackdrop)
+		//兑换背景
+		r.PUT("/api/v1/backdrop", handler.ChangeBackdrop)
 
-	//我的背景
-	r.GET("/api/v1/backdrops", handler.MyBackdrops)
+		//我的背景
+		r.GET("/api/v1/backdrops", handler.MyBackdrops)
+	}
 
 	g3 := r.Group("/api/v1/adm")
 	{
