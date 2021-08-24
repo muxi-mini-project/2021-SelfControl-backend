@@ -3,3 +3,5 @@ test.go
 test
 nohup.out
 /bin/
+
+workspace.code-workspace
