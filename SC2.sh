@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 port=2333
-filename=main
+filename=$1
+
+cd /root/2021-SelfControl-backend
 chmod a+x ./${filename}
 nohup ./${filename} &
 str=$(lsof -i:${port} | grep ${filename})
