@@ -172,3 +172,25 @@ func DeletePunch(id string, title string) (string, error) {
 	}
 	return "", model.DeletePunch(&u)
 }
+
+func GetMonthly(id string) []model.Punch {
+	punchs := model.GetUserPunchHistoriesByMonth(id, int(time.Now().Month()-1))
+	var Punchs []model.Punch
+	for _, punch := range punchs {
+		tag := 0
+		for i, punch2 := range Punchs {
+			if punch2.Title == punch.Title {
+				Punchs[i].Number++
+				tag = 1
+				break
+			}
+		}
+		if tag == 0 {
+			var Punch model.Punch
+			Punch.Title = punch.Title
+			Punch.Number++
+			Punchs = append(Punchs, Punch)
+		}
+	}
+	return Punchs
+}

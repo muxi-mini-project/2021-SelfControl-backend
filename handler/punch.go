@@ -358,7 +358,7 @@ func Monthly(c *gin.Context) {
 		return
 	}
 
-	punch := model.GetMonthly(id)
+	punch := punch.GetMonthly(id)
 	SendResponse(c, "获取成功", punch)
 
 }

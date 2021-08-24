@@ -2,6 +2,7 @@ package handler
 
 import (
 	"SC/model"
+	"SC/service/list"
 	"SC/service/user"
 	"log"
 
@@ -25,9 +26,9 @@ func List(c *gin.Context) {
 	var numbers []model.UserRanking
 	var message string
 	if Type == "month" {
-		numbers, message = model.GetMonthList()
+		numbers, message = list.GetMonthList()
 	} else if Type == "week" {
-		numbers, message = model.GetWeekList()
+		numbers, message = list.GetWeekList()
 	} else {
 		c.JSON(400, gin.H{"message": "url最后面+ week或month查询数据"})
 		return
@@ -76,7 +77,7 @@ func ChangeRanking(c *gin.Context) {
 		return
 	}
 	if Type == "week" {
-		if message, err := model.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
+		if message, err := list.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
@@ -88,7 +89,7 @@ func ChangeRanking(c *gin.Context) {
 			return
 		}
 	} else if Type == "month" {
-		if message, err := model.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
+		if message, err := list.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
