@@ -3,6 +3,8 @@ package user
 import (
 	"SC/handler"
 	"SC/model"
+	"SC/service/punch"
+	"SC/service/user"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +25,7 @@ import (
 // @Router /user [get]
 func UserInfo(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(401, gin.H{"message": "Token Invalid."})
@@ -53,7 +55,7 @@ func UserInfo(c *gin.Context) {
 // @Router /user [put]
 func ChangeUserInfo(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -90,7 +92,7 @@ func ChangeUserInfo(c *gin.Context) {
 // @Router /user/goldhistory [get]
 func GoldHistory(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -117,13 +119,13 @@ func GoldHistory(c *gin.Context) {
 // @Router /user/punch [get]
 func PunchAndNumber(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
-	punchs := model.GetPunchAndNumber(id)
+	punchs := punch.GetPunchAndNumber(id)
 
 	handler.SendResponse(c, "获取成功", punchs)
 }

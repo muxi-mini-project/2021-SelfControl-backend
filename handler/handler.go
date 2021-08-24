@@ -2,6 +2,7 @@ package handler
 
 import (
 	"SC/model"
+	"SC/service/user"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -58,7 +59,7 @@ func List(c *gin.Context) {
 // @Router /list/{type} [put]
 func ChangeRanking(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -118,7 +119,7 @@ func ChangeRanking(c *gin.Context) {
 // @Router /list/history [get]
 func ListHistory(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -159,7 +160,7 @@ func BackdropPrice(c *gin.Context) {
 // @Router /backdrop [put]
 func ChangeBackdrop(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -199,7 +200,7 @@ func ChangeBackdrop(c *gin.Context) {
 // @Router /backdrops [get]
 func MyBackdrops(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		log.Println(err)
 		c.JSON(401, gin.H{"message": "Token Invalid."})

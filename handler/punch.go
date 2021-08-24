@@ -2,6 +2,8 @@ package handler
 
 import (
 	"SC/model"
+	"SC/service/punch"
+	"SC/service/user"
 	"log"
 	"strconv"
 
@@ -19,11 +21,11 @@ import (
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // #@Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
 // #@Router /punchs/{type_id} [get]
-func Punchs(c *gin.Context) {
-	TypeID := c.Param("type_id")
-	punchs := model.GetPunchs(TypeID)
-	c.JSON(200, punchs)
-}
+// func Punchs(c *gin.Context) {
+// 	TypeID := c.Param("type_id")
+// 	punchs := model.GetPunchs(TypeID)
+// 	c.JSON(200, punchs)
+// }
 
 // @Summary  我的打卡
 // @Tags punch
@@ -38,7 +40,7 @@ func Punchs(c *gin.Context) {
 // @Router /punch [get]
 func MyPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -50,7 +52,7 @@ func MyPunch(c *gin.Context) {
 		c.JSON(200, Punchs)
 		return
 	}
-	punchs := model.GetMyPunch(id)
+	punchs := punch.GetPunchAndNumber(id)
 	// if len(punchs) == 0 {
 	// 	punchs = punchs[:0]
 	// }
@@ -71,14 +73,14 @@ func MyPunch(c *gin.Context) {
 // @Router /punch/today/{title_id} [get]
 func TodayPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
 	TitleID, _ := strconv.Atoi(c.Param("title_id"))
-	choice := model.TodayPunch(id, TitleID)
+	choice := punch.TodayPunch(id, TitleID)
 	SendResponse(c, "获取成功", choice)
 }
 
@@ -94,13 +96,13 @@ func TodayPunch(c *gin.Context) {
 // @Router /punch/todayall [get]
 func TodayPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
-	num := model.TodayPunchs(id)
+	num := punch.TodayPunches(id)
 	switch num {
 	case -1:
 		SendResponse(c, "未完成", -1)
@@ -126,7 +128,7 @@ func TodayPunchs(c *gin.Context) {
 // @Router /punch [post]
 func CompletePunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -142,7 +144,7 @@ func CompletePunch(c *gin.Context) {
 		return
 	}
 
-	if err := model.CompletePunch(id, title.Title); err != nil {
+	if err := punch.CompletePunch(id, title.Title); err != nil {
 		log.Println(err)
 		c.JSON(400, gin.H{"message": "Fail."})
 		return
@@ -164,7 +166,7 @@ func CompletePunch(c *gin.Context) {
 // @Router /punch/day/{day} [get]
 func GetDayPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -175,7 +177,7 @@ func GetDayPunchs(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	punchs := model.GetDayPunchs(id, x)
+	punchs := punch.GetDayPunches(id, x)
 	histories := model.GetGoldHistory(id)
 
 	for _, history := range histories {
@@ -203,7 +205,7 @@ func GetDayPunchs(c *gin.Context) {
 // @Router /punch/week/{month} [get]
 func GetWeekPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -215,7 +217,7 @@ func GetWeekPunchs(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	nums := model.GetWeekPunchs(id, x)
+	nums := punch.GetWeekPunchs(id, x)
 	var weekPunch []model.WeekPunch
 	for i, num := range nums {
 		var WeekPunch model.WeekPunch
@@ -241,7 +243,7 @@ func GetWeekPunchs(c *gin.Context) {
 // @Router /punch/create [post]
 func CreatePunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
@@ -256,7 +258,7 @@ func CreatePunch(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	num := model.TodayPunchs(id)
+	num := punch.TodayPunches(id)
 
 	if num > 0 {
 		c.JSON(203, gin.H{"message": "今日已完成全部打卡，不能再新增标签"})
@@ -286,23 +288,23 @@ func CreatePunch(c *gin.Context) {
 // @Router /punch [delete]
 func DeletePunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
-	var punch model.Title
-	if err := c.BindJSON(&punch); err != nil {
+	var Punch model.Title
+	if err := c.BindJSON(&Punch); err != nil {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
 
-	if punch.Title == "" {
+	if Punch.Title == "" {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	if s, err := model.DeletePunch(id, punch.Title); s != "" {
+	if s, err := punch.DeletePunch(id, Punch.Title); s != "" {
 		c.JSON(203, gin.H{"message": "删除失败,用户未选择该标签"})
 		return
 	} else if err != nil {
@@ -335,7 +337,7 @@ func GetPunchs(c *gin.Context) {
 		c.JSON(203, gin.H{"message": "获取失败,用户未公开标签"})
 		return
 	}
-	punchs := model.GetPunchAndNumber(id)
+	punchs := punch.GetPunchAndNumber(id)
 	SendResponse(c, "获取成功", punchs)
 }
 
@@ -350,7 +352,7 @@ func GetPunchs(c *gin.Context) {
 // @Router /punch/month [get]
 func Monthly(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := model.VerifyToken(token)
+	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return

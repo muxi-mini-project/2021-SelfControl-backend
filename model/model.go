@@ -1,45 +1,9 @@
 package model
 
 import (
-	"errors"
 	"strconv"
 	"time"
-
-	"github.com/dgrijalva/jwt-go"
 )
-
-const (
-	ErrorReasonServerBusy = "服务器繁忙"
-	ErrorReasonReLogin    = "请重新登陆"
-)
-
-//var Secret = "vinegar" //加醋
-
-//Jwt
-type Jwt struct {
-	StudentID string `json:"student_id"`
-	jwt.StandardClaims
-}
-
-//user:
-func VerifyToken(strToken string) (string, error) {
-	//解析
-	token, err := jwt.ParseWithClaims(strToken, &Jwt{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte("vinegar"), nil
-	})
-
-	if err != nil {
-		return "", errors.New(ErrorReasonServerBusy + ",或token解析失败")
-	}
-	claims, ok := token.Claims.(*Jwt)
-	if !ok {
-		return "", errors.New(ErrorReasonReLogin)
-	}
-	if err := token.Claims.Valid(); err != nil {
-		return "", errors.New(ErrorReasonReLogin)
-	}
-	return claims.StudentID, nil
-}
 
 func GetUserInfo(id string) (User, error) {
 	var u User
@@ -48,215 +12,84 @@ func GetUserInfo(id string) (User, error) {
 }
 
 func UpdateUserInfo(user User) error {
-	var u User
-	result := DB.Model(&u).Where("student_id = ?", user.StudentID).Update(user)
+	result := DB.Model(&user).Where("student_id = ?", user.StudentID).Update(user)
 	return result.Error
 }
 
 //-----------------------------------------------
 //punch:
-//Punch 为 Title 与 Number 的结构体类型
-func GetPunchAndNumber(id string) []Punch {
+func GetUserPunches(id string) []UsersPunch {
 	var punchs []UsersPunch
 	DB.Where("student_id = ?", id).Find(&punchs)
-	var punchs2 []Punch
-	var Punch Punch
-	for i := 0; i < len(punchs); i++ {
-		var p PunchContent
-		DB.Where("title = ? ", punchs[i].Title).First(&p)
-		Punch.ID = p.ID
-		Punch.Title = punchs[i].Title
-		Punch.Number = punchs[i].Number
-		punchs2 = append(punchs2, Punch)
-	}
-	//Punchs := Punchs{Punchs: punchs2}
-	return punchs2
-
+	return punchs
 }
 
-//根据 类型 获取其全部打卡
-func GetPunchs(TypeID string) []Punch2 {
-	Type := Type(TypeID)
-	var punchs []PunchContent
-	DB.Where("type = ?", Type).Find(&punchs)
-	var punchs2 []Punch2
-	var Punch Punch2
-	for i := 0; i < len(punchs); i++ {
-		Punch.Title = punchs[i].Title
-		Punch.ID = punchs[i].ID
-		punchs2 = append(punchs2, Punch)
-	}
-	//Punchs := Punchs2{Punchs: punchs2}
-	return punchs2
+func GetPunchContentByTitle(title string) PunchContent {
+	var p PunchContent
+	DB.Where("title = ? ", title).First(&p)
+	return p
+}
+func GetPunchContentById(TitleID int) PunchContent {
+	var p PunchContent
+	DB.Where("id = ? ", TitleID).First(&p)
+	return p
 }
 
-func GetMyPunch(id string) []Punch {
-	var punchs []UsersPunch
-	DB.Where("student_id = ?", id).Find(&punchs)
-	var punchs2 []Punch
-	var Punch Punch
-	for i := 0; i < len(punchs); i++ {
-		var p PunchContent
-		DB.Where("title = ? ", punchs[i].Title).First(&p)
-		Punch.ID = p.ID
-		Punch.Title = punchs[i].Title
-		Punch.Number = punchs[i].Number
-		punchs2 = append(punchs2, Punch)
-	}
-	return punchs2
-}
-
-func TodayPunch(StudentId string, TitleID int) bool {
-	var Punch PunchContent
-	DB.Where("id = ?", TitleID).First(&Punch)
+func GetTodayPunchHistory(StudentId string, title string, today int) (PunchHistory, error) {
 	var punch PunchHistory
-	today := time.Now().YearDay()
-	result := DB.Where("student_id = ? AND title = ? AND day = ?", StudentId, Punch.Title, today).First(&punch)
-	var choice bool
-	if result.Error != nil {
-		choice = false
-	} else {
-		choice = true
-	}
-	return choice
+	result := DB.Where("student_id = ? AND title = ? AND day = ?", StudentId, title, today).First(&punch)
+	return punch, result.Error
 }
 
-func TodayPunchs(id string) int {
+func GetUserPunchHistoriesByDay(id string, day int) []PunchHistory {
 	var histories []PunchHistory
 	DB.Where("student_id = ? AND day = ? ", id, time.Now().Day()).Find(&histories)
-	var Punchs []UsersPunch
-	DB.Where("student_id = ? ", id).Find(&Punchs)
-	//无打卡信息
-	if len(Punchs) == 0 {
-		return 0
-	} //未全部完成
-	if len(Punchs) > len(histories) {
-		return -1
-	} //返回全部完成的打卡数量
-	return len(Punchs)
+	return histories
 }
 
-func GetDayPunchs(StudentId string, day int) []Punch {
-	var punchs []PunchHistory
-	DB.Where("student_id = ? AND day = ?", StudentId, day).Find(&punchs)
-	var punchs2 []Punch
-	var Punch Punch
-	for i := 0; i < len(punchs); i++ {
-		var p PunchContent
-		DB.Where("title = ? ", punchs[i].Title).First(&p)
-		Punch.ID = p.ID
-		Punch.Title = punchs[i].Title
-		punchs2 = append(punchs2, Punch)
-	}
-	return punchs2
-}
-
-func GetWeekPunchs(id string, month int) []int {
+func GetPunchHistoriesByMonth(month int) []PunchHistory {
 	var histories []PunchHistory
 	DB.Where("month = ? ", month).Find(&histories)
-	var days, Nums []int
-	var nums [6]int
-	tag := 0
-	days = append(days, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
-	//w := (20/4 - 2*20 + 21 + 21/4 + 13*(month+1)/5) % 7
-	w := (-9 + 13*(month+1)/5) % 7
-	day := days[month] - days[month-1]
-	//一个月6周 tag 就为1
-	if day+w > 35 {
-		tag = 1
-	}
-	for _, history := range histories {
-		history.Day = history.Day - days[month-1]
-		if history.Day <= 8-w {
-			nums[0]++
-			continue
-		} else if history.Day <= 15-w {
-			nums[1]++
-			continue
-		} else if history.Day <= 22-w {
-			nums[2]++
-			continue
-		} else if history.Day <= 29-w {
-			nums[3]++
-			continue
-		} else if history.Day <= 36-w {
-			nums[4]++
-			continue
-		} else {
-			nums[5]++
-			continue
-		}
-	}
-	if tag == 1 {
-		for _, num := range nums {
-			Nums = append(Nums, num)
-		}
-	} else {
-		for i := 0; i < len(nums)-1; i++ {
-			Nums = append(Nums, nums[i])
-		}
-	}
-	return Nums
+	return histories
 }
 
-func CompletePunch(id string, title string) error {
+func GetUserPunchByTitle(id string, title string) (UsersPunch, error) {
 	var pun UsersPunch
 	err := DB.Where("student_id = ? AND title = ? ", id, title).First(&pun).Error
-	if err != nil {
-		return err
-	}
-	var punch PunchHistory
-	punch.Title = title
-	punch.StudentID = id
-	punch.Time = time.Now().Format("2006-01-02 15:04:05")
-	punch.Month = int(time.Now().Month())
-	punch.Day = time.Now().YearDay()
-	if result := DB.Create(&punch); result.Error != nil {
-		return result.Error
-	}
-
-	DB.Model(&pun).Where("student_id = ? ", id).Update("gold", 1+pun.Number)
-
-	var punchss []UsersPunch
-	DB.Where("student_id = ? ", id).Find(&punchss)
-	puns := GetDayPunchs(id, time.Now().Day())
-	if len(puns) == len(punchss) {
-		gold := 0
-		if len(puns) <= 5 {
-			gold = len(puns) * 10
-		} else {
-			gold = ((len(puns)-5)*2 + 10) * len(puns)
-		}
-		return CompleteAllPunch(id, gold)
-	}
-	return nil
+	return pun, err
 }
 
-func CompleteAllPunch(id string, gold int) error {
-	//修改用户金币
-	var user User
-	DB.Where("student_id = ? ", id).First(&user)
-	DB.Model(&user).Where("student_id = ? ", id).Update("gold", gold+user.Gold)
-	s := strconv.Itoa(gold)
-	//创建金币历史
-	history := GoldHistory{
-		StudentID:      id,
-		Time:           time.Now().Format("2006-01-02 15:04:05"),
-		ChangeNumber:   gold,
-		ResidualNumber: user.Gold,
-		Reason:         "完成今日打卡+" + s + "金币",
-	}
-	result := DB.Create(&history)
+func CreatePunchHistory(punch *PunchHistory) error {
+	return DB.Create(punch).Error
+}
+
+func UpdateUserPunch(pun UsersPunch) error {
+
+	result := DB.Model(&pun).Where("id = ?", pun.ID).Update(pun)
 	return result.Error
 }
 
-func DeletePunch(id string, title string) (string, error) {
-	var u UsersPunch
-	if result := DB.Where("student_id = ? AND title = ? ", id, title).First(&u); result.Error != nil {
-		return "用户未选择该标签", nil
-	}
-	result := DB.Delete(&u)
-	return "", result.Error
+func CreateGoldHistory(history *GoldHistory) error {
+	return DB.Create(history).Error
+}
+
+// //根据 类型 获取其全部打卡
+// func GetPunchs(TypeID string) []Punch2 {
+// 	Type := Type(TypeID)
+// 	var punchs []PunchContent
+// 	DB.Where("type = ?", Type).Find(&punchs)
+// 	var punchs2 []Punch2
+// 	var Punch Punch2
+// 	for i := 0; i < len(punchs); i++ {
+// 		Punch.Title = punchs[i].Title
+// 		Punch.ID = punchs[i].ID
+// 		punchs2 = append(punchs2, Punch)
+// 	}
+// 	return punchs2
+// }
+
+func DeletePunch(u *UsersPunch) error {
+	return DB.Delete(u).Error
 }
 
 func GetMonthly(id string) []Punch {

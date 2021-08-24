@@ -3,6 +3,7 @@ package user
 import (
 	"SC/handler"
 	"SC/model"
+	"SC/service/user"
 	"log"
 	"time"
 
@@ -59,7 +60,7 @@ func Login(c *gin.Context) {
 		}
 	}
 
-	claims := &model.Jwt{StudentID: p.StudentID}
+	claims := &user.Jwt{StudentID: p.StudentID}
 
 	claims.ExpiresAt = time.Now().Add(200 * time.Hour).Unix()
 	claims.IssuedAt = time.Now().Unix()
