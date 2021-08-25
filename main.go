@@ -1,15 +1,16 @@
 package main
 
 import (
+	"SC/config"
 	"SC/model"
 	"SC/routers"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/spf13/viper"
 )
-
-var err error
 
 // @title Self_Control API
 // @version 1.0.0
@@ -22,7 +23,15 @@ var err error
 // @Schemes http
 
 func main() {
-	model.DB, err = gorm.Open("mysql", "root:12345678@/SC?parseTime=True")
+	err := config.Init("./conf/config.yaml", "")
+	if err != nil {
+		panic(err)
+	}
+
+	dbMap := viper.GetStringMapString("db")
+	dbConfig := fmt.Sprintf("%s:%s@/%s?parseTime=True", dbMap["username"], dbMap["password"], dbMap["name"])
+
+	model.DB, err = gorm.Open("mysql", dbConfig)
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +40,8 @@ func main() {
 	r := gin.Default()
 	routers.Router(r)
 	// dbtest()
-	r.Run(":2333")
+	port := viper.GetString("port")
+	r.Run(port)
 	defer model.DB.Close()
 }
 

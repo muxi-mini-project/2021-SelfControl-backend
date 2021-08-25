@@ -1,0 +1,10 @@
+local_name: SC
+runmode: release             # 开发模式, debug, release, test
+# addr: 39.99.53.8:2333
+addr: 127.0.0.1:2333
+port: :2333
+db:  # DB 配置 部署时环境变量覆盖
+  name: SC
+  addr: 127.0.0.1:3306
+  username: root
+  password: 
