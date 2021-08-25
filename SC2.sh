@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# 杀死旧的服务 将名为第一个参数的文件部署在本地
+
 port=2333
 filename=$1
 
