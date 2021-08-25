@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-//Punch 为 Title 与 Number 的结构体类型
+// Punch 为 Title 与 Number 的结构体类型
 func GetPunchAndNumber(id string) []model.Punch {
 	punches := model.GetUserPunches(id)
 	var punchs2 []model.Punch
@@ -37,13 +37,13 @@ func TodayPunch(StudentId string, TitleID int) bool {
 func TodayPunches(id string) int {
 	histories := model.GetUserPunchHistoriesByDay(id, time.Now().Day())
 	Punchs := model.GetUserPunches(id)
-	//无打卡信息
+	// 无打卡信息
 	if len(Punchs) == 0 {
 		return 0
-	} //未全部完成
+	} // 未全部完成
 	if len(Punchs) > len(histories) {
 		return -1
-	} //返回全部完成的打卡数量
+	} // 返回全部完成的打卡数量
 	return len(Punchs)
 }
 
@@ -68,10 +68,10 @@ func GetWeekPunchs(id string, month int) []int {
 	var nums [6]int
 	tag := 0
 	days = append(days, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365)
-	//w := (20/4 - 2*20 + 21 + 21/4 + 13*(month+1)/5) % 7
+	// w := (20/4 - 2*20 + 21 + 21/4 + 13*(month+1)/5) % 7
 	w := (-9 + 13*(month+1)/5) % 7
 	day := days[month] - days[month-1]
-	//一个月6周 tag 就为1
+	// 一个月6周 tag 就为1
 	if day+w > 35 {
 		tag = 1
 	}
@@ -143,7 +143,7 @@ func CompletePunch(id string, title string) error {
 }
 
 func completeAllPunch(id string, gold int) error {
-	//修改用户金币
+	// 修改用户金币
 	user, err := model.GetUserInfo(id)
 	if err != nil {
 		return err
@@ -153,7 +153,7 @@ func completeAllPunch(id string, gold int) error {
 		return err
 	}
 	s := strconv.Itoa(gold)
-	//创建金币历史
+	// 创建金币历史
 	history := model.GoldHistory{
 		StudentID:      id,
 		Time:           time.Now().Format("2006-01-02 15:04:05"),

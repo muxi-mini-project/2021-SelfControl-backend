@@ -11,17 +11,17 @@ const (
 	ErrorReasonReLogin    = "请重新登陆"
 )
 
-//var Secret = "vinegar" //加醋
+// var Secret = "vinegar" // 加醋
 
-//Jwt
+// Jwt
 type Jwt struct {
 	StudentID string `json:"student_id"`
 	jwt.StandardClaims
 }
 
-//user:
+// user:
 func VerifyToken(strToken string) (string, error) {
-	//解析
+	// 解析
 	token, err := jwt.ParseWithClaims(strToken, &Jwt{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte("vinegar"), nil
 	})

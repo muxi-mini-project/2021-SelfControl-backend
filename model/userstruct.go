@@ -1,6 +1,6 @@
 package model
 
-//User结构体在MysqlStruct.go
+// User结构体在MysqlStruct.go
 
 type UserHomePage struct {
 	Name        string `json:"name"`

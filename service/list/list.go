@@ -145,7 +145,7 @@ func ChangeWeekRanking(id string, ranking int) (string, error) {
 		return "金币不足", nil
 	}
 
-	//创建修改历史
+	// 创建修改历史
 	History := model.ListHistory{
 		StudentID: id,
 		Type:      1,
@@ -171,11 +171,11 @@ func ChangeWeekRanking(id string, ranking int) (string, error) {
 	if former == 0 || number == 0 {
 		return "错误:该用户兑换排名前没有该排名", nil
 	}
-	//修改用户金币
+	// 修改用户金币
 	user.Gold -= gold
 	model.UpdateUserInfo(user)
 
-	//创建金币历史
+	// 创建金币历史
 	price := gold
 	history := model.GoldHistory{
 		StudentID:      id,
@@ -188,7 +188,7 @@ func ChangeWeekRanking(id string, ranking int) (string, error) {
 		return "", err
 	}
 
-	//修改排行榜
+	// 修改排行榜
 	rank := model.WeekList{
 		StudentID: id,
 		Ranking:   former - ranking,
@@ -209,7 +209,7 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 		return "金币不足", nil
 	}
 
-	//创建修改历史
+	// 创建修改历史
 	History := model.ListHistory{
 		StudentID: id,
 		Type:      2,
@@ -235,10 +235,10 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 	if former == 0 || number == 0 {
 		return "错误:该用户兑换排名前没有该排名", nil
 	}
-	//修改用户金币
+	// 修改用户金币
 	user.Gold -= gold
 	model.UpdateUserInfo(user)
-	//创建金币历史
+	// 创建金币历史
 	price := gold
 	history := model.GoldHistory{
 		StudentID:      id,
@@ -250,7 +250,7 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 	if err := model.CreateGoldAndRankHistory(&history, &History); err != nil {
 		return "", err
 	}
-	//修改排行榜
+	// 修改排行榜
 	rank := model.MonthList{
 		StudentID: id,
 		Ranking:   former - ranking,
@@ -270,7 +270,7 @@ func ChangeWeekList(rank model.WeekList) error {
 	} else {
 		model.DB.Model(r).Where("ranking < ? ", rank.Ranking).Find(&ranks)
 	}
-	//后面的排名++
+	// 后面的排名++
 	for _, Rank := range ranks {
 		Rank.Ranking++
 		model.DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)
@@ -290,7 +290,7 @@ func ChangeMonthList(rank model.MonthList) error {
 	} else {
 		model.DB.Model(r).Where("ranking < ? ", rank.Ranking).Find(&ranks)
 	}
-	//后面的排名++
+	// 后面的排名++
 	for _, Rank := range ranks {
 		Rank.Ranking++
 		model.DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)

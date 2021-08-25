@@ -18,8 +18,8 @@ func UpdateUserInfo(user User) error {
 	return result.Error
 }
 
-//-----------------------------------------------
-//punch:
+// -----------------------------------------------
+// punch:
 func GetUserPunches(id string) []UsersPunch {
 	var punchs []UsersPunch
 	DB.Where("student_id = ?", id).Find(&punchs)
@@ -83,7 +83,7 @@ func GetUserPunchHistoriesByMonth(id string, month int) []PunchHistory {
 	return punchs
 }
 
-// //根据 类型 获取其全部打卡
+// 根据 类型 获取其全部打卡
 // func GetPunchs(TypeID string) []Punch2 {
 // 	Type := Type(TypeID)
 // 	var punchs []PunchContent
@@ -97,8 +97,8 @@ func GetUserPunchHistoriesByMonth(id string, month int) []PunchHistory {
 // 	}
 // 	return punchs2
 // }
-
-//default:
+// ------------------
+// default:
 
 func CreateMonthlist(Rank *MonthList) {
 	DB.Create(Rank)
@@ -159,9 +159,9 @@ func ChangeBackdrop(id string, BackdropID int) (string, error) {
 	if user.Gold < backdrop.Price {
 		return "金币不足", nil
 	}
-	//修改用户金币
+	// 修改用户金币
 	DB.Model(&user).Where("student_id = ? ", id).Update("gold", user.Gold-backdrop.Price)
-	//创建金币历史
+	// 创建金币历史
 	s := strconv.Itoa(BackdropID)
 	history := GoldHistory{
 		StudentID:      id,

@@ -61,24 +61,20 @@ func GetUserInfoFormOne(sid string, pwd string) (SuInfo, error) {
 		Timeout: time.Duration(10 * time.Second),
 		Jar:     jar,
 	}
-	//fmt.Println(params)
 	err = makeAccountRequest(sid, pwd, params, &client)
-	//err := MakeAccountRequest( "", "", params, &client)
+	// err := MakeAccountRequest( "", "", params, &client)
 	if err != nil {
 		log.Println(err)
 		return suInfo, err
 	}
-	//MakeXKRequest(&client)
+	// MakeXKRequest(&client)
 	pt, err := MakeONERequest(&client)
 	if err != nil {
 		log.Println(err)
 		return suInfo, err
 	}
-	//fmt.Println(pt)
 	pt = "Bearer " + pt
-	//fmt.Println(pt)
 	suInfo = getInfo(pt)
-	//fmt.Println(suInfo)
 	return suInfo, nil
 }
 

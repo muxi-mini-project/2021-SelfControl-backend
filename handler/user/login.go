@@ -34,11 +34,11 @@ func Login(c *gin.Context) {
 		return
 	}
 	pwd := p.Password
-	//首次登录 验证一站式
+	// 首次登录 验证一站式
 	if resu := model.DB.Where("student_id = ?", p.StudentID).First(&p); resu.Error != nil {
 		_, err := model.GetUserInfoFormOne(p.StudentID, pwd)
 		if err != nil {
-			//c.Abort()
+			// c.Abort()
 			c.JSON(401, "Password or account wrong.")
 			return
 		}
@@ -48,7 +48,7 @@ func Login(c *gin.Context) {
 		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 		model.DB.Create(&p)
-		// //增加拥有默认背景
+		// 增加拥有默认背景
 		// var usersBackdrop model.UsersBackdrop
 		// usersBackdrop.BackdropID = 0
 		// usersBackdrop.StudentID = p.StudentID
@@ -65,7 +65,7 @@ func Login(c *gin.Context) {
 	claims.ExpiresAt = time.Now().Add(200 * time.Hour).Unix()
 	claims.IssuedAt = time.Now().Unix()
 
-	var Secret = "vinegar" //加醋
+	var Secret = "vinegar" // 加醋
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(Secret))
