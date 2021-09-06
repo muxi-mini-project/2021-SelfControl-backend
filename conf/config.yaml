@@ -7,4 +7,4 @@ db:  # DB 配置 部署时环境变量覆盖
   name: SC
   addr: 127.0.0.1:3306
   username: root
-  password: 
+  password: 12345678
