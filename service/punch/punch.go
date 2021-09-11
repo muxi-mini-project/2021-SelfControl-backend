@@ -21,10 +21,9 @@ func GetPunchAndNumber(id string) []model.Punch {
 	return punchs2
 }
 
-func TodayPunch(StudentId string, TitleID int) bool {
+func DayPunch(StudentId string, TitleID int, day int) bool {
 	Punch := model.GetPunchContentById(TitleID)
-	today := time.Now().YearDay()
-	_, err := model.GetTodayPunchHistory(StudentId, Punch.Title, today)
+	_, err := model.GetTodayPunchHistory(StudentId, Punch.Title, day)
 	var choice bool
 	if err != nil {
 		choice = false
@@ -34,8 +33,8 @@ func TodayPunch(StudentId string, TitleID int) bool {
 	return choice
 }
 
-func TodayPunches(id string) int {
-	histories := model.GetUserPunchHistoriesByDay(id, time.Now().Day())
+func DayPunches(id string, day int) int {
+	histories := model.GetUserPunchHistoriesByDay(id, day)
 	Punchs := model.GetUserPunches(id)
 	// 无打卡信息
 	if len(Punchs) == 0 {

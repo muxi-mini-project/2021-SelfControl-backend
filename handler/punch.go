@@ -6,6 +6,7 @@ import (
 	"SC/service/user"
 	"log"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -70,8 +71,8 @@ func MyPunch(c *gin.Context) {
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/today/{title_id} [get]
-func TodayPunch(c *gin.Context) {
+// @Router /punch/day/{title_id}/{day} [get]
+func DayPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
 	if err != nil {
@@ -80,7 +81,8 @@ func TodayPunch(c *gin.Context) {
 	}
 
 	TitleID, _ := strconv.Atoi(c.Param("title_id"))
-	choice := punch.TodayPunch(id, TitleID)
+	day, _ := strconv.Atoi(c.Param("day"))
+	choice := punch.DayPunch(id, TitleID, day)
 	SendResponse(c, "获取成功", choice)
 }
 
@@ -93,16 +95,17 @@ func TodayPunch(c *gin.Context) {
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/todayall [get]
-func TodayPunchs(c *gin.Context) {
+// @Router /punch/day/all/{day} [get]
+func DayPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
+	day, _ := strconv.Atoi(c.Param("day"))
 
-	num := punch.TodayPunches(id)
+	num := punch.DayPunches(id, day)
 	switch num {
 	case -1:
 		SendResponse(c, "未完成", -1)
@@ -258,7 +261,7 @@ func CreatePunch(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	num := punch.TodayPunches(id)
+	num := punch.DayPunches(id, time.Now().YearDay())
 
 	if num > 0 {
 		c.JSON(203, gin.H{"message": "今日已完成全部打卡，不能再新增标签"})

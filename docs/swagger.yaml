@@ -669,6 +669,70 @@ paths:
       summary: 获取用户某天的打卡
       tags:
       - punch
+  /punch/day/{title_id}/{day}:
+    get:
+      consumes:
+      - application/json
+      description: 在url末尾获取打卡的id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: title_id
+        in: path
+        name: title_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"获取成功"}'
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 判断今天是否已打卡
+      tags:
+      - punch
+  /punch/day/all/{day}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"未完成"}/{"msg":"未选择打卡"}/{"msg":"已全部完成且数量为返回的值"}'
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 判断今天是否已完成全部打卡
+      tags:
+      - punch
   /punch/month:
     get:
       consumes:
@@ -731,70 +795,6 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 获取某用户标签
-      tags:
-      - punch
-  /punch/today/{title_id}:
-    get:
-      consumes:
-      - application/json
-      description: 在url末尾获取打卡的id
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      - description: title_id
-        in: path
-        name: title_id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"msg":"获取成功"}'
-          schema:
-            $ref: '#/definitions/Response'
-        "401":
-          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
-            重新登录'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 判断今天是否已打卡
-      tags:
-      - punch
-  /punch/todayall:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"msg":"未完成"}/{"msg":"未选择打卡"}/{"msg":"已全部完成且数量为返回的值"}'
-          schema:
-            $ref: '#/definitions/Response'
-        "401":
-          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
-            重新登录'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 判断今天是否已完成全部打卡
       tags:
       - punch
   /punch/week/{month}:
