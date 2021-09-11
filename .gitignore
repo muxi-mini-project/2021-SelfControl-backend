@@ -1,6 +1,7 @@
 main
 test.go
 test
+/test/
 nohup.out
 /bin/
 

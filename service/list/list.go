@@ -13,27 +13,25 @@ func GetMonthList() ([]model.UserRanking, string) {
 		s     []string
 		Rank  model.MonthList
 	)
-	err := model.DB.Where("month < ? ", int(time.Now().Month())).First(&Rank).Error
-	if err == nil {
-		model.DB.Delete(Rank, "month < ? ", int(time.Now().Month()))
-		PunchHistory := model.GetPunchHistoriesByMonth(int(time.Now().Month()))
-		for _, ph := range PunchHistory {
-			s = append(s, ph.StudentID)
+	model.DB.Delete(Rank) // 删除月排行
+
+	PunchHistory := model.GetPunchHistoriesByMonth(int(time.Now().Month()))
+	for _, ph := range PunchHistory {
+		s = append(s, ph.StudentID)
+	}
+	UserNumbers := getOrder(s)
+	r := 1
+	for i, num := range UserNumbers {
+		if i > 0 && num.Number < UserNumbers[i-1].Number {
+			r++
 		}
-		UserNumbers := getOrder(s)
-		r := 1
-		for i, num := range UserNumbers {
-			if i > 0 && num.Number < UserNumbers[i-1].Number {
-				r++
-			}
-			Rank = model.MonthList{
-				StudentID: num.StudentId,
-				Ranking:   r,
-				Month:     int(time.Now().Month()),
-				Number:    num.Number,
-			}
-			model.CreateMonthlist(&Rank)
+		Rank = model.MonthList{
+			StudentID: num.StudentId,
+			Ranking:   r,
+			Month:     int(time.Now().Month()),
+			Number:    num.Number,
 		}
+		model.CreateMonthlist(&Rank)
 	}
 	// 把排名前10的加进来
 	for i := 1; i <= 10; i++ {
@@ -45,12 +43,13 @@ func GetMonthList() ([]model.UserRanking, string) {
 		if err != nil {
 			return nil, "获取用户信息错误"
 		}
-		var rank model.UserRanking
-		rank.Number = ran.Number
-		rank.Ranking = ran.Ranking
-		rank.StudentId = ran.StudentID
-		rank.Name = u.Name
-		rank.UserPicture = u.UserPicture
+		rank := model.UserRanking{
+			StudentId:   ran.StudentID,
+			Name:        u.Name,
+			Number:      ran.Number,
+			Ranking:     ran.Ranking,
+			UserPicture: u.UserPicture,
+		}
 		ranks = append(ranks, rank)
 	}
 	return ranks, ""
@@ -64,27 +63,26 @@ func GetWeekList() ([]model.UserRanking, string) {
 		s            []string
 		Rank         model.WeekList
 	)
-	if err := model.DB.Where("day <= ? ", time.Now().YearDay()-7).First(&Rank).Error; err == nil {
-		model.DB.Delete(Rank, "day <= ? ", time.Now().YearDay()-7)
-		model.DB.Table("punch_histories").Select("student_id").Where("day >= ?", int(time.Now().YearDay())-7).Scan(&PunchHistory)
-		for _, ph := range PunchHistory {
-			s = append(s, ph.StudentID)
-		}
-		UserNumbers := getOrder(s)
-		r := 1
-		for i, num := range UserNumbers {
-			if i > 0 && num.Number < UserNumbers[i-1].Number {
-				r++
-			}
-			Rank := model.WeekList{
-				StudentID: num.StudentId,
-				Ranking:   r,
-				Day:       time.Now().YearDay(),
-				Number:    num.Number,
-			}
-			model.DB.Create(&Rank)
-		}
+	model.DB.Delete(Rank) // 把排名删除
+	model.DB.Table("punch_histories").Select("student_id").Where("day >= ?", int(time.Now().YearDay())-7).Scan(&PunchHistory)
+	for _, ph := range PunchHistory {
+		s = append(s, ph.StudentID)
 	}
+	UserNumbers := getOrder(s)
+	r := 1
+	for i, num := range UserNumbers {
+		if i > 0 && num.Number < UserNumbers[i-1].Number {
+			r++
+		}
+		Rank := model.WeekList{
+			StudentID: num.StudentId,
+			Ranking:   r,
+			Day:       time.Now().YearDay(),
+			Number:    num.Number,
+		}
+		model.DB.Create(&Rank)
+	}
+
 	for i := 1; i <= 10; i++ {
 		var Rank []model.WeekList
 		model.DB.Where("ranking = ? ", i).Find(&Rank)
@@ -95,12 +93,13 @@ func GetWeekList() ([]model.UserRanking, string) {
 		if err != nil {
 			return nil, "获取用户信息错误"
 		}
-		var rank model.UserRanking
-		rank.Number = ran.Number
-		rank.Ranking = ran.Ranking
-		rank.StudentId = ran.StudentID
-		rank.Name = u.Name
-		rank.UserPicture = u.UserPicture
+		rank := model.UserRanking{
+			StudentId:   ran.StudentID,
+			Name:        u.Name,
+			Number:      ran.Number,
+			Ranking:     ran.Ranking,
+			UserPicture: u.UserPicture,
+		}
 		ranks = append(ranks, rank)
 	}
 	return ranks, ""
