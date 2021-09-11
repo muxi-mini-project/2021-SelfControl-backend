@@ -60,7 +60,7 @@ func MyPunch(c *gin.Context) {
 	SendResponse(c, "获取成功", punchs)
 }
 
-// @Summary  判断今天是否已打卡
+// @Summary  判断某天某卡是否已被打卡
 // @Tags punch
 // @Description 在url末尾获取打卡的id
 // @Accept application/json
@@ -71,7 +71,7 @@ func MyPunch(c *gin.Context) {
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/day/{title_id}/{day} [get]
+// @Router /punch/oneday/{title_id}/{day} [get]
 func DayPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
@@ -86,7 +86,7 @@ func DayPunch(c *gin.Context) {
 	SendResponse(c, "获取成功", choice)
 }
 
-// @Summary  判断今天是否已完成全部打卡
+// @Summary  判断某天是否已全部打卡
 // @Tags punch
 // @Accept application/json
 // @Produce application/json
@@ -95,7 +95,7 @@ func DayPunch(c *gin.Context) {
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/day/all/{day} [get]
+// @Router /punch/all/{day} [get]
 func DayPunchs(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
