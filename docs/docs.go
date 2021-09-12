@@ -663,6 +663,56 @@ var doc = `{
                 }
             }
         },
+        "/punch/all/{day}": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "判断某天是否已全部打卡",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "day",
+                        "name": "day",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"未完成\"}/{\"msg\":\"未选择打卡\"}/{\"msg\":\"已全部完成且数量为返回的值\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/punch/create": {
             "post": {
                 "description": "该用户新增一个打卡任务",
@@ -708,49 +758,6 @@ var doc = `{
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
                         "schema": {
                             "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "401": {
-                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/punch/day/all/{day}": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "punch"
-                ],
-                "summary": "判断今天是否已完成全部打卡",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"msg\":\"未完成\"}/{\"msg\":\"未选择打卡\"}/{\"msg\":\"已全部完成且数量为返回的值\"}",
-                        "schema": {
-                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {
@@ -827,57 +834,6 @@ var doc = `{
                 }
             }
         },
-        "/punch/day/{title_id}/{day}": {
-            "get": {
-                "description": "在url末尾获取打卡的id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "punch"
-                ],
-                "summary": "判断今天是否已打卡",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "title_id",
-                        "name": "title_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"msg\":\"获取成功\"}",
-                        "schema": {
-                            "$ref": "#/definitions/Response"
-                        }
-                    },
-                    "401": {
-                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
-                        "schema": {
-                            "$ref": "#/definitions/error.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/punch/month": {
             "get": {
                 "consumes": [
@@ -907,6 +863,64 @@ var doc = `{
                             "items": {
                                 "$ref": "#/definitions/model.Punch"
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/punch/oneday/{title_id}/{day}": {
+            "get": {
+                "description": "在url末尾获取打卡的id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "punch"
+                ],
+                "summary": "判断某天某卡是否已被打卡",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "title_id",
+                        "name": "title_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "day",
+                        "name": "day",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"获取成功\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
                         }
                     },
                     "401": {

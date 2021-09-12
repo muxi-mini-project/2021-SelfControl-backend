@@ -67,6 +67,7 @@ func MyPunch(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param title_id path int true "title_id"
+// @Param day path int true "day"
 // @Success 200 {object} Response "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -91,6 +92,7 @@ func DayPunch(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
+// @Param day path int true "day"
 // @Success 200 {object} Response "{"msg":"未完成"}/{"msg":"未选择打卡"}/{"msg":"已全部完成且数量为返回的值"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
