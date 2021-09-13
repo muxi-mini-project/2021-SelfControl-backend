@@ -98,3 +98,12 @@ create table list_histories(
   after      int          not null ,
   primary key (id)
 )ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS title_histories;
+create table title_histories(
+  id         int          not null auto_increment ,
+  student_id varchar(100) not null ,
+  title      varchar(100) not null ,
+  day        int          not null ,
+  primary key (id)
+)ENGINE=InnoDB;

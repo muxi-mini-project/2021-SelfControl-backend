@@ -6,6 +6,7 @@ import (
 	"SC/service/punch"
 	"SC/service/user"
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -151,4 +152,35 @@ func GetPrivacy(c *gin.Context) {
 	}
 
 	handler.SendResponse(c, "默认为1 若要修改隐私 直接使用修改用户信息", u.Privacy)
+}
+
+// @Summary  获取用户某天的标签
+// @Tags user
+// @Description 获取本用户在某天的打卡标签
+// @Accept application/json
+// @Produce application/json
+// @Param day path int true "day"
+// @Success 200 {object} handler.Response "{"msg":"获取本用户在某天的打卡标签"}"
+// @Failure 203 "未找到该用户"
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/title/{day} [get]
+func GetUserTitleByDay(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := user.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	d := c.Param("day")
+	day, _ := strconv.Atoi(d)
+	titles, err := user.GetUserTitleByDay(id, day)
+	if err != nil {
+		c.JSON(203, gin.H{"message": "未找到该用户"})
+		return
+	}
+
+	handler.SendResponse(c, "获取本用户在第"+d+"天的打卡标签", titles)
 }

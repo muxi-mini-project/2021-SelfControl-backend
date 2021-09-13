@@ -3,7 +3,6 @@ module SC
 go 1.14
 
 require (
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.6.3

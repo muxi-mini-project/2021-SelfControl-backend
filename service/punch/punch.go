@@ -62,7 +62,7 @@ func GetDayPunches(StudentId string, day int) []model.Punch {
 }
 
 func GetWeekPunchs(id string, month int) []int {
-	histories := model.GetPunchHistoriesByMonth(month)
+	histories := model.GetUserPunchHistoriesByMonth(id, month)
 	var days, Nums []int
 	var nums [6]int
 	tag := 0

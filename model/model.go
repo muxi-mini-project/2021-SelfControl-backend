@@ -78,9 +78,9 @@ func DeletePunch(u *UsersPunch) error {
 }
 
 func GetUserPunchHistoriesByMonth(id string, month int) []PunchHistory {
-	var punchs []PunchHistory
-	DB.Where("student_id = ? AND month = ? ", id, month).Find(&punchs)
-	return punchs
+	var histories []PunchHistory
+	DB.Where("student_id = ? AND month = ? ", id, month).Find(&histories)
+	return histories
 }
 
 // 根据 类型 获取其全部打卡
@@ -219,4 +219,33 @@ func GetUserRanking(id string, Type string) int {
 		return u.Ranking
 	}
 	return -1
+}
+
+func GetTitleHistory(id string, day int) []TitleHistory {
+	var Titles []TitleHistory
+	DB.Where("id = ? and day = ?", id, day).Find(&Titles)
+	return Titles
+}
+
+func UpdatePunchHistory(day int) {
+	var his TitleHistory
+	DB.Where("").First(&his)
+	if his.Day == time.Now().Day() {
+		return
+	}
+
+	var users []User
+	DB.Find(&users)
+	for _, user := range users {
+		var punches []UsersPunch
+		DB.Where("student_id = ? ", user.StudentID).Find(&punches)
+		for _, punch := range punches {
+			history := TitleHistory{
+				StudentID: user.StudentID,
+				Title:     punch.Title,
+				Day:       time.Now().YearDay(),
+			}
+			DB.Create(&history)
+		}
+	}
 }

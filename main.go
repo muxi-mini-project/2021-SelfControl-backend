@@ -4,6 +4,7 @@ import (
 	"SC/config"
 	"SC/model"
 	"SC/routers"
+	"SC/service/punch"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	go concurrent() // 并发
+
 	//自动建表 迁移？
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
@@ -43,6 +47,11 @@ func main() {
 	port := viper.GetString("port")
 	r.Run(port)
 	defer model.DB.Close()
+}
+
+// 并发
+func concurrent() {
+	punch.UpdatePunchHistoryEveryDay() // 每日更新用户标签
 }
 
 func dbtest() {

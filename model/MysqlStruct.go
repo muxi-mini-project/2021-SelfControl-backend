@@ -77,3 +77,10 @@ type ListHistory struct {
 	Former    int    `json:"former"`
 	After     int    `json:"after"`
 }
+
+type TitleHistory struct {
+	ID        int    `json:"id"`
+	StudentID string `json:"student_id"`
+	Title     string `json:"title"`
+	Day       int    `json:"day"`
+}

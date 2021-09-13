@@ -1343,6 +1343,53 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user/title/{day}": {
+            "get": {
+                "description": "获取本用户在某天的打卡标签",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "获取用户某天的标签",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "day",
+                        "name": "day",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"获取本用户在某天的打卡标签\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "203": {
+                        "description": "未找到该用户"
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

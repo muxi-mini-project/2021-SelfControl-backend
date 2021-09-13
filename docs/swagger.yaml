@@ -1053,6 +1053,38 @@ paths:
       summary: 我的打卡数
       tags:
       - user
+  /user/title/{day}:
+    get:
+      consumes:
+      - application/json
+      description: 获取本用户在某天的打卡标签
+      parameters:
+      - description: day
+        in: path
+        name: day
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"msg":"获取本用户在某天的打卡标签"}'
+          schema:
+            $ref: '#/definitions/Response'
+        "203":
+          description: 未找到该用户
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 获取用户某天的标签
+      tags:
+      - user
 schemes:
 - http
 swagger: "2.0"

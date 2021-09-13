@@ -25,11 +25,14 @@ func Router(r *gin.Engine) {
 		// 金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
 
-		//用户打卡数
+		// 用户打卡数
 		g1.GET("/punch", user.PunchAndNumber)
 
 		// 获取某用户隐私
 		g1.GET("/privacy/:id", user.GetPrivacy)
+
+		// 获取用户某天的标签
+		g1.GET("/title/:day", user.GetUserTitleByDay)
 
 	}
 
@@ -57,7 +60,7 @@ func Router(r *gin.Engine) {
 		g2.DELETE("/", handler.DeletePunch)
 
 		// 获取某用户标签
-		g1.GET("/punch/:id", handler.GetPunchs)
+		g2.GET("/punch/:id", handler.GetPunchs)
 
 		// 月报
 		g2.GET("/month", handler.Monthly)
