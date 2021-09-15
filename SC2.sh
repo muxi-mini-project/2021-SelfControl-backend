@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# 杀死旧的服务 将名为第一个参数的文件部署在本地
+# 杀死旧的服务 将名为main的文件部署在本地 并删除
 
 port=2333
-filename=$1
+filename=main
 
 cd /root/2021-SelfControl-backend
 chmod a+x ./${filename}
@@ -21,6 +21,7 @@ do
         chmod a+x ./${filename}
         nohup ./${filename} &
         echo 'ok'
+        sudo rm ${filename}
         exit 0
     fi
 done

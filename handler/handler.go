@@ -81,7 +81,7 @@ func ChangeRanking(c *gin.Context) {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
-			c.JSON(201, gin.H{"message": message})
+			c.JSON(201, gin.H{"code": 201, "message": message})
 			return
 		} else if err != nil {
 			c.JSON(400, gin.H{"message": "Fail."})
@@ -93,7 +93,7 @@ func ChangeRanking(c *gin.Context) {
 			c.JSON(203, gin.H{"message": message})
 			return
 		} else if message != "" {
-			c.JSON(201, gin.H{"message": message})
+			c.JSON(201, gin.H{"code": 201, "message": message})
 			return
 		} else if err != nil {
 			c.JSON(400, gin.H{"message": "Fail."})

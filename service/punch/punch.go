@@ -35,15 +35,25 @@ func DayPunch(StudentId string, TitleID int, day int) bool {
 
 func DayPunches(id string, day int) int {
 	histories := model.GetUserPunchHistoriesByDay(id, day)
-	Punchs := model.GetUserPunches(id)
+	Len := 0
+	if day == time.Now().YearDay() {
+		Punchs := model.GetUserPunches(id)
+		Len = len(Punchs)
+	} else {
+		Punchs := model.GetTitleHistory(id, day)
+		Len = len(Punchs)
+	}
+
 	// 无打卡信息
-	if len(Punchs) == 0 {
+	if Len == 0 {
 		return 0
-	} // 未全部完成
-	if len(Punchs) > len(histories) {
+	}
+	// 未全部完成
+	if Len > len(histories) {
 		return -1
-	} // 返回全部完成的打卡数量
-	return len(Punchs)
+	}
+	// 返回全部完成的打卡数量
+	return Len
 }
 
 func GetDayPunches(StudentId string, day int) []model.Punch {

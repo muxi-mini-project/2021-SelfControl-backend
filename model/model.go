@@ -45,7 +45,7 @@ func GetTodayPunchHistory(StudentId string, title string, today int) (PunchHisto
 
 func GetUserPunchHistoriesByDay(id string, day int) []PunchHistory {
 	var histories []PunchHistory
-	DB.Where("student_id = ? AND day = ? ", id, time.Now().Day()).Find(&histories)
+	DB.Where("student_id = ? AND day = ? ", id, day).Find(&histories)
 	return histories
 }
 
@@ -230,7 +230,7 @@ func GetTitleHistory(id string, day int) []TitleHistory {
 func UpdatePunchHistory(day int) {
 	var his TitleHistory
 	DB.Where("").First(&his)
-	if his.Day == time.Now().Day() {
+	if his.Day == time.Now().YearDay() {
 		return
 	}
 
