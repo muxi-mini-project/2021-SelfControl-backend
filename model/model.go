@@ -9,17 +9,16 @@ import (
 
 func GetUserInfo(id string) (User, error) {
 	var u User
-	result := DB.Where("student_id = ?", id).First(&u)
-	return u, result.Error
+	return u, DB.Where("student_id = ?", id).First(&u).Error
 }
 
 func UpdateUserInfo(user User) error {
-	result := DB.Model(&user).Where("student_id = ?", user.StudentID).Update(user)
-	return result.Error
+	return DB.Model(&user).Where("student_id = ?", user.StudentID).Update(user).Error
 }
 
 // -----------------------------------------------
 // punch:
+// 今日该用户已选
 func GetUserPunches(id string) []UsersPunch {
 	var punchs []UsersPunch
 	DB.Where("student_id = ?", id).Find(&punchs)
@@ -37,10 +36,9 @@ func GetPunchContentById(TitleID int) PunchContent {
 	return p
 }
 
-func GetTodayPunchHistory(StudentId string, title string, today int) (PunchHistory, error) {
+func GetDayPunchHistory(StudentId string, title string, day int) (PunchHistory, error) {
 	var punch PunchHistory
-	result := DB.Where("student_id = ? AND title = ? AND day = ?", StudentId, title, today).First(&punch)
-	return punch, result.Error
+	return punch, DB.Where("student_id = ? AND title = ? AND day = ?", StudentId, title, day).First(&punch).Error
 }
 
 func GetUserPunchHistoriesByDay(id string, day int) []PunchHistory {
@@ -57,8 +55,13 @@ func GetPunchHistoriesByMonth(month int) []PunchHistory {
 
 func GetUserPunchByTitle(id string, title string) (UsersPunch, error) {
 	var pun UsersPunch
-	err := DB.Where("student_id = ? AND title = ? ", id, title).First(&pun).Error
-	return pun, err
+	return pun, DB.Where("student_id = ? AND title = ? ", id, title).First(&pun).Error
+}
+
+func GetUserPunchHistoriesByTitle(id string, title string) []PunchHistory {
+	var histories []PunchHistory
+	DB.Where("student_id = ? AND title = ? ", id, title).Find(&histories)
+	return histories
 }
 
 func CreatePunchHistory(punch *PunchHistory) error {
@@ -191,13 +194,18 @@ func GetGoldHistory(id string) []GoldHistory {
 }
 
 func CreatePunch(id string, title string) (string, error) {
-	punch, err := GetUserPunchByTitle(id, title)
+	_, err := GetUserPunchByTitle(id, title)
 	if err == nil {
 		return "该标签已选择", nil
 	}
-	punch.StudentID = id
-	punch.Title = title
-	return "", DB.Create(&punch).Error
+
+	Punch := UsersPunch{
+		StudentID: id,
+		Title:     title,
+		Number:    len(GetUserPunchHistoriesByTitle(id, title)),
+	}
+
+	return "", DB.Create(&Punch).Error
 }
 
 func Type(id string) string {

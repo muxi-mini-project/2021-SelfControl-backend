@@ -105,6 +105,7 @@ func DayPunchs(c *gin.Context) {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
+
 	day, _ := strconv.Atoi(c.Param("day"))
 
 	num := punch.DayPunches(id, day)
@@ -164,7 +165,8 @@ func CompletePunch(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param day path int true "day"
-// @Success 200 {object} []model.Punch "{"msg":"1"}/{"msg":"0"}"
+// @Success 200 {object} []model.Punch "{"msg":"获取成功"}
+// Success 200 {object} []model.Punch "{"msg":"1"}/{"msg":"0"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -176,25 +178,16 @@ func GetDayPunchs(c *gin.Context) {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
+
 	a := c.Param("day")
-	x, _ := strconv.Atoi(a)
-	if x == 0 {
+	day, _ := strconv.Atoi(a)
+	if day == 0 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	punchs := punch.GetDayPunches(id, x)
-	histories := model.GetGoldHistory(id)
+	punchs := punch.GetDayPunches(id, day)
 
-	for _, history := range histories {
-		Time := []byte(history.Time)
-		Time = Time[8:10]
-		Time2, _ := strconv.Atoi(string(Time))
-		if Time2 == x {
-			SendResponse(c, "1", punchs)
-			return
-		}
-	}
-	SendResponse(c, "0", punchs)
+	SendResponse(c, "获取成功", punchs)
 }
 
 // @Summary 获取用户月报的周数据
@@ -217,12 +210,12 @@ func GetWeekPunchs(c *gin.Context) {
 	}
 
 	a := c.Param("month")
-	x, _ := strconv.Atoi(a)
-	if x == 0 {
+	month, _ := strconv.Atoi(a)
+	if month == 0 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
-	nums := punch.GetWeekPunchs(id, x)
+	nums := punch.GetWeekPunchs(id, month)
 	var weekPunch []model.WeekPunch
 	for i, num := range nums {
 		var WeekPunch model.WeekPunch

@@ -2,6 +2,7 @@ package punch
 
 import (
 	"SC/model"
+	"errors"
 	"strconv"
 	"time"
 )
@@ -21,16 +22,14 @@ func GetPunchAndNumber(id string) []model.Punch {
 	return punchs2
 }
 
-func DayPunch(StudentId string, TitleID int, day int) bool {
+func DayPunch(id string, TitleID int, day int) bool {
 	Punch := model.GetPunchContentById(TitleID)
-	_, err := model.GetTodayPunchHistory(StudentId, Punch.Title, day)
-	var choice bool
+	_, err := model.GetDayPunchHistory(id, Punch.Title, day)
 	if err != nil {
-		choice = false
+		return false
 	} else {
-		choice = true
+		return true
 	}
-	return choice
 }
 
 func DayPunches(id string, day int) int {
@@ -56,17 +55,18 @@ func DayPunches(id string, day int) int {
 	return Len
 }
 
-func GetDayPunches(StudentId string, day int) []model.Punch {
-	histories := model.GetUserPunchHistoriesByDay(StudentId, day)
+// 获取某日该用户已完成打卡
+func GetDayPunches(id string, day int) []model.Punch {
+	histories := model.GetUserPunchHistoriesByDay(id, day)
 	var punchs2 []model.Punch
-	var Punch model.Punch
 
 	for _, history := range histories {
-		p := model.GetPunchContentByTitle(history.Title)
-		Punch.ID = p.ID
-		Punch.Title = history.Title
+		Punch := model.Punch{
+			Title:  history.Title,
+			ID:     model.GetPunchContentByTitle(history.Title).ID,
+			Number: len(model.GetUserPunchHistoriesByTitle(id, history.Title)),
+		}
 		punchs2 = append(punchs2, Punch)
-
 	}
 	return punchs2
 }
@@ -119,26 +119,41 @@ func GetWeekPunchs(id string, month int) []int {
 }
 
 func CompletePunch(id string, title string) error {
-	pun, err := model.GetUserPunchByTitle(id, title)
+	punches := model.GetUserPunches(id) // 获取该用户该title的打卡情况(包括总数量)
+
+	// 判断是否已选
+	Punch, err := model.GetUserPunchByTitle(id, title)
 	if err != nil {
-		return err
+		return errors.New("未选择该标签")
 	}
-	var punch model.PunchHistory
-	punch.Title = title
-	punch.StudentID = id
-	punch.Time = time.Now().Format("2006-01-02 15:04:05")
-	punch.Month = int(time.Now().Month())
-	punch.Day = time.Now().YearDay()
-	if err := model.CreatePunchHistory(&punch); err != nil {
-		return err
+
+	// 判断是否已打卡
+	Histories := model.GetUserPunchHistoriesByDay(id, time.Now().YearDay())
+	for _, History := range Histories {
+		if History.Title == title { // 已打卡
+			return errors.New("今日已打该卡")
+		}
 	}
-	pun.Number += 1
-	if err := model.UpdateUserPunch(pun); err != nil {
+
+	// 允许打卡后创建打卡历史
+	history := model.PunchHistory{
+		Title:     title,
+		StudentID: id,
+		Time:      time.Now().Format("2006-01-02 15:04:05"),
+		Month:     int(time.Now().Month()),
+		Day:       time.Now().YearDay(),
+	}
+	if err := model.CreatePunchHistory(&history); err != nil {
 		return err
 	}
 
-	punches := model.GetUserPunches(id)
-	puns := GetDayPunches(id, time.Now().Day())
+	Punch.Number += 1
+
+	if err := model.UpdateUserPunch(Punch); err != nil {
+		return err
+	}
+
+	puns := GetDayPunches(id, time.Now().YearDay()) // 今日已完成
 	if len(puns) == len(punches) {
 		gold := 0
 		if len(puns) <= 5 {
