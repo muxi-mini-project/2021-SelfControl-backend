@@ -11,7 +11,7 @@ func UpdatePunchHistoryEveryDay() {
 		minute := time.Now().Minute()
 		time.Sleep(1000000000 * 60)
 		if hour == 23 && minute > 55 {
-			model.UpdatePunchHistory(time.Now().Day())
+			model.UpdatePunchHistory(time.Now().YearDay())
 		}
 	}
 }

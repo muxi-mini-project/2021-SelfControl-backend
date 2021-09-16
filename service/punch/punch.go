@@ -36,11 +36,9 @@ func DayPunches(id string, day int) int {
 	histories := model.GetUserPunchHistoriesByDay(id, day)
 	Len := 0
 	if day == time.Now().YearDay() {
-		Punchs := model.GetUserPunches(id)
-		Len = len(Punchs)
+		Len = len(model.GetUserPunches(id))
 	} else {
-		Punchs := model.GetTitleHistory(id, day)
-		Len = len(Punchs)
+		Len = len(model.GetTitleHistory(id, day))
 	}
 
 	// 无打卡信息

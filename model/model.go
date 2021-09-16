@@ -231,7 +231,7 @@ func GetUserRanking(id string, Type string) int {
 
 func GetTitleHistory(id string, day int) []TitleHistory {
 	var Titles []TitleHistory
-	DB.Where("id = ? and day = ?", id, day).Find(&Titles)
+	DB.Where("student_id = ? and day = ?", id, day).Find(&Titles)
 	return Titles
 }
 
