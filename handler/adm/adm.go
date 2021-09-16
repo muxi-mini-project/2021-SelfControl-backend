@@ -70,3 +70,33 @@ func DeleteBackdrop(c *gin.Context) {
 	// model.DB.Exec("detele from users_backdrops WHERE student_id = ?", sid)
 	handler.SendResponse(c, "删除成功", nil)
 }
+
+// @Summary  (管理员)新增用户标签
+// @Description 管理员直接新增用户当前标签
+// @Tags administrator
+// @Accept application/json
+// @Produce application/json
+// @Param student_id path int true "student_id"
+// @Success 200 {object} handler.Response "{"msg":"删"}"
+// @Failure 203 "该标签已选择"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Router /adm/title/{student_id} [post]
+func CreateTitle(c *gin.Context) {
+	sid := c.Param("student_id")
+
+	var title model.Title
+	if err := c.BindJSON(&title); err != nil || title.Title == "" {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+
+	if message, err := model.CreatePunch(sid, title.Title); message != "" {
+		c.JSON(203, gin.H{"message": message})
+		return
+	} else if err != nil {
+		c.JSON(400, gin.H{"message": "Fail."})
+		return
+	}
+
+	handler.SendResponse(c, "新增标签成功", nil)
+}

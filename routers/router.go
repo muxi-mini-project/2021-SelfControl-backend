@@ -106,5 +106,8 @@ func Router(r *gin.Engine) {
 
 		// 清除用户背景
 		g3.GET("/del_backdrop/:student_id", adm.DeleteBackdrop)
+
+		// 新增用户标签
+		g3.POST("/title/:student_id", adm.CreateTitle)
 	}
 }
