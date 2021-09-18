@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"strconv"
 	"time"
 
@@ -157,6 +158,12 @@ func CreateGoldAndRankHistory(history *GoldHistory, History *ListHistory) error 
 func ChangeBackdrop(id string, BackdropID int) (string, error) {
 	var backdrop Backdrop
 	DB.Where("backdrop_id = ? ", BackdropID).First(&backdrop)
+
+	var userBackdrop UsersBackdrop
+	DB.Where("backdrop_id = ? and student_id = ? ", BackdropID, id).First(&userBackdrop)
+	if userBackdrop.BackdropID == BackdropID {
+		return "", errors.New("已购买此背景")
+	}
 	var user User
 	DB.Where("student_id = ? ", id).First(&user)
 	if user.Gold < backdrop.Price {
@@ -237,7 +244,7 @@ func GetTitleHistory(id string, day int) []TitleHistory {
 
 func UpdatePunchHistory(day int) {
 	var his TitleHistory
-	DB.Where("").First(&his)
+	DB.First(&his)
 	if his.Day == time.Now().YearDay() {
 		return
 	}

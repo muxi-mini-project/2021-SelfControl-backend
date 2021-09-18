@@ -42,7 +42,7 @@ func Login(c *gin.Context) {
 			c.JSON(401, "Password or account wrong.")
 			return
 		}
-		p.CurrentBackdrop = 6
+		p.CurrentBackdrop = 1
 		p.Gold = 0
 		p.Name = "小樨"
 		p.Privacy = 1

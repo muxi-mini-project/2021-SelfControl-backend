@@ -173,7 +173,7 @@ func ChangeBackdrop(c *gin.Context) {
 		return
 	}
 
-	if b.BackdropID == 0 {
+	if b.BackdropID < 2 || b.BackdropID > 6 {
 		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
 		return
 	}
@@ -210,17 +210,18 @@ func MyBackdrops(c *gin.Context) {
 
 	backdrops := model.GetBackdrop(id)
 	var Backdrops model.BackdropRes
+	// 默认背景是1 购买的是2-6,返回的的是B1到B5
 	for _, value := range backdrops {
 		switch value.BackdropID {
-		case 1:
-			Backdrops.B1 = 1
 		case 2:
-			Backdrops.B2 = 1
+			Backdrops.B1 = 1
 		case 3:
-			Backdrops.B3 = 1
+			Backdrops.B2 = 1
 		case 4:
-			Backdrops.B4 = 1
+			Backdrops.B3 = 1
 		case 5:
+			Backdrops.B4 = 1
+		case 6:
 			Backdrops.B5 = 1
 		}
 	}

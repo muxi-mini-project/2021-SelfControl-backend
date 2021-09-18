@@ -140,6 +140,47 @@
                 }
             }
         },
+        "/adm/title/{student_id}": {
+            "post": {
+                "description": "管理员直接新增用户当前标签",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "administrator"
+                ],
+                "summary": "(管理员)新增用户标签",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "student_id",
+                        "name": "student_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"msg\":\"删\"}",
+                        "schema": {
+                            "$ref": "#/definitions/Response"
+                        }
+                    },
+                    "203": {
+                        "description": "该标签已选择"
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/backdrop": {
             "get": {
                 "description": "获取背景价格",
@@ -794,7 +835,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"msg\":\"1\"}/{\"msg\":\"0\"}",
+                        "description": "{\"msg\":\"获取成功\"}",
                         "schema": {
                             "type": "array",
                             "items": {
