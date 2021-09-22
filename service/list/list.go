@@ -2,6 +2,7 @@ package list
 
 import (
 	"SC/model"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -33,6 +34,28 @@ func GetMonthList() ([]model.UserRanking, string) {
 		}
 		model.CreateMonthlist(&Rank)
 	}
+	// 将今日的兑换排名修改进list
+	records := model.GetChangeListRecords(time.Now().YearDay())
+	for _, record := range records {
+		// 修改排行榜
+		if record.Type == 1 {
+			continue
+		}
+		var rank model.MonthList
+		model.DB.Where("student_id = ? ", record.StudentID).First(&rank)
+		Rank := model.MonthList{
+			StudentID: record.StudentID,
+			Ranking:   rank.Ranking - record.Ranking,
+			Month:     int(time.Now().Month()),
+			Number:    rank.Number,
+		}
+
+		err := ChangeMonthList(Rank)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+
 	// 把排名前10的加进来
 	for i := 1; i <= 10; i++ {
 		Rank := model.GetMonthRanks(i)
@@ -81,6 +104,26 @@ func GetWeekList() ([]model.UserRanking, string) {
 			Number:    num.Number,
 		}
 		model.DB.Create(&Rank)
+	}
+	// 将今日的兑换排名修改进list
+	records := model.GetChangeListRecords(time.Now().YearDay())
+	for _, record := range records {
+		// 修改排行榜
+		if record.Type == 2 {
+			continue
+		}
+		var rank model.WeekList
+		model.DB.Where("student_id = ? ", record.StudentID).First(&rank)
+		Rank := model.WeekList{
+			StudentID: record.StudentID,
+			Ranking:   rank.Ranking - record.Ranking,
+			Day:       time.Now().YearDay(),
+			Number:    rank.Number,
+		}
+		err := ChangeWeekList(Rank)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	for i := 1; i <= 10; i++ {
@@ -187,15 +230,14 @@ func ChangeWeekRanking(id string, ranking int) (string, error) {
 		return "", err
 	}
 
-	// 修改排行榜
-	rank := model.WeekList{
+	// 插入到兑换记录表
+	record := model.ChangeListRecord{
 		StudentID: id,
-		Ranking:   former - ranking,
+		Type:      1, // week
+		Ranking:   ranking,
 		Day:       time.Now().YearDay(),
-		Number:    number,
 	}
-	err = ChangeWeekList(rank)
-	return "", err
+	return "", model.DB.Create(&record).Error
 }
 
 func ChangeMonthRanking(id string, ranking int) (string, error) {
@@ -249,15 +291,15 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 	if err := model.CreateGoldAndRankHistory(&history, &History); err != nil {
 		return "", err
 	}
-	// 修改排行榜
-	rank := model.MonthList{
+
+	// 插入到兑换记录表
+	record := model.ChangeListRecord{
 		StudentID: id,
-		Ranking:   former - ranking,
-		Month:     int(time.Now().Month()),
-		Number:    number,
+		Type:      2, // week
+		Ranking:   ranking,
+		Day:       time.Now().YearDay(),
 	}
-	err = ChangeMonthList(rank)
-	return "", err
+	return "", model.DB.Create(&record).Error
 }
 
 func ChangeWeekList(rank model.WeekList) error {
@@ -276,8 +318,7 @@ func ChangeWeekList(rank model.WeekList) error {
 	}
 
 	model.DB.Where("student_id = ? ", rank.StudentID).Delete(&rank)
-	err := model.DB.Create(&rank).Error
-	return err
+	return model.DB.Create(&rank).Error
 }
 
 func ChangeMonthList(rank model.MonthList) error {
@@ -295,6 +336,5 @@ func ChangeMonthList(rank model.MonthList) error {
 		model.DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)
 	}
 	model.DB.Where("student_id = ? ", rank.StudentID).Delete(&rank)
-	err := model.DB.Create(&rank).Error
-	return err
+	return model.DB.Create(&rank).Error
 }

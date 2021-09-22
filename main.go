@@ -3,7 +3,7 @@ package main
 import (
 	"SC/config"
 	"SC/model"
-	"SC/routers"
+	"SC/router"
 	"SC/service/punch"
 	"fmt"
 
@@ -42,7 +42,7 @@ func main() {
 	//自动建表 迁移？
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
-	routers.Router(r)
+	router.Router(r)
 	// dbtest()
 	port := viper.GetString("port")
 	r.Run(port)

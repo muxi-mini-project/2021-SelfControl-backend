@@ -84,3 +84,11 @@ type TitleHistory struct {
 	Title     string `json:"title"`
 	Day       int    `json:"day"`
 }
+
+type ChangeListRecord struct {
+	ID        int    `json:"id"`
+	Type      int    `json:"type"`
+	StudentID string `json:"student_id"`
+	Day       int    `json:"day"`
+	Ranking   int    `json:"ranking"`
+}

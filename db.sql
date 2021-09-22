@@ -107,3 +107,13 @@ create table title_histories(
   day        int          not null ,
   primary key (id)
 )ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS change_list_records;
+create table change_list_records(
+  id         int          not null auto_increment ,
+  day        int          not null ,
+  student_id varchar(100) not null ,
+  ranking    int          not null ,
+  type       int          not null ,
+  primary key (id)
+)ENGINE=InnoDB;

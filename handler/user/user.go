@@ -69,7 +69,7 @@ func ChangeUserInfo(c *gin.Context) {
 	}
 
 	if user.Privacy != 2 && user.Privacy != 1 && user.Privacy != 0 {
-		c.JSON(400, gin.H{"message": "Privacy参数错误(2 = 公开， 1 = 不公开)"})
+		c.JSON(400, gin.H{"message": "Privacy参数错误(2 = 不公开， 1 = 公开)"})
 		return
 	}
 	user.StudentID = id
@@ -100,9 +100,9 @@ func GoldHistory(c *gin.Context) {
 	}
 
 	histories := model.GetGoldHistory(id)
-	if len(histories) > 3 {
-		histories = histories[len(histories)-3:]
-	}
+	// if len(histories) > 3 {
+	// 	histories = histories[len(histories)-3:]
+	// }
 
 	handler.SendResponse(c, "获取成功", histories)
 }
@@ -137,7 +137,7 @@ func PunchAndNumber(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param id path int true "id"
-// @Success 200 {object} handler.Response "{"msg":"默认为1 若要修改隐私 直接使用修改用户信息"}"
+// @Success 200 {object} handler.Response "{"msg":"默认为1(公开),2是不公开 若要修改隐私 直接使用修改用户信息"}"
 // @Failure 203 "未找到该用户"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"

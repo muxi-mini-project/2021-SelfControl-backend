@@ -228,9 +228,19 @@ func Type(id string) string {
 }
 
 func GetUserRanking(id string, Type string) int {
-	var u WeekList
-	err := DB.Where("student_id = ? ", id).First(&u).Error
-	if err != nil {
+	if Type == "week" {
+		var u WeekList
+		err := DB.Where("student_id = ? ", id).First(&u).Error
+		if err != nil {
+			return -1
+		}
+		return u.Ranking
+	} else if Type == "month" {
+		var u MonthList
+		err := DB.Where("student_id = ? ", id).First(&u).Error
+		if err != nil {
+			return -1
+		}
 		return u.Ranking
 	}
 	return -1
@@ -263,4 +273,10 @@ func UpdatePunchHistory(day int) {
 			DB.Create(&history)
 		}
 	}
+}
+
+func GetChangeListRecords(day int) []ChangeListRecord {
+	var records []ChangeListRecord
+	DB.Where("day = ? ", day).Find(&records)
+	return records
 }
