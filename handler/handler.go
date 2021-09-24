@@ -54,6 +54,7 @@ func List(c *gin.Context) {
 // @Param ranking body model.Ranking true "ranking"
 // @Success 200 {object} Response "{"msg":"兑换成功"}"
 // @Failure 203 "金币不足"
+// @Failure 204 "错误:该用户兑换排名前没有该排名"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -80,6 +81,9 @@ func ChangeRanking(c *gin.Context) {
 		if message, err := list.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
 			return
+		} else if message == "错误:该用户兑换排名前没有该排名" {
+			c.JSON(204, gin.H{"code": 204, "message": message})
+			return
 		} else if message != "" {
 			c.JSON(201, gin.H{"code": 201, "message": message})
 			return
@@ -91,6 +95,9 @@ func ChangeRanking(c *gin.Context) {
 	} else if Type == "month" {
 		if message, err := list.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
 			c.JSON(203, gin.H{"message": message})
+			return
+		} else if message == "错误:该用户兑换排名前没有该排名" {
+			c.JSON(204, gin.H{"code": 204, "message": message})
 			return
 		} else if message != "" {
 			c.JSON(201, gin.H{"code": 201, "message": message})
