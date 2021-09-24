@@ -14,13 +14,13 @@ func Router(r *gin.Engine) {
 	g1 := r.Group("/api/v1/user")
 	{
 		// 登陆
-		g1.POST("/", user.Login)
+		g1.POST("", user.Login)
 
 		// 用户信息
-		g1.GET("/", user.UserInfo)
+		g1.GET("", user.UserInfo)
 
 		// 修改用户信息
-		g1.PUT("/", user.ChangeUserInfo)
+		g1.PUT("", user.ChangeUserInfo)
 
 		// 金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
@@ -42,7 +42,7 @@ func Router(r *gin.Engine) {
 	g2 := r.Group("/api/v1/punch")
 	{
 		// 我的打卡
-		g2.GET("/", handler.MyPunch)
+		g2.GET("", handler.MyPunch)
 
 		// 判断某天某卡是否已被打卡
 		g2.GET("/oneday/:title_id/:day", handler.DayPunch)
@@ -51,13 +51,13 @@ func Router(r *gin.Engine) {
 		g2.GET("/all/:day", handler.DayPunchs)
 
 		// 完成打卡
-		g2.POST("/", handler.CompletePunch)
+		g2.POST("", handler.CompletePunch)
 
 		// 添加标签
 		g2.POST("/create", handler.CreatePunch)
 
 		// 移除标签
-		g2.DELETE("/", handler.DeletePunch)
+		g2.DELETE("", handler.DeletePunch)
 
 		// 获取某用户标签
 		g2.GET("/punch/:id", handler.GetPunchs)
