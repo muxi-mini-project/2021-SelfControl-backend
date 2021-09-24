@@ -254,8 +254,7 @@ func GetTitleHistory(id string, day int) []TitleHistory {
 
 func UpdatePunchHistory(day int) {
 	var his TitleHistory
-	DB.First(&his)
-	if his.Day == time.Now().YearDay() {
+	if DB.Where("day = ? ", day).First(&his); his.ID != 0 { // 当日的已更新过
 		return
 	}
 
@@ -268,7 +267,7 @@ func UpdatePunchHistory(day int) {
 			history := TitleHistory{
 				StudentID: user.StudentID,
 				Title:     punch.Title,
-				Day:       time.Now().YearDay(),
+				Day:       day,
 			}
 			DB.Create(&history)
 		}
