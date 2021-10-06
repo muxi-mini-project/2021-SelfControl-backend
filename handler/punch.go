@@ -60,19 +60,18 @@ func MyPunch(c *gin.Context) {
 	SendResponse(c, "获取成功", punchs)
 }
 
-// @Summary  判断某天某卡是否已被打卡
+// @Summary  判断某天打卡情况
 // @Tags punch
-// @Description 在url末尾获取打卡的id
+// @Description 获取一个数组, ok为true代表当天该卡已打卡
 // @Accept application/json
 // @Produce application/json
 // @Param token header string true "token"
-// @Param title_id path int true "title_id"
 // @Param day path int true "day"
 // @Success 200 {object} Response "{"msg":"获取成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /punch/oneday/{title_id}/{day} [get]
+// @Router /punch/oneday/{day} [get]
 func DayPunch(c *gin.Context) {
 	token := c.Request.Header.Get("token")
 	id, err := user.VerifyToken(token)
@@ -81,10 +80,9 @@ func DayPunch(c *gin.Context) {
 		return
 	}
 
-	TitleID, _ := strconv.Atoi(c.Param("title_id"))
 	day, _ := strconv.Atoi(c.Param("day"))
-	choice := punch.DayPunch(id, TitleID, day)
-	SendResponse(c, "获取成功", choice)
+	res := punch.DayPunch(id, day)
+	SendResponse(c, "获取成功", res)
 }
 
 // @Summary  判断某天是否已全部打卡

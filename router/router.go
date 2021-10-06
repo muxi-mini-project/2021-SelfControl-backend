@@ -44,8 +44,8 @@ func Router(r *gin.Engine) {
 		// 我的打卡
 		g2.GET("", handler.MyPunch)
 
-		// 判断某天某卡是否已被打卡
-		g2.GET("/oneday/:title_id/:day", handler.DayPunch)
+		// 判断某天打卡情况
+		g2.GET("/oneday/:day", handler.DayPunch)
 
 		// 判断某天是否已全部打卡
 		g2.GET("/all/:day", handler.DayPunchs)

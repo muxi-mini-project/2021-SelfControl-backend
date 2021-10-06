@@ -3,6 +3,7 @@ package punch
 import (
 	"SC/model"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 )
@@ -22,14 +23,53 @@ func GetPunchAndNumber(id string) []model.Punch {
 	return punchs2
 }
 
-func DayPunch(id string, TitleID int, day int) bool {
-	Punch := model.GetPunchContentById(TitleID)
-	_, err := model.GetDayPunchHistory(id, Punch.Title, day)
-	if err != nil {
-		return false
+type Punch3 struct {
+	// model.Punch2
+	Title string
+	ID    int
+	Ok    bool `json:"ok"`
+}
+
+func DayPunch(id string, day int) []Punch3 {
+	var Punchs []Punch3
+	if day == time.Now().YearDay() {
+		userPunchs := model.GetUserPunches(id)
+		for _, punch := range userPunchs {
+			P := model.GetPunchContentByTitle(punch.Title)
+			Punch := Punch3{
+				punch.Title,
+				P.ID,
+				false,
+			}
+			history, _ := model.GetDayPunchHistory(id, punch.Title, day)
+			if history.StudentID == "" {
+				Punch.Ok = false
+			} else {
+				Punch.Ok = true
+			}
+			Punchs = append(Punchs, Punch)
+		}
 	} else {
-		return true
+		punchs := model.GetTitleHistory(id, day)
+
+		for _, punch := range punchs {
+			P := model.GetPunchContentByTitle(punch.Title)
+			Punch := Punch3{
+				punch.Title,
+				P.ID,
+				false,
+			}
+			history, _ := model.GetDayPunchHistory(id, punch.Title, day)
+			fmt.Println(history.StudentID)
+			if history.StudentID == "" {
+				Punch.Ok = false
+			} else {
+				Punch.Ok = true
+			}
+			Punchs = append(Punchs, Punch)
+		}
 	}
+	return Punchs
 }
 
 func DayPunches(id string, day int) int {
