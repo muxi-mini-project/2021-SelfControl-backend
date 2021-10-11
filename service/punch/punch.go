@@ -74,7 +74,7 @@ func DayPunch(id string, day int) []Punch3 {
 
 func DayPunches(id string, day int) int {
 	histories := model.GetUserPunchHistoriesByDay(id, day)
-	Len := 0
+	var Len int
 	if day == time.Now().YearDay() {
 		Len = len(model.GetUserPunches(id))
 	} else {
@@ -193,7 +193,7 @@ func CompletePunch(id string, title string) error {
 
 	puns := GetDayPunches(id, time.Now().YearDay()) // 今日已完成
 	if len(puns) == len(punches) {
-		gold := 0
+		var gold int
 		if len(puns) <= 5 {
 			gold = len(puns) * 10
 		} else {

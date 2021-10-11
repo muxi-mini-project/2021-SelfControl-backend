@@ -473,6 +473,9 @@ var doc = `{
                     "203": {
                         "description": "金币不足"
                     },
+                    "204": {
+                        "description": "错误:该用户兑换排名前没有该排名"
+                    },
                     "400": {
                         "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
                         "schema": {
@@ -921,9 +924,9 @@ var doc = `{
                 }
             }
         },
-        "/punch/oneday/{title_id}/{day}": {
+        "/punch/oneday/{day}": {
             "get": {
-                "description": "在url末尾获取打卡的id",
+                "description": "获取一个数组, ok为true代表当天该卡已打卡",
                 "consumes": [
                     "application/json"
                 ],
@@ -933,20 +936,13 @@ var doc = `{
                 "tags": [
                     "punch"
                 ],
-                "summary": "判断某天某卡是否已被打卡",
+                "summary": "判断某天打卡情况",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "token",
                         "name": "token",
                         "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "title_id",
-                        "name": "title_id",
-                        "in": "path",
                         "required": true
                     },
                     {
@@ -1315,7 +1311,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"msg\":\"默认为1 若要修改隐私 直接使用修改用户信息\"}",
+                        "description": "{\"msg\":\"默认为1(公开),2是不公开 若要修改隐私 直接使用修改用户信息\"}",
                         "schema": {
                             "$ref": "#/definitions/Response"
                         }
