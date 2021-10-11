@@ -195,9 +195,9 @@ func CompletePunch(id string, title string) error {
 	if len(puns) == len(punches) {
 		var gold int
 		if len(puns) <= 5 {
-			gold = len(puns) * 10
+			gold = 10
 		} else {
-			gold = ((len(puns)-5)*2 + 10) * len(puns)
+			gold = len(puns) * 2
 		}
 		return completeAllPunch(id, gold)
 	}
