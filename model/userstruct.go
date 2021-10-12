@@ -23,7 +23,7 @@ type Punch2 struct {
 }
 
 type UserAndNumber struct {
-	StudentId string `json:"student_id"`
+	StudentID string `json:"student_id"`
 	Number    int    `json:"number"`
 }
 
@@ -36,7 +36,7 @@ type BackdropRes struct {
 }
 
 type UserRanking struct {
-	StudentId   string `json:"student_id"`
+	StudentID   string `json:"student_id"`
 	Name        string `json:"name"`
 	Number      int    `json:"number"`
 	Ranking     int    `json:"ranking"`

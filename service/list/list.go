@@ -27,7 +27,7 @@ func GetMonthList() ([]model.UserRanking, string) {
 			r++
 		}
 		Rank = model.MonthList{
-			StudentID: num.StudentId,
+			StudentID: num.StudentID,
 			Ranking:   r,
 			Month:     int(time.Now().Month()),
 			Number:    num.Number,
@@ -67,7 +67,7 @@ func GetMonthList() ([]model.UserRanking, string) {
 			return nil, "获取用户信息错误"
 		}
 		rank := model.UserRanking{
-			StudentId:   ran.StudentID,
+			StudentID:   ran.StudentID,
 			Name:        u.Name,
 			Number:      ran.Number,
 			Ranking:     ran.Ranking,
@@ -98,7 +98,7 @@ func GetWeekList() ([]model.UserRanking, string) {
 			r++
 		}
 		Rank := model.WeekList{
-			StudentID: num.StudentId,
+			StudentID: num.StudentID,
 			Ranking:   r,
 			Day:       time.Now().YearDay(),
 			Number:    num.Number,
@@ -137,7 +137,7 @@ func GetWeekList() ([]model.UserRanking, string) {
 			return nil, "获取用户信息错误"
 		}
 		rank := model.UserRanking{
-			StudentId:   ran.StudentID,
+			StudentID:   ran.StudentID,
 			Name:        u.Name,
 			Number:      ran.Number,
 			Ranking:     ran.Ranking,
@@ -150,16 +150,16 @@ func GetWeekList() ([]model.UserRanking, string) {
 
 func getOrder(s []string) []model.UserAndNumber {
 	var Numbers []model.UserAndNumber
-	Number := model.UserAndNumber{StudentId: s[0], Number: 1}
+	Number := model.UserAndNumber{StudentID: s[0], Number: 1}
 	Numbers = append(Numbers, Number)
 	for i := 1; i < len(s); i++ {
 		for j := 0; j < len(Numbers); j++ {
-			if Numbers[j].StudentId == s[i] {
+			if Numbers[j].StudentID == s[i] {
 				Numbers[j].Number++
 				break
 			}
 			if j == len(Numbers)-1 {
-				Number := model.UserAndNumber{StudentId: s[i]}
+				Number := model.UserAndNumber{StudentID: s[i]}
 				Numbers = append(Numbers, Number)
 			}
 		}
@@ -199,7 +199,7 @@ func ChangeWeekRanking(id string, ranking int) (string, error) {
 	former := 0
 	number := 0
 	for _, UandN := range UserNumber {
-		if UandN.StudentId == id {
+		if UandN.StudentID == id {
 			former = UandN.Ranking
 			if former <= ranking {
 				return "超出可兑换限制", nil
@@ -262,7 +262,7 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 	former := 0
 	number := 0
 	for _, UandN := range UserNumber {
-		if UandN.StudentId == id {
+		if UandN.StudentID == id {
 			former = UandN.Ranking
 			if former <= ranking {
 				return "超出可兑换限制", nil
