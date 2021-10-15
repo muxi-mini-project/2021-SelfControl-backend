@@ -5,6 +5,7 @@ import (
 	"SC/model"
 	"SC/service/punch"
 	"SC/service/user"
+	"encoding/base64"
 	"fmt"
 	"strconv"
 
@@ -73,6 +74,9 @@ func ChangeUserInfo(c *gin.Context) {
 		return
 	}
 	user.StudentID = id
+	if user.Password != "" {
+		user.Password = base64.StdEncoding.EncodeToString([]byte(user.Password)) // 加密后存数据库
+	}
 	if err := model.UpdateUserInfo(user); err != nil {
 		c.JSON(400, gin.H{"message": "更新失败"})
 		return
