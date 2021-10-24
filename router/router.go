@@ -4,11 +4,16 @@ import (
 	"SC/handler"
 	"SC/handler/adm"
 	"SC/handler/user"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Router(r *gin.Engine) {
+
+	r.NoRoute(func(c *gin.Context) {
+		c.String(http.StatusNotFound, "The incorrect API route.")
+	})
 
 	// user:
 	g1 := r.Group("/api/v1/user")
