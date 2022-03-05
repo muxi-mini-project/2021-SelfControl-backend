@@ -1,5 +1,11 @@
-FROM scratch
-COPY . /app
+
+FROM golang:1.17-alpine
+ENV GOPROXY=https://goproxy.cn
+WORKDIR /build
+COPY . .
+EXPOSE 2333
+RUN mkdir /app
+RUN  go mod tidy
+RUN go build -o /app main.go
 WORKDIR /app
-RUN npm install --registry=https://registry.npm.taobao.org
-EXPOSE 3000
+CMD ["/app/main"]
