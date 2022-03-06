@@ -18,7 +18,7 @@ import (
 // @description 自控力API
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
-// @contact.email 864978550@qq.com
+// @contact.email tao_dei@qq.com
 // @host 39.99.53.8:2333
 // @BasePath /api/v1
 // @Schemes http
