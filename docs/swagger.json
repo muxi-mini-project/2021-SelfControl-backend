@@ -9,11 +9,11 @@
         "termsOfService": "http://swagger.io/terrms/",
         "contact": {
             "name": "TAODEI",
-            "email": "864978550@qq.com"
+            "email": "tao_dei@qq.com"
         },
         "version": "1.0.0"
     },
-    "host": "39.99.53.8:2333",
+    "host": "self-control.muxixyz.com:2333",
     "basePath": "/api/v1",
     "paths": {
         "/adm/del_backdrop/{student_id}": {

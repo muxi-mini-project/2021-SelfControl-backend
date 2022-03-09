@@ -6,6 +6,7 @@ import (
 	"SC/router"
 	"SC/service/punch"
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -19,7 +20,7 @@ import (
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email tao_dei@qq.com
-// @host 39.99.53.8:2333
+// @host self-control.muxixyz.com:2333
 // @BasePath /api/v1
 // @Schemes http
 
@@ -30,7 +31,11 @@ func main() {
 	}
 
 	dbMap := viper.GetStringMapString("db")
-	dbConfig := fmt.Sprintf("%s:%s@/%s?parseTime=True", dbMap["username"], dbMap["password"], dbMap["name"])
+	addr := os.Getenv("MYSQL_ADDR")
+	if addr == "" {
+		addr = dbMap["addr"]
+	}
+	dbConfig := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=True", dbMap["username"], dbMap["password"], addr, dbMap["name"])
 
 	model.DB, err = gorm.Open("mysql", dbConfig)
 	if err != nil {
@@ -43,7 +48,10 @@ func main() {
 	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
 	router.Router(r)
-	// dbtest()
+	init := os.Getenv("INIT")
+	if init == "yes" {
+		dbInitTest()
+	}
 	port := viper.GetString("port")
 	r.Run(port)
 	defer model.DB.Close()
@@ -54,7 +62,7 @@ func concurrent() {
 	punch.UpdatePunchHistoryEveryDay() // 每日更新用户标签
 }
 
-func dbtest() {
+func dbInitTest() {
 	var (
 		backdrop1 model.Backdrop
 		backdrop2 model.Backdrop

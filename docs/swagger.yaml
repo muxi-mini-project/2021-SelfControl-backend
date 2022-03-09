@@ -140,10 +140,10 @@ definitions:
       week:
         type: integer
     type: object
-host: 39.99.53.8:2333
+host: self-control.muxixyz.com:2333
 info:
   contact:
-    email: 864978550@qq.com
+    email: tao_dei@qq.com
     name: TAODEI
   description: 自控力API
   termsOfService: http://swagger.io/terrms/
