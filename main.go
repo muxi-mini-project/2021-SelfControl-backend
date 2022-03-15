@@ -5,11 +5,9 @@ import (
 	"SC/model"
 	"SC/router"
 	"SC/service/punch"
-	"fmt"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
 )
@@ -30,28 +28,17 @@ func main() {
 		panic(err)
 	}
 
-	dbMap := viper.GetStringMapString("db")
-	addr := os.Getenv("MYSQL_ADDR")
-	if addr == "" {
-		addr = dbMap["addr"]
-	}
-	dbConfig := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=True", dbMap["username"], dbMap["password"], addr, dbMap["name"])
-
-	model.DB, err = gorm.Open("mysql", dbConfig)
-	if err != nil {
-		panic(err)
-	}
+	model.InitDB()
 
 	go concurrent() // 并发
 
-	//自动建表 迁移？
-	//model.DB.AutoMigrate(&model.User{})
 	r := gin.Default()
 	router.Router(r)
 	init := os.Getenv("INIT")
 	if init == "yes" {
 		dbInitTest()
 	}
+	dbInitTest()
 	port := viper.GetString("port")
 	r.Run(port)
 	defer model.DB.Close()
