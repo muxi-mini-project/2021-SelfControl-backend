@@ -3,6 +3,8 @@ test.go
 test
 /test/
 nohup.out
+/.idea/
+.DS_Store
 
 workspace.code-workspace
 /conf/

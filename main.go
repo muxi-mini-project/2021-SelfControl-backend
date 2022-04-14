@@ -13,12 +13,12 @@ import (
 )
 
 // @title Self_Control API
-// @version 1.0.0
+// @version 1.1.0
 // @description 自控力API
 // @termsOfService http://swagger.io/terrms/
 // @contact.name TAODEI
 // @contact.email tao_dei@qq.com
-// @host self-control.muxixyz.com:2333
+// @host self-control.muxixyz.com
 // @BasePath /api/v1
 // @Schemes http
 
@@ -38,7 +38,6 @@ func main() {
 	if init == "yes" {
 		dbInitTest()
 	}
-	dbInitTest()
 	port := viper.GetString("port")
 	r.Run(port)
 	defer model.DB.Close()

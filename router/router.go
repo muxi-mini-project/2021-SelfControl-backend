@@ -27,6 +27,9 @@ func Router(r *gin.Engine) {
 		// 修改用户信息
 		g1.PUT("", user.ChangeUserInfo)
 
+		// 修改用户信息
+		g1.PUT("/avatar", user.ChangeUserAvatar)
+
 		// 金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
 

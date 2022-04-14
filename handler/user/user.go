@@ -49,7 +49,6 @@ func UserInfo(c *gin.Context) {
 // @Produce application/json
 // @Param token header string true "token"
 // @Param User body model.User true "需要修改的用户信息"
-// Success 200 "修改成功"
 // @Success 200 {object} handler.Response "{"msg":"修改成功"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
@@ -82,6 +81,45 @@ func ChangeUserInfo(c *gin.Context) {
 		return
 	}
 	handler.SendResponse(c, "修改成功", nil)
+}
+
+// ChangeUserAvatar ...
+// @Summary  修改用户头像
+// @Tags user
+// @Description 上传头像，返回url
+// @Param file formData file true "二进制文件"
+// @Param token header string true "token"
+// @Accept multipart/form-data
+// @Produce application/json
+// @Success 200 {object} string
+// @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
+// @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
+// @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
+// @Router /user/avatar [put]
+func ChangeUserAvatar(c *gin.Context) {
+	token := c.Request.Header.Get("token")
+	id, err := user.VerifyToken(token)
+	if err != nil {
+		c.JSON(401, gin.H{"message": "Token Invalid."})
+		return
+	}
+
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
+		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+		return
+	}
+
+	dataLen := header.Size
+
+	url, err := user.UpdateAvatar(header.Filename, id, file, dataLen)
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(500, gin.H{"message": "失败"})
+		return
+	}
+
+	handler.SendResponse(c, "修改成功", gin.H{"url": url})
 }
 
 // @Summary  金币历史

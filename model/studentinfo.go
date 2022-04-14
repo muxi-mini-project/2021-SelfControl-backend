@@ -68,13 +68,13 @@ func GetUserInfoFormOne(sid string, pwd string) (SuInfo, error) {
 		return suInfo, err
 	}
 	// MakeXKRequest(&client)
-	pt, err := MakeONERequest(&client)
-	if err != nil {
-		log.Println(err)
-		return suInfo, err
-	}
-	pt = "Bearer " + pt
-	suInfo = getInfo(pt)
+	// pt, err := MakeONERequest(&client)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return suInfo, err
+	// }
+	// pt = "Bearer " + pt
+	// suInfo = getInfo(pt)
 	return suInfo, nil
 }
 
@@ -119,7 +119,7 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 
 	// 初始化 http client
 	client := http.Client{
-		//Timeout: TIMEOUT,
+		// Timeout: TIMEOUT,
 	}
 
 	// 初始化 http request
@@ -128,7 +128,7 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 		log.Println(err)
 		return params, err
 	}
-	//request.Header.Add("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
+	// request.Header.Add("User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.109 Safari/537.36")
 	// 发起请求
 	resp, err := client.Do(request)
 	if err != nil {
@@ -148,7 +148,7 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 
 	// 获取 Cookie 中的 JSESSIONID
 	for _, cookie := range resp.Cookies() {
-		//fmt.Println(cookie.Value)
+		// fmt.Println(cookie.Value)
 		if cookie.Name == "JSESSIONID" {
 			JSESSIONID = cookie.Value
 		}
@@ -255,7 +255,7 @@ func getInfo(pt string) SuInfo {
 	if err != nil {
 		log.Println(err)
 	}
-	//fmt.Println(string(body))
+	// fmt.Println(string(body))
 	var tmpInfo SuInfo
 	err = json.Unmarshal(body, &tmpInfo)
 	if err != nil {

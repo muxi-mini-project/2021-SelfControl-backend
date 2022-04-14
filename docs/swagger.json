@@ -11,9 +11,9 @@
             "name": "TAODEI",
             "email": "tao_dei@qq.com"
         },
-        "version": "1.0.0"
+        "version": "1.1.0"
     },
-    "host": "self-control.muxixyz.com:2333",
+    "host": "self-control.muxixyz.com",
     "basePath": "/api/v1",
     "paths": {
         "/adm/del_backdrop/{student_id}": {
@@ -1203,7 +1203,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"msg\":\"将student_id作为token保留\"}",
+                        "description": "{\"msg\":\"将data保留，并作为token放入后续请求header\"}",
                         "schema": {
                             "$ref": "#/definitions/Response"
                         }
@@ -1216,6 +1216,63 @@
                     },
                     "401": {
                         "description": "{\"error_code\":\"10001\", \"message\":\"Password or account wrong.\"} 身份认证失败 重新登录",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"error_code\":\"30001\", \"message\":\"Fail.\"} 失败",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/avatar": {
+            "put": {
+                "description": "上传头像，返回url",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "修改用户头像",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "二进制文件",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "{\"error_code\":\"20001\", \"message\":\"Fail.\"} or {\"error_code\":\"00002\", \"message\":\"Lack Param Or Param Not Satisfiable.\"}",
+                        "schema": {
+                            "$ref": "#/definitions/error.Error"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"error_code\":\"10001\", \"message\":\"Token Invalid.\"} 身份认证失败 重新登录",
                         "schema": {
                             "$ref": "#/definitions/error.Error"
                         }
@@ -1425,9 +1482,7 @@
                 "code": {
                     "type": "integer"
                 },
-                "data": {
-                    "type": "object"
-                },
+                "data": {},
                 "msg": {
                     "type": "string"
                 }

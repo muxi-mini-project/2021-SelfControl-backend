@@ -19,7 +19,7 @@ import (
 // @Produce application/json
 // @Param object body model.User true "登录的用户信息"
 // Success 200 {object} Token "将student_id作为token保留"
-// @Success 200 {object} handler.Response "{"msg":"将student_id作为token保留"}"
+// @Success 200 {object} handler.Response "{"msg":"将data保留，并作为token放入后续请求header"}"
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Password or account wrong."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
@@ -68,7 +68,7 @@ func Login(c *gin.Context) {
 
 	claims := &user.Jwt{StudentID: p.StudentID}
 
-	claims.ExpiresAt = time.Now().Add(200 * time.Hour).Unix()
+	claims.ExpiresAt = time.Now().Add(12 * 30 * 24 * time.Hour).Unix()
 	claims.IssuedAt = time.Now().Unix()
 
 	var Secret = "vinegar" // 加醋
@@ -79,5 +79,5 @@ func Login(c *gin.Context) {
 		log.Println(err)
 	}
 
-	handler.SendResponse(c, "将student_id作为token保留", signedToken)
+	handler.SendResponse(c, "将data保留，并作为token放入后续请求header", signedToken)
 }

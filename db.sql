@@ -1,5 +1,5 @@
-Create database SC;
-Use SC
+Create database sc;
+Use sc;
 
 DROP TABLE IF EXISTS users;
 create table users(
@@ -11,7 +11,7 @@ create table users(
   privacy          int          not null ,
   current_backdrop int          not null ,
   primary key (student_id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS gold_histories;
 create table gold_histories(
@@ -22,7 +22,7 @@ create table gold_histories(
   residual_number int		       not null ,
   reason          varchar(200) not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS backdrops;
 create table backdrops(
@@ -30,7 +30,7 @@ create table backdrops(
   picture_url varchar(100) not null UNIQUE ,
   price       int          not null ,
   primary key (backdrop_id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS punch_histories;
 create table punch_histories(
@@ -41,7 +41,7 @@ create table punch_histories(
   day        int          not null ,
   month      int          not null ,
   primary key (id)
-)ENGINE=InnoDB; 
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC; 
 
 DROP TABLE IF EXISTS punch_contents;
 create table punch_contents(
@@ -50,7 +50,7 @@ create table punch_contents(
   title       varchar(100) not null UNIQUE ,
   content     varchar(100) ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS users_punches;
 create table users_punches(
@@ -59,7 +59,7 @@ create table users_punches(
   title      varchar(100) not null ,
   number     int          not null default 0,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS users_backdrops;
 create table users_backdrops(
@@ -67,7 +67,7 @@ create table users_backdrops(
   student_id  varchar(100) not null ,
   backdrop_id int          not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS week_lists;
 create table week_lists(
@@ -77,7 +77,7 @@ create table week_lists(
   number     int          not null ,
   day        int          not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS month_lists;
 create table month_lists(
@@ -87,7 +87,7 @@ create table month_lists(
   number     int          not null ,
   month      int          not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS list_histories;
 create table list_histories(
@@ -97,16 +97,16 @@ create table list_histories(
   former     int          not null ,
   after      int          not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS title_histories;
 create table title_histories(
   id         int          not null auto_increment ,
   student_id varchar(100) not null ,
   title      varchar(100) not null ,
-  day        int          not null ,
+  day        int          not NULL ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS change_list_records;
 create table change_list_records(
@@ -116,4 +116,4 @@ create table change_list_records(
   ranking    int          not null ,
   type       int          not null ,
   primary key (id)
-)ENGINE=InnoDB;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;

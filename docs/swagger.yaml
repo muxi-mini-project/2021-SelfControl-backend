@@ -4,8 +4,7 @@ definitions:
     properties:
       code:
         type: integer
-      data:
-        type: object
+      data: {}
       msg:
         type: string
     type: object
@@ -140,7 +139,7 @@ definitions:
       week:
         type: integer
     type: object
-host: self-control.muxixyz.com:2333
+host: self-control.muxixyz.com
 info:
   contact:
     email: tao_dei@qq.com
@@ -148,7 +147,7 @@ info:
   description: 自控力API
   termsOfService: http://swagger.io/terrms/
   title: Self_Control API
-  version: 1.0.0
+  version: 1.1.0
 paths:
   /adm/del_backdrop/{student_id}:
     get:
@@ -922,7 +921,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"msg":"将student_id作为token保留"}'
+          description: '{"msg":"将data保留，并作为token放入后续请求header"}'
           schema:
             $ref: '#/definitions/Response'
         "400":
@@ -980,6 +979,46 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 修改用户信息
+      tags:
+      - user
+  /user/avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      description: 上传头像，返回url
+      parameters:
+      - description: 二进制文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 修改用户头像
       tags:
       - user
   /user/goldhistory:
