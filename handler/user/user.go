@@ -111,7 +111,10 @@ func ChangeUserAvatar(c *gin.Context) {
 	}
 
 	dataLen := header.Size
-
+	if dataLen > 10*1024*1024 {
+		c.JSON(402, gin.H{"message": "文件过大（超出10M）"})
+		return
+	}
 	url, err := user.UpdateAvatar(header.Filename, id, file, dataLen)
 	fmt.Println(err)
 	if err != nil {

@@ -4,7 +4,9 @@ import (
 	"SC/handler"
 	"SC/handler/adm"
 	"SC/handler/user"
+	"SC/router/middleware"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,8 +29,8 @@ func Router(r *gin.Engine) {
 		// 修改用户信息
 		g1.PUT("", user.ChangeUserInfo)
 
-		// 修改用户信息
-		g1.PUT("/avatar", user.ChangeUserAvatar)
+		// 修改用户头像
+		g1.PUT("/avatar", middleware.TimeoutMiddleware(10*time.Second), user.ChangeUserAvatar)
 
 		// 金币历史
 		g1.GET("/goldhistory", user.GoldHistory)
