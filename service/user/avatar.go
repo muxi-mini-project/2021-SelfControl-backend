@@ -24,7 +24,7 @@ func initOSS() {
 	domainName = viper.GetString("oss.domain_name")
 }
 
-func getToken() {
+func GetToken() string {
 	var maxInt uint64 = 1 << 32
 	initOSS()
 	putPolicy := storage.PutPolicy{
@@ -33,6 +33,7 @@ func getToken() {
 	}
 	mac := qbox.NewMac(accessKey, secretKey)
 	upToken = putPolicy.UploadToken(mac)
+	return upToken
 }
 
 func getObjectName(filename string, id uint32) (string, error) {
@@ -46,7 +47,7 @@ func getObjectName(filename string, id uint32) (string, error) {
 
 func uploadFile(filename string, id uint32, r io.ReaderAt, dataLen int64) (string, error) {
 	if upToken == "" {
-		getToken()
+		GetToken()
 	}
 
 	objectName, err := getObjectName(filename, id)

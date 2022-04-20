@@ -83,46 +83,48 @@ func ChangeUserInfo(c *gin.Context) {
 	handler.SendResponse(c, "修改成功", nil)
 }
 
-// ChangeUserAvatar ...
-// @Summary  修改用户头像
+// GetUserToken ...
+// @Summary  获取七牛云token
 // @Tags user
-// @Description 上传头像，返回url
-// @Param file formData file true "二进制文件"
+// @Description 返回token
+// Param file formData file true "二进制文件"
 // @Param token header string true "token"
-// @Accept multipart/form-data
+// Accept multipart/form-data
+// @Accept application/json
 // @Produce application/json
 // @Success 200 {object} string
 // @Failure 401 {object} error.Error "{"error_code":"10001", "message":"Token Invalid."} 身份认证失败 重新登录"
 // @Failure 400 {object} error.Error "{"error_code":"20001", "message":"Fail."} or {"error_code":"00002", "message":"Lack Param Or Param Not Satisfiable."}"
 // @Failure 500 {object} error.Error "{"error_code":"30001", "message":"Fail."} 失败"
-// @Router /user/avatar [put]
-func ChangeUserAvatar(c *gin.Context) {
+// @Router /user/qiniu_token [get]
+func GetUserToken(c *gin.Context) {
 	token := c.Request.Header.Get("token")
-	id, err := user.VerifyToken(token)
+	_, err := user.VerifyToken(token)
 	if err != nil {
 		c.JSON(401, gin.H{"message": "Token Invalid."})
 		return
 	}
 
-	file, header, err := c.Request.FormFile("file")
-	if err != nil {
-		c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
-		return
-	}
+	// file, header, err := c.Request.FormFile("file")
+	// if err != nil {
+	// 	c.JSON(400, gin.H{"message": "Lack Param Or Param Not Satisfiable."})
+	// 	return
+	// }
+	//
+	// dataLen := header.Size
+	// if dataLen > 10*1024*1024 {
+	// 	c.JSON(402, gin.H{"message": "文件过大（超出10M）"})
+	// 	return
+	// }
 
-	dataLen := header.Size
-	if dataLen > 10*1024*1024 {
-		c.JSON(402, gin.H{"message": "文件过大（超出10M）"})
-		return
-	}
-
-	url, err := user.UpdateAvatar(header.Filename, id, file, dataLen)
+	// url, err := user.UpdateAvatar(header.Filename, id, file, dataLen)
+	Token := user.GetToken()
 	if err != nil {
 		c.JSON(500, gin.H{"message": "失败"})
 		return
 	}
 
-	handler.SendResponse(c, "修改成功", gin.H{"url": url})
+	handler.SendResponse(c, "修改成功", gin.H{"token": Token})
 }
 
 // @Summary  金币历史

@@ -120,6 +120,10 @@ func GetWeekList() ([]model.UserRanking, string) {
 			Day:       time.Now().YearDay(),
 			Number:    rank.Number,
 		}
+
+		if Rank.Ranking < 1 { // 防止在兑换后排名提升导致超出排行榜
+			Rank.Ranking = 1
+		}
 		err := ChangeWeekList(Rank)
 		if err != nil {
 			fmt.Println(err)

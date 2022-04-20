@@ -981,46 +981,6 @@ paths:
       summary: 修改用户信息
       tags:
       - user
-  /user/avatar:
-    put:
-      consumes:
-      - multipart/form-data
-      description: 上传头像，返回url
-      parameters:
-      - description: 二进制文件
-        in: formData
-        name: file
-        required: true
-        type: file
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
-            "message":"Lack Param Or Param Not Satisfiable."}'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "401":
-          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
-            重新登录'
-          schema:
-            $ref: '#/definitions/error.Error'
-        "500":
-          description: '{"error_code":"30001", "message":"Fail."} 失败'
-          schema:
-            $ref: '#/definitions/error.Error'
-      summary: 修改用户头像
-      tags:
-      - user
   /user/goldhistory:
     get:
       consumes:
@@ -1115,6 +1075,41 @@ paths:
           schema:
             $ref: '#/definitions/error.Error'
       summary: 我的打卡数
+      tags:
+      - user
+  /user/qiniu_token:
+    get:
+      consumes:
+      - application/json
+      description: 返回token
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: '{"error_code":"20001", "message":"Fail."} or {"error_code":"00002",
+            "message":"Lack Param Or Param Not Satisfiable."}'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "401":
+          description: '{"error_code":"10001", "message":"Token Invalid."} 身份认证失败
+            重新登录'
+          schema:
+            $ref: '#/definitions/error.Error'
+        "500":
+          description: '{"error_code":"30001", "message":"Fail."} 失败'
+          schema:
+            $ref: '#/definitions/error.Error'
+      summary: 获取七牛云token
       tags:
       - user
   /user/title/{day}:
