@@ -4,9 +4,9 @@ addr: 127.0.0.1:8080
 port: :8080
 db:  # DB 配置 部署时环境变量覆盖
   name: SC
-  addr: 127.0.0.1:3306
-  username: root
-  password: 12345678
+  addr: rm-bp1pkcz9y269h30fm5o.mysql.rds.aliyuncs.com
+  username: sc
+  password: Muxistudio517
 oss:
   access_key: 0bNiwJGpdwmvvuVAzLDjM6gnxj9MiwmSagVpIW81
   secret_key: zHA9w8PoSfL6D4dvWNwU2GF4XHUn9MalynbANE3_

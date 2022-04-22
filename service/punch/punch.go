@@ -3,7 +3,6 @@ package punch
 import (
 	"SC/model"
 	"errors"
-	"fmt"
 	"strconv"
 	"time"
 )
@@ -24,10 +23,10 @@ func GetPunchAndNumber(id string) []model.Punch {
 }
 
 type Punch3 struct {
-	// model.Punch2
-	Title string
-	ID    int
-	Ok    bool `json:"ok"`
+	Title string `json:"title"`
+	ID    int    `json:"id"`
+	Ok    bool   `json:"ok"`
+	Num   int    `json:"number"`
 }
 
 func DayPunch(id string, day int) []Punch3 {
@@ -40,6 +39,7 @@ func DayPunch(id string, day int) []Punch3 {
 				punch.Title,
 				P.ID,
 				false,
+				punch.Number,
 			}
 			history, _ := model.GetDayPunchHistory(id, punch.Title, day)
 			if history.StudentID == "" {
@@ -52,15 +52,22 @@ func DayPunch(id string, day int) []Punch3 {
 	} else {
 		punchs := model.GetTitleHistory(id, day)
 
+		ps := GetPunchAndNumber(id)
 		for _, punch := range punchs {
 			P := model.GetPunchContentByTitle(punch.Title)
 			Punch := Punch3{
 				punch.Title,
 				P.ID,
 				false,
+				0,
+			}
+			for _, p := range ps {
+				if p.Title == Punch.Title {
+					Punch.Num = p.Number
+					break
+				}
 			}
 			history, _ := model.GetDayPunchHistory(id, punch.Title, day)
-			fmt.Println(history.StudentID)
 			if history.StudentID == "" {
 				Punch.Ok = false
 			} else {

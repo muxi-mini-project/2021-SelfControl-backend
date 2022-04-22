@@ -50,7 +50,7 @@ func GetMonthList() ([]model.UserRanking, string) {
 			Number:    rank.Number,
 		}
 
-		err := ChangeMonthList(Rank)
+		err := ChangeMonthList(Rank, rank.Ranking)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -105,6 +105,13 @@ func GetWeekList() ([]model.UserRanking, string) {
 		}
 		model.DB.Create(&Rank)
 	}
+	var Rankss []model.WeekList
+	for i := 1; i <= 50; i++ {
+		var Rank []model.WeekList
+		model.DB.Where("ranking = ? ", i).Find(&Rank)
+		Rankss = append(Rankss, Rank...)
+	}
+	fmt.Println(Rankss)
 	// 将今日的兑换排名修改进list
 	records := model.GetChangeListRecords(time.Now().YearDay())
 	for _, record := range records {
@@ -124,7 +131,7 @@ func GetWeekList() ([]model.UserRanking, string) {
 		if Rank.Ranking < 1 { // 防止在兑换后排名提升导致超出排行榜
 			Rank.Ranking = 1
 		}
-		err := ChangeWeekList(Rank)
+		err := ChangeWeekList(Rank, rank.Ranking)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -135,6 +142,8 @@ func GetWeekList() ([]model.UserRanking, string) {
 		model.DB.Where("ranking = ? ", i).Find(&Rank)
 		Ranks = append(Ranks, Rank...)
 	}
+	fmt.Println(Ranks)
+	// add user info
 	for _, ran := range Ranks {
 		u, err := model.GetUserInfo(ran.StudentID)
 		if err != nil {
@@ -306,38 +315,44 @@ func ChangeMonthRanking(id string, ranking int) (string, error) {
 	return "", model.DB.Create(&record).Error
 }
 
-func ChangeWeekList(rank model.WeekList) error {
+func ChangeWeekList(rank model.WeekList, ranking int) error {
 	var r model.WeekList
 	model.DB.Where("day <= ? ", rank.Day-7).Delete(&r)
 	var ranks []model.WeekList
-	if err := model.DB.Where("student_id = ? ", rank.StudentID).First(&r).Error; err != nil {
-		model.DB.Model(r).Where("ranking < ? AND ranking >= ? ", rank.Ranking, r.Ranking).Find(&ranks)
-	} else {
-		model.DB.Model(r).Where("ranking < ? ", rank.Ranking).Find(&ranks)
+
+	ok := false
+	if err := model.DB.Where("student_id != ? AND ranking = ?", rank.StudentID, ranking).First(&r).Error; err != nil {
+		ok = true // 找不到相同排名的
 	}
-	// 后面的排名++
-	for _, Rank := range ranks {
-		Rank.Ranking++
-		model.DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)
+
+	if ok { // 兑换前没有排名跟他一样的，就r后面的--
+		model.DB.Where("ranking > ?", ranking).Find(&ranks)
+		for _, rank := range ranks {
+			rank.Ranking--
+			model.DB.Model(r).Where("student_id = ? ", rank.StudentID).Update("ranking", rank.Ranking)
+		}
 	}
 
 	model.DB.Where("student_id = ? ", rank.StudentID).Delete(&rank)
 	return model.DB.Create(&rank).Error
 }
 
-func ChangeMonthList(rank model.MonthList) error {
+func ChangeMonthList(rank model.MonthList, ranking int) error {
 	var r model.MonthList
 	model.DB.Where("month != ? ", rank.Month).Delete(&r)
 	var ranks []model.MonthList
-	if err := model.DB.Where("student_id = ? ", rank.StudentID).First(&r).Error; err != nil {
-		model.DB.Model(r).Where("ranking < ? AND ranking >= ? ", rank.Ranking, r.Ranking).Find(&ranks)
-	} else {
-		model.DB.Model(r).Where("ranking < ? ", rank.Ranking).Find(&ranks)
+
+	ok := false
+	if err := model.DB.Where("student_id != ? AND ranking = ?", rank.StudentID, ranking).First(&r).Error; err != nil {
+		ok = true // 找不到相同排名的
 	}
-	// 后面的排名++
-	for _, Rank := range ranks {
-		Rank.Ranking++
-		model.DB.Model(r).Where("student_id = ? ", Rank.StudentID).Update("ranking", Rank.Ranking)
+
+	if ok { // 兑换前没有排名跟他一样的，就r后面的--
+		model.DB.Where("ranking > ?", ranking).Find(&ranks)
+		for _, rank := range ranks {
+			rank.Ranking--
+			model.DB.Model(r).Where("student_id = ? ", rank.StudentID).Update("ranking", rank.Ranking)
+		}
 	}
 	model.DB.Where("student_id = ? ", rank.StudentID).Delete(&rank)
 	return model.DB.Create(&rank).Error

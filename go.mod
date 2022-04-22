@@ -3,7 +3,6 @@ module SC
 go 1.17
 
 require (
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.7.7
@@ -12,6 +11,7 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/swaggo/swag v1.8.0
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+	gorm.io/gorm v1.23.4
 )
 
 require (
@@ -31,6 +31,7 @@ require (
 	github.com/gookit/color v1.3.6 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
