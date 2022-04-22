@@ -5,11 +5,10 @@ import (
 	"SC/model"
 	"SC/router"
 	"SC/service/punch"
-	"os"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // @title Self_Control API

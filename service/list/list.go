@@ -57,7 +57,7 @@ func GetMonthList() ([]model.UserRanking, string) {
 	}
 
 	// 把排名前10的加进来
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 50; i++ {
 		Rank := model.GetMonthRanks(i)
 		Ranks = append(Ranks, Rank...)
 	}
@@ -130,7 +130,7 @@ func GetWeekList() ([]model.UserRanking, string) {
 		}
 	}
 
-	for i := 1; i <= 10; i++ {
+	for i := 1; i <= 50; i++ {
 		var Rank []model.WeekList
 		model.DB.Where("ranking = ? ", i).Find(&Rank)
 		Ranks = append(Ranks, Rank...)

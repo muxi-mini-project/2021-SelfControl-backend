@@ -37,9 +37,9 @@ func List(c *gin.Context) {
 		c.JSON(400, gin.H{"message": message})
 		return
 	}
-	// if len(numbers) > 5 {
-	// 	numbers = numbers[5:]
-	// }
+	if len(numbers) > 50 {
+		numbers = numbers[:50]
+	}
 
 	SendResponse(c, "获取所有用户", numbers)
 }
@@ -79,7 +79,7 @@ func ChangeRanking(c *gin.Context) {
 	}
 	if Type == "week" {
 		if message, err := list.ChangeWeekRanking(id, ranking.Ranking); message == "金币不足" {
-			c.JSON(203, gin.H{"message": message})
+			c.JSON(203, gin.H{"code": 203, "message": message})
 			return
 		} else if message == "错误:该用户兑换排名前没有该排名" {
 			c.JSON(204, gin.H{"code": 204, "message": message})
@@ -94,7 +94,7 @@ func ChangeRanking(c *gin.Context) {
 		}
 	} else if Type == "month" {
 		if message, err := list.ChangeMonthRanking(id, ranking.Ranking); message == "金币不足" {
-			c.JSON(203, gin.H{"message": message})
+			c.JSON(203, gin.H{"code": 203, "message": message})
 			return
 		} else if message == "错误:该用户兑换排名前没有该排名" {
 			c.JSON(204, gin.H{"code": 204, "message": message})

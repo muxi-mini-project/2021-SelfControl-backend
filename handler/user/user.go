@@ -5,7 +5,6 @@ import (
 	"SC/model"
 	"SC/service/punch"
 	"SC/service/user"
-	"encoding/base64"
 	"fmt"
 	"strconv"
 
@@ -72,10 +71,13 @@ func ChangeUserInfo(c *gin.Context) {
 		c.JSON(400, gin.H{"message": "Privacy参数错误(2 = 不公开， 1 = 公开)"})
 		return
 	}
-	user.StudentID = id
-	if user.Password != "" {
-		user.Password = base64.StdEncoding.EncodeToString([]byte(user.Password)) // 加密后存数据库
-	}
+	u, _ := model.GetUserInfo(id)
+	user.StudentID = u.StudentID
+	user.Password = u.Password
+	user.Gold = u.Gold
+	// if user.Password != "" {
+	// 	user.Password = base64.StdEncoding.EncodeToString([]byte(user.Password)) // 加密后存数据库
+	// }
 	if err := model.UpdateUserInfo(user); err != nil {
 		c.JSON(400, gin.H{"message": "更新失败"})
 		return
