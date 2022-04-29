@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"github.com/ShiinaOrez/GoSecurity/security"
 	"strconv"
 	"time"
 
@@ -278,4 +279,12 @@ func GetChangeListRecords(day int) []ChangeListRecord {
 	var records []ChangeListRecord
 	DB.Where("day = ? ", day).Find(&records)
 	return records
+}
+
+func GeneratePasswordHash(password string) string {
+	return security.GeneratePasswordHash(password)
+}
+
+func CheckPassword(password, hashPwd string) bool {
+	return security.CheckPasswordHash(password, hashPwd)
 }

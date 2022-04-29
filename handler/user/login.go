@@ -4,7 +4,6 @@ import (
 	"SC/handler"
 	"SC/model"
 	"SC/service/user"
-	"encoding/base64"
 	"log"
 	"time"
 
@@ -49,7 +48,8 @@ func Login(c *gin.Context) {
 		p.Privacy = 1
 		p.UserPicture = "www.baidu.com"
 
-		p.Password = base64.StdEncoding.EncodeToString([]byte(p.Password)) // 加密后存数据库
+		p.Password = model.GeneratePasswordHash(pwd) // 加密后存数据库
+		// p.Password = base64.StdEncoding.EncodeToString([]byte(p.Password)) // 加密后存数据库
 
 		model.DB.Create(&p)
 		// 增加拥有默认背景
@@ -58,9 +58,9 @@ func Login(c *gin.Context) {
 		// usersBackdrop.StudentID = p.StudentID
 		// model.DB.Create(&usersBackdrop)
 	} else {
-		password, _ := base64.StdEncoding.DecodeString(p.Password) // 从数据库中解密后比较
+		// password, _ := base64.StdEncoding.DecodeString(p.Password) // 从数据库中解密后比较
 
-		if string(password) != pwd {
+		if !model.CheckPassword(pwd, p.Password) {
 			c.JSON(401, "Password or account wrong.")
 			return
 		}

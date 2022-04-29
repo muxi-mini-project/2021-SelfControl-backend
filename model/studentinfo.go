@@ -16,7 +16,7 @@ import (
 	"golang.org/x/net/publicsuffix"
 )
 
-type accountReqeustParams struct {
+type accountRequestParams struct {
 	lt         string
 	execution  string
 	_eventId   string
@@ -109,13 +109,13 @@ func MakeONERequest(client *http.Client) (portal_token string, err error) {
 }
 
 // 预处理，打开 account.ccnu.edu.cn 获取模拟登陆需要的表单字段
-func makeAccountPreflightRequest() (*accountReqeustParams, error) {
+func makeAccountPreflightRequest() (*accountRequestParams, error) {
 	var JSESSIONID string
 	var lt string
 	var execution string
 	var _eventId string
 
-	params := &accountReqeustParams{}
+	params := &accountRequestParams{}
 
 	// 初始化 http client
 	client := http.Client{
@@ -198,7 +198,7 @@ func makeAccountPreflightRequest() (*accountReqeustParams, error) {
 	return params, nil
 }
 
-func makeAccountRequest(sid, password string, params *accountReqeustParams, client *http.Client) error {
+func makeAccountRequest(sid, password string, params *accountRequestParams, client *http.Client) error {
 	v := url.Values{}
 	v.Set("username", sid)
 	v.Set("password", password)

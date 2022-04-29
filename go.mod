@@ -3,6 +3,7 @@ module SC
 go 1.17
 
 require (
+	github.com/ShiinaOrez/GoSecurity v0.0.0-20191118072239-d06064a9edd6
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/gin-gonic/gin v1.7.7
@@ -11,7 +12,6 @@ require (
 	github.com/spf13/viper v1.10.1
 	github.com/swaggo/swag v1.8.0
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
-	gorm.io/gorm v1.23.4
 )
 
 require (
